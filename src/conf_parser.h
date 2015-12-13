@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -224,51 +224,53 @@ extern int yydebug;
     T_LOG = 434,
     T_NCHANGE = 435,
     T_NONONREG = 436,
-    T_OPME = 437,
-    T_PREPEND = 438,
-    T_PSEUDO = 439,
-    T_RECVQ = 440,
-    T_REJ = 441,
-    T_RESTART = 442,
-    T_SERVER = 443,
-    T_SERVICE = 444,
-    T_SERVNOTICE = 445,
-    T_SET = 446,
-    T_SHARED = 447,
-    T_SIZE = 448,
-    T_SKILL = 449,
-    T_SOFTCALLERID = 450,
-    T_SPY = 451,
-    T_SSL = 452,
-    T_SSL_CIPHER_LIST = 453,
-    T_TARGET = 454,
-    T_UMODES = 455,
-    T_UNAUTH = 456,
-    T_UNDLINE = 457,
-    T_UNLIMITED = 458,
-    T_UNRESV = 459,
-    T_UNXLINE = 460,
-    T_WALLOP = 461,
-    T_WALLOPS = 462,
-    T_WEBIRC = 463,
-    TBOOL = 464,
-    THROTTLE_COUNT = 465,
-    THROTTLE_TIME = 466,
-    TKLINE_EXPIRE_NOTICES = 467,
-    TMASKED = 468,
-    TS_MAX_DELTA = 469,
-    TS_WARN_DELTA = 470,
-    TWODOTS = 471,
-    TYPE = 472,
-    UNKLINE = 473,
-    USE_LOGGING = 474,
-    USER = 475,
-    VHOST = 476,
-    VHOST6 = 477,
-    WARN_NO_CONNECT_BLOCK = 478,
-    WHOIS = 479,
-    XLINE = 480,
-    XLINE_EXEMPT = 481
+    T_OPERWALL = 437,
+    T_OPERWALLS = 438,
+    T_OPME = 439,
+    T_PREPEND = 440,
+    T_PSEUDO = 441,
+    T_RECVQ = 442,
+    T_REJ = 443,
+    T_RESTART = 444,
+    T_SERVER = 445,
+    T_SERVICE = 446,
+    T_SERVNOTICE = 447,
+    T_SET = 448,
+    T_SHARED = 449,
+    T_SIZE = 450,
+    T_SKILL = 451,
+    T_SOFTCALLERID = 452,
+    T_SPY = 453,
+    T_SSL = 454,
+    T_SSL_CIPHER_LIST = 455,
+    T_TARGET = 456,
+    T_UMODES = 457,
+    T_UNAUTH = 458,
+    T_UNDLINE = 459,
+    T_UNLIMITED = 460,
+    T_UNRESV = 461,
+    T_UNXLINE = 462,
+    T_WALLOP = 463,
+    T_WALLOPS = 464,
+    T_WEBIRC = 465,
+    TBOOL = 466,
+    THROTTLE_COUNT = 467,
+    THROTTLE_TIME = 468,
+    TKLINE_EXPIRE_NOTICES = 469,
+    TMASKED = 470,
+    TS_MAX_DELTA = 471,
+    TS_WARN_DELTA = 472,
+    TWODOTS = 473,
+    TYPE = 474,
+    UNKLINE = 475,
+    USE_LOGGING = 476,
+    USER = 477,
+    VHOST = 478,
+    VHOST6 = 479,
+    WARN_NO_CONNECT_BLOCK = 480,
+    WHOIS = 481,
+    XLINE = 482,
+    XLINE_EXEMPT = 483
   };
 #endif
 /* Tokens.  */
@@ -451,55 +453,57 @@ extern int yydebug;
 #define T_LOG 434
 #define T_NCHANGE 435
 #define T_NONONREG 436
-#define T_OPME 437
-#define T_PREPEND 438
-#define T_PSEUDO 439
-#define T_RECVQ 440
-#define T_REJ 441
-#define T_RESTART 442
-#define T_SERVER 443
-#define T_SERVICE 444
-#define T_SERVNOTICE 445
-#define T_SET 446
-#define T_SHARED 447
-#define T_SIZE 448
-#define T_SKILL 449
-#define T_SOFTCALLERID 450
-#define T_SPY 451
-#define T_SSL 452
-#define T_SSL_CIPHER_LIST 453
-#define T_TARGET 454
-#define T_UMODES 455
-#define T_UNAUTH 456
-#define T_UNDLINE 457
-#define T_UNLIMITED 458
-#define T_UNRESV 459
-#define T_UNXLINE 460
-#define T_WALLOP 461
-#define T_WALLOPS 462
-#define T_WEBIRC 463
-#define TBOOL 464
-#define THROTTLE_COUNT 465
-#define THROTTLE_TIME 466
-#define TKLINE_EXPIRE_NOTICES 467
-#define TMASKED 468
-#define TS_MAX_DELTA 469
-#define TS_WARN_DELTA 470
-#define TWODOTS 471
-#define TYPE 472
-#define UNKLINE 473
-#define USE_LOGGING 474
-#define USER 475
-#define VHOST 476
-#define VHOST6 477
-#define WARN_NO_CONNECT_BLOCK 478
-#define WHOIS 479
-#define XLINE 480
-#define XLINE_EXEMPT 481
+#define T_OPERWALL 437
+#define T_OPERWALLS 438
+#define T_OPME 439
+#define T_PREPEND 440
+#define T_PSEUDO 441
+#define T_RECVQ 442
+#define T_REJ 443
+#define T_RESTART 444
+#define T_SERVER 445
+#define T_SERVICE 446
+#define T_SERVNOTICE 447
+#define T_SET 448
+#define T_SHARED 449
+#define T_SIZE 450
+#define T_SKILL 451
+#define T_SOFTCALLERID 452
+#define T_SPY 453
+#define T_SSL 454
+#define T_SSL_CIPHER_LIST 455
+#define T_TARGET 456
+#define T_UMODES 457
+#define T_UNAUTH 458
+#define T_UNDLINE 459
+#define T_UNLIMITED 460
+#define T_UNRESV 461
+#define T_UNXLINE 462
+#define T_WALLOP 463
+#define T_WALLOPS 464
+#define T_WEBIRC 465
+#define TBOOL 466
+#define THROTTLE_COUNT 467
+#define THROTTLE_TIME 468
+#define TKLINE_EXPIRE_NOTICES 469
+#define TMASKED 470
+#define TS_MAX_DELTA 471
+#define TS_WARN_DELTA 472
+#define TWODOTS 473
+#define TYPE 474
+#define UNKLINE 475
+#define USE_LOGGING 476
+#define USER 477
+#define VHOST 478
+#define VHOST6 479
+#define WARN_NO_CONNECT_BLOCK 480
+#define WHOIS 481
+#define XLINE 482
+#define XLINE_EXEMPT 483
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 153 "conf_parser.y" /* yacc.c:1909  */
@@ -507,10 +511,8 @@ union YYSTYPE
   int number;
   char *string;
 
-#line 511 "conf_parser.h" /* yacc.c:1909  */
+#line 515 "conf_parser.h" /* yacc.c:1909  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
