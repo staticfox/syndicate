@@ -40,7 +40,7 @@
  * NICKLEN: do not change this; if you want to change the maximum
  * allowed nickname length, you can do this in the ircd.conf
  */
-#define NICKLEN         30
+#define NICKLEN         31
 #define USERLEN         10
 #define ACCOUNTLEN      NICKLEN
 #define PORTNAMELEN 6  /* ":31337" */
@@ -51,7 +51,7 @@
                               generated length; DO NOT CHANGE! */
 #define REALLEN         50
 #define CHANNELLEN      50
-#define TOPICLEN        300
+#define TOPICLEN        400
 #define KILLLEN         240
 #define REASONLEN       240
 #define KICKLEN         180
