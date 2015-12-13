@@ -305,6 +305,14 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
     {
       switch (*s)
       {
+        case '~':
+          fl |= CHFL_OWNER;
+          ++s;
+          break;
+        case '&':
+          fl |= CHFL_PROTECT;
+          ++s;
+          break;
         case '@':
           fl |= CHFL_CHANOP;
           ++s;
@@ -337,6 +345,18 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
 
     if (keep_new_modes)
     {
+      if (fl & CHFL_OWNER)
+      {
+        *up++  = '~';
+        len_uid++;
+      }
+
+      if (fl & CHFL_PROTECT)
+      {
+        *up++  = '&';
+        len_uid++;
+      }
+
       if (fl & CHFL_CHANOP)
       {
         *up++  = '@';
@@ -388,6 +408,60 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
                              ":%s!%s@%s AWAY :%s",
                              target_p->name, target_p->username,
                              target_p->host, target_p->away);
+    }
+
+    if (fl & CHFL_OWNER)
+    {
+      *mbuf++ = 'q';
+      para[pargs++] = target_p->name;
+
+      if (pargs >= MAXMODEPARAMS)
+      {
+        sptr = sendbuf;
+        *mbuf = '\0';
+
+        for (lcount = 0; lcount < MAXMODEPARAMS; ++lcount)
+        {
+          slen = sprintf(sptr, " %s", para[lcount]);
+          sptr += slen;
+        }
+
+        sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s MODE %s %s%s",
+                             servername, chptr->name, modebuf, sendbuf);
+
+        mbuf = modebuf;
+        *mbuf++ = '+';
+
+        sendbuf[0] = '\0';
+        pargs = 0;
+      }
+    }
+
+    if (fl & CHFL_PROTECT)
+    {
+      *mbuf++ = 'a';
+      para[pargs++] = target_p->name;
+
+      if (pargs >= MAXMODEPARAMS)
+      {
+        sptr = sendbuf;
+        *mbuf = '\0';
+
+        for (lcount = 0; lcount < MAXMODEPARAMS; ++lcount)
+        {
+          slen = sprintf(sptr, " %s", para[lcount]);
+          sptr += slen;
+        }
+
+        sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s MODE %s %s%s",
+                             servername, chptr->name, modebuf, sendbuf);
+
+        mbuf = modebuf;
+        *mbuf++ = '+';
+
+        sendbuf[0] = '\0';
+        pargs = 0;
+      }
     }
 
     if (fl & CHFL_CHANOP)
@@ -615,9 +689,11 @@ set_final_mode(struct Mode *mode, struct Mode *oldmode)
 static void
 remove_our_modes(struct Channel *chptr, struct Client *source_p)
 {
+  remove_a_mode(chptr, source_p, CHFL_OWNER,  'q');
+  remove_a_mode(chptr, source_p, CHFL_PROTECT,'a');
   remove_a_mode(chptr, source_p, CHFL_CHANOP, 'o');
   remove_a_mode(chptr, source_p, CHFL_HALFOP, 'h');
-  remove_a_mode(chptr, source_p, CHFL_VOICE, 'v');
+  remove_a_mode(chptr, source_p, CHFL_VOICE,  'v');
 }
 
 /* remove_a_mode()

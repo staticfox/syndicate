@@ -28,7 +28,7 @@
 #define INCLUDED_channel_mode_h
 
 
-#define CMEMBER_STATUS_FLAGS "@%+"
+#define CMEMBER_STATUS_FLAGS "~&@%+"
 enum { CMEMBER_STATUS_FLAGS_LEN = sizeof(CMEMBER_STATUS_FLAGS) - 1 };
 
 enum { MODEBUFLEN = 200 };
@@ -49,7 +49,9 @@ enum
   CHACCESS_PEON      =  0,
   CHACCESS_HALFOP    =  1,
   CHACCESS_CHANOP    =  2,
-  CHACCESS_REMOTE    =  3
+  CHACCESS_PROTECT   =  3,
+  CHACCESS_OWNER     =  4,
+  CHACCESS_REMOTE    =  5
 };
 
 /* can_send results */
@@ -71,7 +73,10 @@ enum
   CHFL_INVEX        = 0x00000020U,
   /* Cache flags for silence on ban */
   CHFL_BAN_CHECKED  = 0x00000040U,
-  CHFL_BAN_SILENCED = 0x00000080U
+  CHFL_BAN_SILENCED = 0x00000080U,
+  /* More channel modes */
+  CHFL_PROTECT      = 0x00000100U,  /* Channel admin/protect mode */
+  CHFL_OWNER        = 0x00000200U   /* Channel owner */
 };
 
 /* channel modes ONLY */

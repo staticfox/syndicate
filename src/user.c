@@ -787,6 +787,18 @@ user_set_hostmask(struct Client *target_p, const char *hostname, const int what)
     int len = 0;
     const struct Membership *member = node->data;
 
+    if (has_member_flags(member, CHFL_OWNER))
+    {
+      *p++ = 'q';
+      len += snprintf(nickbuf + len, sizeof(nickbuf) - len, len ? " %s" : "%s", target_p->name);
+    }
+
+    if (has_member_flags(member, CHFL_PROTECT))
+    {
+      *p++ = 'a';
+      len += snprintf(nickbuf + len, sizeof(nickbuf) - len, len ? " %s" : "%s", target_p->name);
+    }
+
     if (has_member_flags(member, CHFL_CHANOP))
     {
       *p++ = 'o';

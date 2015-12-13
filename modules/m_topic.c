@@ -83,8 +83,7 @@ m_topic(struct Client *source_p, int parc, char *parv[])
       return 0;
     }
 
-    if (!(chptr->mode.mode & MODE_TOPICLIMIT) ||
-        has_member_flags(member, CHFL_CHANOP|CHFL_HALFOP))
+    if (!(chptr->mode.mode & MODE_TOPICLIMIT) || is_any_op(member))
     {
       char topic_info[NICKLEN + USERLEN + HOSTLEN + 3];  /* +3 for !, @, \0 */
 

@@ -120,6 +120,8 @@ struct Ban
 
 extern dlink_list channel_list;
 
+extern int can_kick_deop(struct Membership *, struct Membership *);
+extern int is_any_op(struct Membership *);
 extern int channel_check_name(const char *, const int);
 extern int can_send(struct Channel *, struct Client *, struct Membership *, const char *, int);
 extern int is_banned(const struct Channel *, const struct Client *);

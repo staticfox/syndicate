@@ -930,6 +930,123 @@ chm_op(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
 }
 
 static void
+chm_protect(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
+       char **parv, int *errors, int alev, int dir, char c, unsigned int d)
+{
+  struct Client *target_p;
+  struct Membership *member;
+
+  if (alev < CHACCESS_PROTECT)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one_numeric(source_p, &me,
+                         alev == CHACCESS_NOTONCHAN ? ERR_NOTONCHANNEL :
+                         ERR_CHANOPRIVSNEEDED, chptr->name);
+
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (dir == MODE_QUERY || parc <= *parn)
+    return;
+
+  if ((target_p = find_chasing(source_p, parv[(*parn)++])) == NULL)
+    return;  /* find_chasing sends ERR_NOSUCHNICK */
+
+  if ((member = find_channel_link(target_p, chptr)) == NULL)
+  {
+    if (!(*errors & SM_ERR_NOTONCHANNEL))
+      sendto_one_numeric(source_p, &me, ERR_USERNOTINCHANNEL, target_p->name, chptr->name);
+
+    *errors |= SM_ERR_NOTONCHANNEL;
+    return;
+  }
+
+  if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  switch (dir)
+  {
+    case MODE_ADD:
+      if (has_member_flags(member, CHFL_PROTECT))
+        return;  /* No redundant mode changes */
+
+      AddMemberFlag(member, CHFL_PROTECT);
+      break;
+    case MODE_DEL:
+      if (!has_member_flags(member, CHFL_PROTECT))
+        return;  /* No redundant mode changes */
+
+      DelMemberFlag(member, CHFL_PROTECT);
+      break;
+  }
+
+  mode_changes[mode_count].letter = c;
+  mode_changes[mode_count].arg = target_p->name;
+  mode_changes[mode_count].id = target_p->id;
+  mode_changes[mode_count++].dir = dir;
+}
+
+/* Do we let them?? */
+static void
+chm_owner(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
+       char **parv, int *errors, int alev, int dir, char c, unsigned int d)
+{
+  struct Client *target_p;
+  struct Membership *member;
+
+  if (alev < CHACCESS_OWNER)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one_numeric(source_p, &me,
+                         alev == CHACCESS_NOTONCHAN ? ERR_NOTONCHANNEL :
+                         ERR_CHANOPRIVSNEEDED, chptr->name);
+
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (dir == MODE_QUERY || parc <= *parn)
+    return;
+
+  if ((target_p = find_chasing(source_p, parv[(*parn)++])) == NULL)
+    return;  /* find_chasing sends ERR_NOSUCHNICK */
+
+  if ((member = find_channel_link(target_p, chptr)) == NULL)
+  {
+    if (!(*errors & SM_ERR_NOTONCHANNEL))
+      sendto_one_numeric(source_p, &me, ERR_USERNOTINCHANNEL, target_p->name, chptr->name);
+
+    *errors |= SM_ERR_NOTONCHANNEL;
+    return;
+  }
+
+  if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  switch (dir)
+  {
+    case MODE_ADD:
+      if (has_member_flags(member, CHFL_OWNER))
+        return;  /* No redundant mode changes */
+
+      AddMemberFlag(member, CHFL_OWNER);
+      break;
+    case MODE_DEL:
+      if (!has_member_flags(member, CHFL_OWNER))
+        return;  /* No redundant mode changes */
+
+      DelMemberFlag(member, CHFL_OWNER);
+      break;
+  }
+
+  mode_changes[mode_count].letter = c;
+  mode_changes[mode_count].arg = target_p->name;
+  mode_changes[mode_count].id = target_p->id;
+  mode_changes[mode_count++].dir = dir;
+}
+
+static void
 chm_limit(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
           char **parv, int *errors, int alev, int dir, char c, unsigned int d)
 {
@@ -1136,7 +1253,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_nosuch,  0 },
   { chm_nosuch,  0 },
   { chm_nosuch,  0 },
-  { chm_nosuch,  0 },                   /* a */
+  { chm_protect, 0 },                   /* a */
   { chm_ban,     0 },                   /* b */
   { chm_simple, MODE_NOCTRL},           /* c */
   { chm_nosuch,  0 },                   /* d */
@@ -1152,7 +1269,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_simple,     MODE_NOPRIVMSGS },  /* n */
   { chm_op,         0               },  /* o */
   { chm_simple,     MODE_PRIVATE    },  /* p */
-  { chm_nosuch,     0               },  /* q */
+  { chm_owner,      0               },  /* q */
   { chm_registered, MODE_REGISTERED },  /* r */
   { chm_simple,     MODE_SECRET     },  /* s */
   { chm_simple,     MODE_TOPICLIMIT },  /* t */
@@ -1318,6 +1435,12 @@ get_channel_access(const struct Client *source_p,
 
   /* Just to be sure.. */
   assert(source_p == member->client_p);
+
+  if (has_member_flags(member, CHFL_OWNER))
+    return CHACCESS_OWNER;
+
+  if (has_member_flags(member, CHFL_PROTECT))
+    return CHACCESS_PROTECT;
 
   if (has_member_flags(member, CHFL_CHANOP))
     return CHACCESS_CHANOP;

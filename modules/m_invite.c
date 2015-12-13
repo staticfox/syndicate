@@ -98,7 +98,7 @@ m_invite(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
-  if (!has_member_flags(member, CHFL_CHANOP | CHFL_HALFOP))
+  if (!has_member_flags(member, CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP))
   {
     sendto_one_numeric(source_p, &me, ERR_CHANOPRIVSNEEDED, chptr->name);
     return 0;
@@ -148,10 +148,10 @@ m_invite(struct Client *source_p, int parc, char *parv[])
 
   if (chptr->mode.mode & MODE_INVITEONLY)
   {
-    sendto_channel_local(NULL, chptr, CHFL_CHANOP | CHFL_HALFOP, 0, CAP_INVITE_NOTIFY,
+    sendto_channel_local(NULL, chptr, CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP, 0, CAP_INVITE_NOTIFY,
                          ":%s NOTICE %%%s :%s is inviting %s to %s.",
                          me.name, chptr->name, source_p->name, target_p->name, chptr->name);
-    sendto_channel_local(NULL, chptr, CHFL_CHANOP | CHFL_HALFOP, CAP_INVITE_NOTIFY, 0,
+    sendto_channel_local(NULL, chptr, CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP, CAP_INVITE_NOTIFY, 0,
                          ":%s!%s@%s INVITE %s %s", source_p->name, source_p->username,
                          source_p->host, target_p->name, chptr->name);
   }
@@ -212,10 +212,10 @@ ms_invite(struct Client *source_p, int parc, char *parv[])
 
   if (chptr->mode.mode & MODE_INVITEONLY)
   {
-    sendto_channel_local(NULL, chptr, CHFL_CHANOP | CHFL_HALFOP, 0, CAP_INVITE_NOTIFY,
+    sendto_channel_local(NULL, chptr, CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP, 0, CAP_INVITE_NOTIFY,
                          ":%s NOTICE %%%s :%s is inviting %s to %s.",
                          me.name, chptr->name, source_p->name, target_p->name, chptr->name);
-    sendto_channel_local(NULL, chptr, CHFL_CHANOP | CHFL_HALFOP, CAP_INVITE_NOTIFY, 0,
+    sendto_channel_local(NULL, chptr, CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP, CAP_INVITE_NOTIFY, 0,
                          ":%s!%s@%s INVITE %s %s", source_p->name, source_p->username,
                          source_p->host, target_p->name, chptr->name);
   }

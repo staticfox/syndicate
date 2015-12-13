@@ -350,9 +350,11 @@ set_final_mode(const struct Mode *mode, const struct Mode *oldmode)
 static void
 remove_our_modes(struct Channel *chptr, struct Client *source_p)
 {
+  remove_a_mode(chptr, source_p, CHFL_OWNER,  'q');
+  remove_a_mode(chptr, source_p, CHFL_PROTECT,'a');
   remove_a_mode(chptr, source_p, CHFL_CHANOP, 'o');
   remove_a_mode(chptr, source_p, CHFL_HALFOP, 'h');
-  remove_a_mode(chptr, source_p, CHFL_VOICE, 'v');
+  remove_a_mode(chptr, source_p, CHFL_VOICE,  'v');
 }
 
 /* remove_a_mode()

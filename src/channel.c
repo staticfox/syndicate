@@ -170,6 +170,10 @@ channel_send_members(struct Client *client_p, const struct Channel *chptr,
 
     tlen = strlen(member->client_p->id) + 1;  /* +1 for space */
 
+    if (member->flags & CHFL_OWNER)
+      ++tlen;
+    if (member->flags & CHFL_PROTECT)
+      ++tlen;
     if (member->flags & CHFL_CHANOP)
       ++tlen;
     if (member->flags & CHFL_HALFOP)
@@ -188,6 +192,10 @@ channel_send_members(struct Client *client_p, const struct Channel *chptr,
       t = start;
     }
 
+    if (member->flags & CHFL_OWNER)
+      *t++ = '~';
+    if (member->flags & CHFL_PROTECT)
+      *t++ = '&';
     if (member->flags & CHFL_CHANOP)
       *t++ = '@';
     if (member->flags & CHFL_HALFOP)
@@ -273,6 +281,48 @@ channel_send_modes(struct Client *client_p, struct Channel *chptr)
   channel_send_mask_list(client_p, chptr, &chptr->banlist, 'b');
   channel_send_mask_list(client_p, chptr, &chptr->exceptlist, 'e');
   channel_send_mask_list(client_p, chptr, &chptr->invexlist, 'I');
+}
+
+/*! \brief Check if the user has privleges to kick or deop
+ * \param source Pointer to struct membership
+ * \param target Pointer to struct membership
+ */
+int
+can_kick_deop(struct Membership *source, struct Membership *target)
+{
+  if (has_member_flags(source, CHFL_OWNER))
+    return 1;
+  if (has_member_flags(source, CHFL_PROTECT) && has_member_flags(target, CHFL_PROTECT))
+    return 1;
+  if (has_member_flags(source, CHFL_PROTECT) && has_member_flags(target, CHFL_OWNER))
+    return 0;
+  if (has_member_flags(source, CHFL_CHANOP) && has_member_flags(target, CHFL_OWNER))
+    return 0;
+  if (has_member_flags(source, CHFL_CHANOP) && has_member_flags(target, CHFL_PROTECT))
+    return 0;
+  if (has_member_flags(source, CHFL_HALFOP) && is_any_op(target))
+    return 0;
+  if (has_member_flags(source, CHFL_CHANOP) && has_member_flags(target, CHFL_PROTECT))
+    return 0;
+  if (has_member_flags(source, CHFL_CHANOP) && has_member_flags(target, CHFL_OWNER))
+    return 0;
+  if (!is_any_op(source))
+    return 0;
+
+  return 1;
+}
+
+/*! \brief Check if the user has any operator status
+ * \param msptr Pointer to struct membership
+ */
+int
+is_any_op(struct Membership *msptr)
+{
+  if(has_member_flags(msptr, CHFL_HALFOP) || has_member_flags(msptr, CHFL_CHANOP)
+    || has_member_flags(msptr, CHFL_PROTECT) || has_member_flags(msptr, CHFL_OWNER))
+    return 1;
+  else
+    return 0;
 }
 
 /*! \brief Check channel name for invalid characters
@@ -429,11 +479,15 @@ channel_member_names(struct Client *client_p, struct Channel *chptr,
 
       if (!multi_prefix)
       {
-        if (member->flags & (CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
+        if (member->flags & (CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
           ++tlen;
       }
       else
       {
+        if (member->flags & CHFL_OWNER)
+          ++tlen;
+        if (member->flags & CHFL_PROTECT)
+          ++tlen;
         if (member->flags & CHFL_CHANOP)
           ++tlen;
         if (member->flags & CHFL_HALFOP)
@@ -551,6 +605,20 @@ get_member_status(const struct Membership *member, const int combine)
 {
   static char buffer[CMEMBER_STATUS_FLAGS_LEN + 1];  /* +1 for \0 */
   char *p = buffer;
+
+  if (member->flags & CHFL_OWNER)
+  {
+    if (!combine)
+      return "~";
+    *p++ = '~';
+  }
+
+  if (member->flags & CHFL_PROTECT)
+  {
+    if (!combine)
+      return "&";
+    *p++ = '&';
+  }
 
   if (member->flags & CHFL_CHANOP)
   {
@@ -758,7 +826,7 @@ can_send(struct Channel *chptr, struct Client *client_p,
       return ERR_NOCTCP;
 
   if (member || (member = find_channel_link(client_p, chptr)))
-    if (member->flags & (CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
+    if (member->flags & (CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
       return CAN_SEND_OPV;
 
   if (!member && (chptr->mode.mode & MODE_NOPRIVMSGS))

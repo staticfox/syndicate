@@ -243,18 +243,28 @@ msg_channel(int p_or_n, struct Client *source_p, struct Channel *chptr,
 
   if (flags & CHFL_VOICE)
   {
-    type = CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE;
+    type = CHFL_OWNER | CHFL_PROTECT| CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE;
     prefix = "+";
   }
   else if (flags & CHFL_HALFOP)
   {
-    type = CHFL_CHANOP | CHFL_HALFOP;
+    type = CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP;
     prefix = "%";
   }
   else if (flags & CHFL_CHANOP)
   {
-    type = CHFL_CHANOP;
+    type = CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP;
     prefix = "@";
+  }
+  else if (flags & CHFL_PROTECT)
+  {
+    type = CHFL_OWNER | CHFL_PROTECT;
+    prefix = "&";
+  }
+  else if (flags & CHFL_OWNER)
+  {
+    type = CHFL_OWNER;
+    prefix = "~";
   }
 
   /* Chanops and voiced can flood their own channel with impunity */
@@ -518,15 +528,19 @@ build_target_list(int p_or_n, struct Client *source_p, char *list, const char *t
     type = 0;
     with_prefix = name;
 
-    /* Allow %+@ if someone wants to do that */
+    /* Allow ~&%+@ if someone wants to do that */
     while (1)
     {
-      if (*name == '@')
-        type |= CHFL_CHANOP;
+      if (*name == '~')
+        type |= CHFL_OWNER;
+      else if (*name == '&')
+        type |= CHFL_OWNER | CHFL_PROTECT;
+      else if (*name == '@')
+        type |= CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP;
       else if (*name == '%')
-        type |= CHFL_CHANOP | CHFL_HALFOP;
+        type |= CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP;
       else if (*name == '+')
-        type |= CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE;
+        type |= CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE;
       else
         break;
       ++name;
@@ -549,7 +563,7 @@ build_target_list(int p_or_n, struct Client *source_p, char *list, const char *t
         if (IsClient(source_p) && !HasFlag(source_p, FLAGS_SERVICE))
         {
           if (!has_member_flags(find_channel_link(source_p, target),
-                                CHFL_CHANOP|CHFL_HALFOP|CHFL_VOICE))
+                                CHFL_OWNER|CHFL_PROTECT|CHFL_CHANOP|CHFL_HALFOP|CHFL_VOICE))
           {
             sendto_one_numeric(source_p, &me, ERR_CHANOPRIVSNEEDED, with_prefix);
             continue;
