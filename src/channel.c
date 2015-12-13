@@ -613,28 +613,28 @@ get_member_status(const struct Membership *member, const int combine)
     *p++ = '~';
   }
 
-  if (member->flags & CHFL_PROTECT)
+  else if (member->flags & CHFL_PROTECT)
   {
     if (!combine)
       return "&";
     *p++ = '&';
   }
 
-  if (member->flags & CHFL_CHANOP)
+  else if (member->flags & CHFL_CHANOP)
   {
     if (!combine)
       return "@";
     *p++ = '@';
   }
 
-  if (member->flags & CHFL_HALFOP)
+  else if (member->flags & CHFL_HALFOP)
   {
     if (!combine)
       return "%";
     *p++ = '%';
   }
 
-  if (member->flags & CHFL_VOICE)
+  else if (member->flags & CHFL_VOICE)
     *p++ = '+';
   *p = '\0';
 
