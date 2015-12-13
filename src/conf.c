@@ -863,7 +863,7 @@ set_default_conf(void)
   ConfigGeneral.oper_only_umodes = UMODE_DEBUG | UMODE_LOCOPS | UMODE_HIDDEN | UMODE_FARCONNECT |
                                    UMODE_UNAUTH | UMODE_EXTERNAL | UMODE_BOTS | UMODE_NCHANGE |
                                    UMODE_SPY | UMODE_FULL | UMODE_SKILL | UMODE_REJ | UMODE_CCONN;
-  ConfigGeneral.oper_umodes = UMODE_BOTS | UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
+  ConfigGeneral.oper_umodes = UMODE_BOTS | UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP | UMODE_OPERWALL;
   ConfigGeneral.throttle_count = 1;
   ConfigGeneral.throttle_time = 1;
 }
@@ -1085,6 +1085,7 @@ static const struct oper_privs
   { OPER_FLAG_UNXLINE,        'Z' },
   { OPER_FLAG_WALLOPS,        'a' },
   { OPER_FLAG_XLINE,          'b' },
+  { OPER_FLAG_OPERWALLS,      'c' },
   { 0, '\0' }
 };
 

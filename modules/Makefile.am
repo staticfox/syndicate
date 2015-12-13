@@ -34,6 +34,7 @@ modules_LTLIBRARIES = m_accept.la    \
                       m_motd.la      \
                       m_names.la     \
                       m_oper.la      \
+                      m_operwall.la  \
                       m_pass.la      \
                       m_ping.la      \
                       m_pong.la      \
@@ -99,6 +100,7 @@ m_module_la_LDFLAGS = $(MODULE_FLAGS)
 m_motd_la_LDFLAGS = $(MODULE_FLAGS)
 m_names_la_LDFLAGS = $(MODULE_FLAGS)
 m_oper_la_LDFLAGS = $(MODULE_FLAGS)
+m_operwall_la_LDFLAGS = $(MODULE_FLAGS)
 m_pass_la_LDFLAGS = $(MODULE_FLAGS)
 m_ping_la_LDFLAGS = $(MODULE_FLAGS)
 m_pong_la_LDFLAGS = $(MODULE_FLAGS)
@@ -163,6 +165,7 @@ m_module_la_SOURCES = m_module.c
 m_motd_la_SOURCES = m_motd.c
 m_names_la_SOURCES = m_names.c
 m_oper_la_SOURCES = m_oper.c
+m_operwall_la_SOURCES = m_operwall.c
 m_pass_la_SOURCES = m_pass.c
 m_ping_la_SOURCES = m_ping.c
 m_pong_la_SOURCES = m_pong.c

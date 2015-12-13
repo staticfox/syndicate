@@ -83,6 +83,7 @@ const struct user_modes  umode_tab[] =
   { 'w', UMODE_WALLOP       },
   { 'x', UMODE_HIDDENHOST   },
   { 'y', UMODE_SPY          },
+  { 'z', UMODE_OPERWALL     },
   { '\0', 0 }
 };
 

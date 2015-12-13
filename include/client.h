@@ -178,7 +178,8 @@ enum
   UMODE_SSL          = 0x01000000U,  /**< User is connected via TLS/SSL */
   UMODE_WEBIRC       = 0x02000000U,  /**< User connected via a webirc gateway */
   UMODE_HIDEIDLE     = 0x04000000U,  /**< Hides idle and signon time in WHOIS */
-  UMODE_HIDECHANS    = 0x08000000U   /**< Hides channel list in WHOIS */
+  UMODE_HIDECHANS    = 0x08000000U,  /**< Hides channel list in WHOIS */
+  UMODE_OPERWALL     = 0x10000000U   /**< Send operwall messages to them */
 };
 
 #define HasUMode(x, y) ((x)->umodes &   (y))
@@ -216,7 +217,8 @@ enum
   OPER_FLAG_UNRESV         = 0x01000000U,  /**< Oper can use UNRESV command */
   OPER_FLAG_UNXLINE        = 0x02000000U,  /**< Oper can use UNXLINE command */
   OPER_FLAG_WALLOPS        = 0x04000000U,  /**< Oper can use WALLOPS command */
-  OPER_FLAG_XLINE          = 0x08000000U   /**< Oper can use XLINE command */
+  OPER_FLAG_XLINE          = 0x08000000U,  /**< Oper can use XLINE command */
+  OPER_FLAG_OPERWALLS      = 0x10000000U   /**< Oper can use OPERWALL command */
 };
 
 #define HasOFlag(x, y) ((x)->connection->operflags &   (y))

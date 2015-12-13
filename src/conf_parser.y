@@ -326,6 +326,8 @@ reset_block_state(void)
 %token  T_LOG
 %token  T_NCHANGE
 %token  T_NONONREG
+%token  T_OPERWALL
+%token  T_OPERWALLS
 %token  T_OPME
 %token  T_PREPEND
 %token  T_PSEUDO
@@ -1306,6 +1308,10 @@ oper_umodes_item:  T_BOTS
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_FARCONNECT;
+} | T_OPERWALL
+{
+ if (conf_parser_ctx.pass == 2)
+    block_state.modes.value |= UMODE_OPERWALL;
 };
 
 oper_flags: IRCD_FLAGS
@@ -1427,6 +1433,10 @@ oper_flags_item: KILL ':' REMOTE
 {
   if (conf_parser_ctx.pass == 2)
     block_state.port.value |= OPER_FLAG_CLOSE;
+} | T_OPERWALLS
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.port.value |= OPER_FLAG_OPERWALLS;
 };
 
 
@@ -2844,6 +2854,9 @@ umode_oitem:     T_BOTS
 } | T_FARCONNECT
 {
   ConfigGeneral.oper_umodes |= UMODE_FARCONNECT;
+} | T_OPERWALL
+{
+  ConfigGeneral.oper_umodes |= UMODE_OPERWALL;
 };
 
 general_oper_only_umodes: OPER_ONLY_UMODES
@@ -2912,6 +2925,9 @@ umode_item:   T_BOTS
 } | T_FARCONNECT
 {
   ConfigGeneral.oper_only_umodes |= UMODE_FARCONNECT;
+} | T_OPERWALL
+{
+  ConfigGeneral.oper_only_umodes |= UMODE_OPERWALL;
 };
 
 general_min_nonwildcard: MIN_NONWILDCARD '=' NUMBER ';'
