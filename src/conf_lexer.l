@@ -340,6 +340,7 @@ wallops                     { return T_WALLOPS; }
 warn_no_connect_block       { return WARN_NO_CONNECT_BLOCK; }
 webirc                      { return T_WEBIRC; }
 whois                       { return WHOIS; }
+whoisnotify                 { return WHOIS_NOTIFY; }
 xline                       { return XLINE; }
 xline_exempt                { return XLINE_EXEMPT; }
 

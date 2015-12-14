@@ -209,6 +209,10 @@ whois_person(struct Client *source_p, struct Client *target_p)
       sendto_one_numeric(source_p, &me, RPL_WHOISIDLE, target_p->name,
                          client_get_idle_time(source_p, target_p),
                          target_p->connection->firsttime);
+
+  if (HasUMode(target_p, UMODE_WHOIS) && target_p != source_p)
+    sendto_one_notice(target_p, &me, ":WHOIS: %s (%s@%s) performed a WHOIS on you from %s",
+      source_p->name, source_p->username, source_p->sockhost, source_p->servptr->name);
 }
 
 /* do_whois()

@@ -371,6 +371,7 @@ reset_block_state(void)
 %token  VHOST6
 %token  WARN_NO_CONNECT_BLOCK
 %token  WHOIS
+%token  WHOIS_NOTIFY
 %token  XLINE
 %token  XLINE_EXEMPT
 
@@ -1312,6 +1313,10 @@ oper_umodes_item:  T_BOTS
 {
  if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_OPERWALL;
+} | WHOIS_NOTIFY
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.modes.value |= UMODE_WHOIS;
 };
 
 oper_flags: IRCD_FLAGS
@@ -2857,6 +2862,9 @@ umode_oitem:     T_BOTS
 } | T_OPERWALL
 {
   ConfigGeneral.oper_umodes |= UMODE_OPERWALL;
+} | WHOIS_NOTIFY
+{
+  ConfigGeneral.oper_umodes |= UMODE_WHOIS;
 };
 
 general_oper_only_umodes: OPER_ONLY_UMODES
@@ -2928,6 +2936,9 @@ umode_item:   T_BOTS
 } | T_OPERWALL
 {
   ConfigGeneral.oper_only_umodes |= UMODE_OPERWALL;
+} | WHOIS_NOTIFY
+{
+  ConfigGeneral.oper_only_umodes |= UMODE_WHOIS;
 };
 
 general_min_nonwildcard: MIN_NONWILDCARD '=' NUMBER ';'

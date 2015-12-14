@@ -179,7 +179,8 @@ enum
   UMODE_WEBIRC       = 0x02000000U,  /**< User connected via a webirc gateway */
   UMODE_HIDEIDLE     = 0x04000000U,  /**< Hides idle and signon time in WHOIS */
   UMODE_HIDECHANS    = 0x08000000U,  /**< Hides channel list in WHOIS */
-  UMODE_OPERWALL     = 0x10000000U   /**< Send operwall messages to them */
+  UMODE_OPERWALL     = 0x10000000U,  /**< Send operwall messages to them */
+  UMODE_WHOIS        = 0x20000000U   /**< Notify user on WHOIS */
 };
 
 #define HasUMode(x, y) ((x)->umodes &   (y))

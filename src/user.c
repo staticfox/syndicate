@@ -69,6 +69,7 @@ const struct user_modes  umode_tab[] =
   { 'e', UMODE_EXTERNAL     },
   { 'f', UMODE_FULL         },
   { 'g', UMODE_CALLERID     },
+  { 'h', UMODE_WHOIS        },
   { 'i', UMODE_INVISIBLE    },
   { 'j', UMODE_REJ          },
   { 'k', UMODE_SKILL        },
