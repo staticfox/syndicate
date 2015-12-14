@@ -269,8 +269,9 @@ extern int yydebug;
     VHOST6 = 479,
     WARN_NO_CONNECT_BLOCK = 480,
     WHOIS = 481,
-    XLINE = 482,
-    XLINE_EXEMPT = 483
+    WHOIS_NOTIFY = 482,
+    XLINE = 483,
+    XLINE_EXEMPT = 484
   };
 #endif
 /* Tokens.  */
@@ -498,8 +499,9 @@ extern int yydebug;
 #define VHOST6 479
 #define WARN_NO_CONNECT_BLOCK 480
 #define WHOIS 481
-#define XLINE 482
-#define XLINE_EXEMPT 483
+#define WHOIS_NOTIFY 482
+#define XLINE 483
+#define XLINE_EXEMPT 484
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -511,7 +513,7 @@ union YYSTYPE
   int number;
   char *string;
 
-#line 515 "conf_parser.h" /* yacc.c:1909  */
+#line 517 "conf_parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
