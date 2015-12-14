@@ -99,7 +99,7 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
         break;
 
       case 'x':
-        if (!EmptyString(extarg) && valid_hostname(extarg))
+        if (!EmptyString(extarg))
           user_set_hostmask(target_p, extarg, what);
         break;
 
