@@ -85,33 +85,40 @@ whois_person(struct Client *source_p, struct Client *target_p)
                             me.name, source_p->name, target_p->name, "");
   t = buf + mlen;
 
-  DLINK_FOREACH(node, target_p->channel.head)
+  /*
+   * If they're a service then their channels are most likely private.
+   * Don't send them to users
+   */
+  if (!HasFlag(target_p, FLAGS_SERVICE))
   {
-    const struct Membership *member = node->data;
-    int show = whois_can_see_channels(member->chptr, source_p, target_p);
-
-    if (show)
+    DLINK_FOREACH(node, target_p->channel.head)
     {
-      if ((cur_len + 4 + strlen(member->chptr->name) + 1) > (IRCD_BUFSIZE - 2))
+      const struct Membership *member = node->data;
+      int show = whois_can_see_channels(member->chptr, source_p, target_p);
+
+      if (show)
       {
-        *(t - 1) = '\0';
-        sendto_one(source_p, "%s", buf);
-        cur_len = mlen;
-        t = buf + mlen;
+        if ((cur_len + 4 + strlen(member->chptr->name) + 1) > (IRCD_BUFSIZE - 2))
+        {
+          *(t - 1) = '\0';
+          sendto_one(source_p, "%s", buf);
+          cur_len = mlen;
+          t = buf + mlen;
+        }
+
+        tlen = sprintf(t, "%s%s%s ", show == 2 ? "*" : "", get_member_status(member, 1),
+                       member->chptr->name);
+        t += tlen;
+        cur_len += tlen;
+        reply_to_send = 1;
       }
-
-      tlen = sprintf(t, "%s%s%s ", show == 2 ? "*" : "", get_member_status(member, 1),
-                     member->chptr->name);
-      t += tlen;
-      cur_len += tlen;
-      reply_to_send = 1;
     }
-  }
 
-  if (reply_to_send)
-  {
-    *(t - 1) = '\0';
-    sendto_one(source_p, "%s", buf);
+    if (reply_to_send)
+    {
+      *(t - 1) = '\0';
+      sendto_one(source_p, "%s", buf);
+    }
   }
 
   if ((ConfigServerHide.hide_servers || IsHidden(target_p->servptr)) &&
