@@ -88,6 +88,18 @@ WITH PARAMETERS:
 
               PARAMS: /mode #channel +oooo nick1 nick2 nick3 nick4
 
+     +a     - 'Admin'.  This gives the user administrator status in the
+              channel. Administrators may op or administer any user among
+              the other priveleges of +o.
+
+              PARAMS: /mode #channel +aaaa nick1 nick2 nick3 nick4
+
+     +q     - 'Owner'.  This gives the user owner status of the channel.
+              Owners are protected from actions against non-owners, meaning
+              they are immune to status changes and kicks/bans.
+
+              PARAMS: /mode #channel +qqqq nick1 nick2 nick3 nick4
+
      +b     - 'Ban'.  This will prevent a user from entering the channel,
               based on a nick!ident@host match.
 
