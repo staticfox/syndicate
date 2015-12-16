@@ -225,6 +225,8 @@ static const char *const replies[] =
   /* 717 */  [RPL_TARGNOTIFY] = "%s :has been informed that you messaged them.",
   /* 718 */  [RPL_UMODEGMSG] = "%s %s@%s :is messaging you, and you are umode %s.",
   /* 723 */  [ERR_NOPRIVS] = "%s :Insufficient oper privileges.",
+  /* 727 */  [RPL_ISCAPTURED] = "%s :is captured",
+  /* 728 */  [RPL_ISUNCAPTURED] = "%s :is uncaptured",
   /* 999 */  [ERR_LAST_ERR_MSG] = ":Last error message"
 };
 

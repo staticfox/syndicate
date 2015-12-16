@@ -62,7 +62,8 @@ typedef enum HandlerType
   SERVER_HANDLER,
   ENCAP_HANDLER,
   OPER_HANDLER,
-  LAST_HANDLER_TYPE
+  LAST_HANDLER_TYPE,
+  DUMMY_HANDLER
 } HandlerType;
 
 /*

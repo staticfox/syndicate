@@ -245,6 +245,11 @@ enum
 #define IsFloodDone(x)          ((x)->flags &  FLAGS_FLOODDONE)
 #define IsHidden(x)             ((x)->flags &  FLAGS_HIDDEN)
 
+/* capture */
+#define IsCaptured(x)           ((x)->handler == DUMMY_HANDLER)
+#define SetCaptured(x)          ((x)->handler =  DUMMY_HANDLER)
+#define ClearCaptured(x)        ((x)->handler = CLIENT_HANDLER)
+
 
 /*! \brief addr_mask_type enumeration */
 enum addr_mask_type

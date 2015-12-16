@@ -224,6 +224,9 @@ parse_handle_command(struct Message *message, struct Client *source_p,
 
   ++message->count;
 
+  if (IsCaptured(source_p))
+    return;
+
   /* Check right amount of parameters is passed... --is */
   if (i < message->args_min)
     sendto_one_numeric(source_p, &me, ERR_NEEDMOREPARAMS, message->cmd);
