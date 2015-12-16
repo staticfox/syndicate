@@ -62,12 +62,12 @@ do_whowas(struct Client *source_p, const int parc, char *parv[])
     if (!irccmp(parv[1], whowas->name))
     {
       sendto_one_numeric(source_p, &me, RPL_WHOWASUSER, whowas->name,
-                         whowas->username, whowas->hostname,
-                         whowas->realname);
+                         whowas->username, whowas->hostname, whowas->realname);
 
       if (HasUMode(source_p, UMODE_OPER))
         sendto_one_numeric(source_p, &me, RPL_WHOISACTUALLY, whowas->name,
-                           whowas->username, whowas->hostname,
+                           whowas->username, (HasUMode(source_p, UMODE_OPER)) ?
+                           whowas->realhost : whowas->hostname,
                            whowas->sockhost);
 
       if (strcmp(whowas->account, "*"))

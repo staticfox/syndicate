@@ -13,6 +13,7 @@ ircd_SOURCES = auth.c            \
                channel.c         \
                channel_mode.c    \
                client.c          \
+               cloak.c           \
                conf.c            \
                conf_class.c      \
                conf_db.c         \

@@ -81,7 +81,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
         {
           sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "Captured %s (%s@%s)",
                                target_p->name, target_p->username,
-                               target_p->host);
+                               target_p->realhost);
           SetCaptured(target_p);
         }
 
@@ -129,7 +129,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
         continue;
 
       if (match(nick, target_p->name) &&
-          match(host, target_p->host) && match(user, target_p->username))
+          match(host, target_p->realhost) && match(user, target_p->username))
       {
         SetCaptured(target_p);
         ++matches;
@@ -179,7 +179,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
 
           sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "Uncaptured %s (%s@%s)",
                                target_p->name, target_p->username,
-                               target_p->host);
+                               target_p->realhost);
         }
 
         sendto_one_numeric(source_p, &me, RPL_ISUNCAPTURED, target_p->name);
@@ -223,7 +223,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
         continue;
 
       if (match(nick, target_p->name) &&
-          match(host, target_p->host) && match(user, target_p->username))
+          match(host, target_p->realhost) && match(user, target_p->username))
       {
         ClearCaptured(target_p);
         ++matches;

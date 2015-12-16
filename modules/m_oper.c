@@ -100,11 +100,11 @@ failed_oper_notice(struct Client *source_p, const char *name,
     sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
                          "Failed OPER attempt as %s by %s (%s@%s) - %s",
                          name, source_p->name, source_p->username,
-                         source_p->host, reason);
+                         source_p->realhost, reason);
 
   ilog(LOG_TYPE_OPER, "Failed OPER attempt as %s by %s (%s@%s) - %s",
        name, source_p->name, source_p->username,
-       source_p->host, reason);
+       source_p->realhost, reason);
 }
 
 /*! \brief OPER command handler
@@ -174,7 +174,7 @@ m_oper(struct Client *source_p, int parc, char *parv[])
     oper_up(source_p);
 
     ilog(LOG_TYPE_OPER, "OPER %s by %s!%s@%s", opername, source_p->name,
-         source_p->username, source_p->host);
+         source_p->username, source_p->realhost);
   }
   else
   {

@@ -65,7 +65,7 @@ mr_webirc(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
-  conf = find_address_conf(source_p->host,
+  conf = find_address_conf(source_p->realhost,
                            HasFlag(source_p, FLAGS_GOTID) ? source_p->username : "webirc",
                            &source_p->connection->ip,
                            source_p->connection->aftype, parv[1]);
@@ -112,6 +112,7 @@ mr_webirc(struct Client *source_p, int parc, char *parv[])
 
   strlcpy(source_p->sockhost, parv[4], sizeof(source_p->sockhost));
   strlcpy(source_p->host, parv[3], sizeof(source_p->host));
+  strlcpy(source_p->realhost, parv[3], sizeof(source_p->host));
 
   /* Check dlines now, k-lines will be checked on registration */
   if ((conf = find_dline_conf(&source_p->connection->ip,

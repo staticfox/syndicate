@@ -140,7 +140,8 @@ enum
   FLAGS_SERVICE       = 0x00400000U,  /**< Client/server is a network service */
   FLAGS_SSL           = 0x00800000U,  /**< User is connected via TLS/SSL */
   FLAGS_SQUIT         = 0x01000000U,
-  FLAGS_EXEMPTXLINE   = 0x02000000U   /**< Client is exempt from x-lines */
+  FLAGS_EXEMPTXLINE   = 0x02000000U,  /**< Client is exempt from x-lines */
+  FLAGS_IP_SPOOFED    = 0x04000000U   /**< Client has a spoofed IP */
 };
 
 #define HasFlag(x, y) ((x)->flags &   (y))
@@ -406,12 +407,25 @@ struct Client
   char              username[USERLEN + 1]; /* client's username */
 
   /*
-   * client->host contains the resolved name or ip address
+   * client->host contains either the real host or the fake host
+   * from the user. This is considered public knowldge.
+   */
+  char              host[HOSTLEN + 1];     /* client's hostname */
+
+  /*
+   * client->realhost contains the resolved name or ip address
    * as a string for the user, it may be fiddled with for oper spoofing etc.
    * once it's changed the *real* address goes away. This should be
    * considered a read-only field after the client has registered.
    */
-  char              host[HOSTLEN + 1];     /* client's hostname */
+  char              realhost[HOSTLEN + 1];
+
+  /*
+   * The clients cloaked IP and host. These contain the same value if
+   * the user has no hostname, only an IP.
+   */
+  char              cloaked_ip[HOSTLEN + 1];
+  char              cloaked_host[HOSTLEN + 1];
 
   /*
    * client->info for unix clients will normally contain the info from the

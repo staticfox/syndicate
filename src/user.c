@@ -49,6 +49,7 @@
 #include "parse.h"
 #include "watch.h"
 #include "isupport.h"
+#include "cloak.h"
 
 static char umode_buffer[IRCD_BUFSIZE];
 
@@ -233,14 +234,15 @@ introduce_client(struct Client *source_p)
     if (server == source_p->from)
       continue;
 
-    sendto_one(server, ":%s UID %s %u %ju %s %s %s %s %s %s :%s",
-               source_p->servptr->id,
-               source_p->name, source_p->hopcount+1,
-               source_p->tsinfo,
-               ubuf, source_p->username, source_p->host,
-               source_p->sockhost, source_p->id,
-               source_p->account,
-               source_p->info);
+    /* charybdis style introduction to fit the cloaks */
+    sendto_one(server, ":%s UID %s %u %ju %s %s %s %s %s %s %s :%s",
+       source_p->servptr->id,
+       source_p->name, source_p->hopcount+1,
+       source_p->tsinfo,
+       ubuf, source_p->username, source_p->host,
+       (MyClient(source_p) && HasFlag(source_p, FLAGS_IP_SPOOFED)) ?
+       "0" : source_p->sockhost, source_p->id, source_p->realhost,
+       source_p->account, source_p->info);
 
     if (!EmptyString(source_p->certfp))
       sendto_one(server, ":%s CERTFP %s", source_p->id, source_p->certfp);
@@ -266,6 +268,10 @@ user_welcome(struct Client *source_p)
                       ssl_get_cipher(source_p->connection->fd.ssl));
   }
 #endif
+
+  if (HasUMode(source_p, UMODE_HIDDENHOST))
+    sendto_one(source_p, ":%s NOTICE %s :*** Your host is masked (%s)", me.name,
+        source_p->name, source_p->host);
 
   sendto_one_numeric(source_p, &me, RPL_WELCOME, ConfigServerInfo.network_name,
                      source_p->name);
@@ -350,11 +356,11 @@ register_local_user(struct Client *source_p)
   if (!check_client(source_p))
     return;
 
-  if (!valid_hostname(source_p->host))
+  if (!valid_hostname(source_p->realhost))
   {
     sendto_one_notice(source_p, &me, ":*** Notice -- You have an illegal "
                       "character in your hostname");
-    strlcpy(source_p->host, source_p->sockhost, sizeof(source_p->host));
+    strlcpy(source_p->realhost, source_p->sockhost, sizeof(source_p->realhost));
   }
 
   conf = source_p->connection->confs.head->data;
@@ -424,7 +430,7 @@ register_local_user(struct Client *source_p)
   {
     sendto_realops_flags(UMODE_FULL, L_ALL, SEND_NOTICE,
                          "Too many clients, rejecting %s[%s].",
-                         source_p->name, source_p->host);
+                         source_p->name, source_p->realhost);
     ++ServerStats.is_ref;
     exit_client(source_p, "Sorry, server is full - try later");
     return;
@@ -436,7 +442,7 @@ register_local_user(struct Client *source_p)
 
     sendto_realops_flags(UMODE_REJ, L_ALL, SEND_NOTICE,
                          "Invalid username: %s (%s@%s)",
-                         source_p->name, source_p->username, source_p->host);
+                         source_p->name, source_p->username, source_p->realhost);
     ++ServerStats.is_ref;
     snprintf(buf, sizeof(buf), "Invalid username [%s]", source_p->username);
     exit_client(source_p, buf);
@@ -454,8 +460,8 @@ register_local_user(struct Client *source_p)
 
   sendto_realops_flags(UMODE_CCONN, L_ALL, SEND_NOTICE,
                        "Client connecting: %s (%s@%s) [%s] {%s} [%s] <%s>",
-                       source_p->name, source_p->username, source_p->host,
-                       source_p->sockhost,
+                       source_p->name, source_p->username, source_p->realhost,
+                       (EmptyString(source_p->sockhost) || !strcmp("0", source_p->sockhost)) ? "255.255.255.255" : source_p->sockhost,
                        get_client_class(&source_p->connection->confs),
                        source_p->info, source_p->id);
 
@@ -463,6 +469,16 @@ register_local_user(struct Client *source_p)
   {
     AddUMode(source_p, UMODE_INVISIBLE);
     ++Count.invisi;
+  }
+
+  if (ConfigGeneral.enable_cloak_system && !HasFlag(source_p, FLAGS_IP_SPOOFED))
+  {
+    make_virthost(source_p->realhost, source_p->cloaked_host, sizeof(source_p->cloaked_host));
+    make_virthost(source_p->sockhost, source_p->cloaked_ip, sizeof(source_p->cloaked_ip));
+
+    strlcpy(source_p->host, source_p->cloaked_host, sizeof(source_p->cloaked_host));
+
+    AddUMode(source_p, UMODE_HIDDENHOST);
   }
 
   if (++Count.local > Count.max_loc)
@@ -490,7 +506,7 @@ register_local_user(struct Client *source_p)
                   &unknown_list, &local_client_list);
 
   user_welcome(source_p);
-  userhost_add(source_p->username, source_p->host, 0);
+  userhost_add(source_p->username, source_p->realhost, 0);
   AddFlag(source_p, FLAGS_USERHOST);
 
   introduce_client(source_p);
@@ -516,7 +532,7 @@ register_remote_user(struct Client *source_p)
     sendto_realops_flags(UMODE_DEBUG, L_ALL, SEND_NOTICE,
                          "Bad User [%s] :%s USER %s@%s %s, != %s[%s]",
                          source_p->from->name, source_p->name, source_p->username,
-                         source_p->host, source_p->servptr->name,
+                         source_p->realhost, source_p->servptr->name,
                          target_p->name, target_p->from->name);
     sendto_one(source_p->from,
                ":%s KILL %s :%s (UID from wrong direction (%s != %s))",
@@ -541,15 +557,16 @@ register_remote_user(struct Client *source_p)
   SetClient(source_p);
   dlinkAdd(source_p, &source_p->lnode, &source_p->servptr->serv->client_list);
   dlinkAdd(source_p, &source_p->node, &global_client_list);
-  userhost_add(source_p->username, source_p->host, 1);
+  userhost_add(source_p->username, source_p->realhost, 1);
   AddFlag(source_p, FLAGS_USERHOST);
 
   if (HasFlag(source_p->servptr, FLAGS_EOB))
     sendto_realops_flags(UMODE_FARCONNECT, L_ALL, SEND_NOTICE,
                          "Client connecting at %s: %s (%s@%s) [%s] [%s] <%s>",
                          source_p->servptr->name,
-                         source_p->name, source_p->username, source_p->host,
-                         source_p->sockhost, source_p->info, source_p->id);
+                         source_p->name, source_p->username, source_p->realhost,
+                         (EmptyString(source_p->sockhost) || !strcmp("0", source_p->sockhost)) ? "255.255.255.255" : source_p->sockhost,
+                         source_p->info, source_p->id);
 
   introduce_client(source_p);
 }
@@ -768,7 +785,7 @@ user_set_hostmask(struct Client *target_p, const char *hostname, const int what)
 
   strlcpy(target_p->host, hostname, sizeof(target_p->host));
 
-  userhost_add(target_p->username, target_p->host, !MyConnect(target_p));
+  userhost_add(target_p->username, target_p->realhost, !MyConnect(target_p));
   AddFlag(target_p, FLAGS_USERHOST);
 
   if (MyConnect(target_p))

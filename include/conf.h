@@ -208,6 +208,10 @@ struct config_general_entry
   const char *dlinefile;
   const char *resvfile;
 
+  char *cloak_key1;
+  char *cloak_key2;
+  char *cloak_key3;
+
   unsigned int dline_min_cidr;
   unsigned int dline_min_cidr6;
   unsigned int kline_min_cidr;
@@ -253,6 +257,7 @@ struct config_general_entry
   unsigned int ping_cookie;
   unsigned int disable_auth;
   unsigned int cycle_on_host_change;
+  unsigned int enable_cloak_system;
 };
 
 struct config_channel_entry

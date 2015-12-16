@@ -260,7 +260,7 @@ attach_iline(struct Client *client_p, struct MaskItem *conf)
   ip_found->count++;
   AddFlag(client_p, FLAGS_IPHASH);
 
-  userhost_count(client_p->username, client_p->host,
+  userhost_count(client_p->username, client_p->realhost,
                  &global, &local, &ident);
 
   /* XXX blah. go down checking the various silly limits
@@ -338,10 +338,14 @@ verify_access(struct Client *client_p)
     if (IsConfDoSpoofIp(conf))
     {
       if (IsConfSpoofNotice(conf))
+
+        /* Remove this? */
         sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE, "%s spoofing: %s as %s",
                              client_p->name, client_p->host, conf->name);
 
       strlcpy(client_p->host, conf->name, sizeof(client_p->host));
+      strlcpy(client_p->realhost, conf->name, sizeof(client_p->realhost));
+      AddFlag(client_p, FLAGS_IP_SPOOFED);
     }
 
     return attach_iline(client_p, conf);
@@ -692,7 +696,7 @@ find_exact_name_conf(enum maskitem_type type, const struct Client *who, const ch
           switch (conf->htype)
           {
             case HM_HOST:
-              if (!match(conf->host, who->host) || !match(conf->host, who->sockhost))
+              if (!match(conf->host, who->realhost) || !match(conf->host, who->sockhost))
                 if (!conf->class->max_total || conf->class->ref_count < conf->class->max_total)
                   return conf;
               break;
@@ -867,6 +871,10 @@ set_default_conf(void)
   ConfigGeneral.oper_umodes = UMODE_BOTS | UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
   ConfigGeneral.throttle_count = 1;
   ConfigGeneral.throttle_time = 1;
+  ConfigGeneral.enable_cloak_system = 0;
+  ConfigGeneral.cloak_key1 = NULL;
+  ConfigGeneral.cloak_key2 = NULL;
+  ConfigGeneral.cloak_key3 = NULL;
 }
 
 static void
@@ -1133,7 +1141,7 @@ get_oper_name(const struct Client *client_p)
       if (conf->type == CONF_OPER)
       {
         snprintf(buffer, sizeof(buffer), "%s!%s@%s{%s}", client_p->name,
-                 client_p->username, client_p->host, conf->name);
+                 client_p->username, client_p->realhost, conf->name);
         return buffer;
       }
     }
@@ -1146,7 +1154,7 @@ get_oper_name(const struct Client *client_p)
   }
 
   snprintf(buffer, sizeof(buffer), "%s!%s@%s{%s}", client_p->name,
-           client_p->username, client_p->host, client_p->servptr->name);
+           client_p->username, client_p->realhost, client_p->servptr->name);
   return buffer;
 }
 
@@ -1236,6 +1244,14 @@ clear_out_old_conf(void)
 
   /* Clean out listeners */
   listener_close_marked();
+
+  /* Clean out general */
+  MyFree(ConfigGeneral.cloak_key1);
+  MyFree(ConfigGeneral.cloak_key2);
+  MyFree(ConfigGeneral.cloak_key3);
+  ConfigGeneral.cloak_key1 = NULL;
+  ConfigGeneral.cloak_key2 = NULL;
+  ConfigGeneral.cloak_key3 = NULL;
 }
 
 /* read_conf_files()

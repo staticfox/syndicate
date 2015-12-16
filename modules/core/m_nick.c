@@ -330,11 +330,12 @@ change_remote_nick(struct Client *source_p, char *parv[])
  *      - parv[ 3] = TS
  *      - parv[ 4] = umode
  *      - parv[ 5] = username
- *      - parv[ 6] = hostname
+ *      - parv[ 6] = vishost
  *      - parv[ 7] = ip
  *      - parv[ 8] = uid
- *      - parv[ 9] = services account
- *      - parv[10] = ircname (gecos)
+ *      - parv[ 9] = hostname
+ *      - parv[10] = services account
+ *      - parv[11] = ircname (gecos)
  */
 static void
 uid_from_server(struct Client *source_p, int parc, char *parv[])
@@ -346,12 +347,13 @@ uid_from_server(struct Client *source_p, int parc, char *parv[])
   client_p->hopcount = atoi(parv[2]);
   client_p->tsinfo = strtoimax(parv[3], NULL, 10);
 
-  strlcpy(client_p->account, parv[9], sizeof(client_p->account));
+  strlcpy(client_p->account, parv[10], sizeof(client_p->account));
   strlcpy(client_p->name, parv[1], sizeof(client_p->name));
   strlcpy(client_p->id, parv[8], sizeof(client_p->id));
   strlcpy(client_p->sockhost, parv[7], sizeof(client_p->sockhost));
   strlcpy(client_p->info, parv[parc - 1], sizeof(client_p->info));
   strlcpy(client_p->host, parv[6], sizeof(client_p->host));
+  strlcpy(client_p->realhost, parv[9], sizeof(client_p->realhost));
   strlcpy(client_p->username, parv[5], sizeof(client_p->username));
 
   hash_add_client(client_p);
@@ -390,11 +392,12 @@ uid_from_server(struct Client *source_p, int parc, char *parv[])
  *      - parv[ 3] = TS
  *      - parv[ 4] = umode
  *      - parv[ 5] = username
- *      - parv[ 6] = hostname
+ *      - parv[ 6] = vishost
  *      - parv[ 7] = ip
  *      - parv[ 8] = uid
- *      - parv[ 9] = services id (account name)
- *      - parv[10] = ircname (gecos)
+ *      - parv[ 9] = hostname
+ *      - parv[10] = services account
+ *      - parv[11] = ircname (gecos)
  */
 static int
 perform_uid_introduction_collides(struct Client *source_p, struct Client *target_p,
@@ -766,11 +769,12 @@ ms_nick(struct Client *source_p, int parc, char *parv[])
  *      - parv[ 3] = TS
  *      - parv[ 4] = umode
  *      - parv[ 5] = username
- *      - parv[ 6] = hostname
+ *      - parv[ 6] = vishost
  *      - parv[ 7] = ip
  *      - parv[ 8] = uid
- *      - parv[ 9] = services id (account name)
- *      - parv[10] = ircname (gecos)
+ *      - parv[ 9] = hostname
+ *      - parv[10] = services account
+ *      - parv[11] = ircname (gecos)
  */
 static int
 ms_uid(struct Client *source_p, int parc, char *parv[])
@@ -779,7 +783,7 @@ ms_uid(struct Client *source_p, int parc, char *parv[])
 
   if (check_clean_nick(source_p, parv[1]) ||
       check_clean_user(source_p, parv[1], parv[5]) ||
-      check_clean_host(source_p, parv[1], parv[6]) ||
+      check_clean_host(source_p, parv[1], parv[9]) ||
       check_clean_uid(source_p, parv[1], parv[8]))
     return 0;
 
@@ -830,7 +834,7 @@ static struct Message nick_msgtab =
 static struct Message uid_msgtab =
 {
   .cmd = "UID",
-  .args_min = 11,
+  .args_min = 12,
   .args_max = MAXPARA,
   .handlers[UNREGISTERED_HANDLER] = m_ignore,
   .handlers[CLIENT_HANDLER] = m_ignore,

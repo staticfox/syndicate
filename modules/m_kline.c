@@ -69,7 +69,7 @@ kline_check(struct AddressRec *arec)
             conf_try_ban(client_p, arec->conf);
         break;
       default:  /* HM_HOST */
-        if (!match(arec->Mask.hostname, client_p->host) || !match(arec->Mask.hostname, client_p->sockhost))
+        if (!match(arec->Mask.hostname, client_p->realhost) || !match(arec->Mask.hostname, client_p->sockhost))
           conf_try_ban(client_p, arec->conf);
         break;
     }
@@ -277,7 +277,7 @@ ms_kline(struct Client *source_p, int parc, char *parv[])
 
   if (HasFlag(source_p, FLAGS_SERVICE) ||
       find_matching_name_conf(CONF_SHARED, source_p->servptr->name,
-                              source_p->username, source_p->host,
+                              source_p->username, source_p->realhost,
                               SHARED_KLINE))
   {
     if (!valid_wild_card(source_p, 2, user, host))

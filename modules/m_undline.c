@@ -175,7 +175,7 @@ ms_undline(struct Client *source_p, int parc, char *parv[])
 
   if (HasFlag(source_p, FLAGS_SERVICE) ||
       find_matching_name_conf(CONF_SHARED, source_p->servptr->name,
-                              source_p->username, source_p->host,
+                              source_p->username, source_p->realhost,
                               SHARED_UNDLINE))
     dline_remove_and_notify(source_p, addr);
 

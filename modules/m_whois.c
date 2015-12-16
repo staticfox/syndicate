@@ -121,6 +121,9 @@ whois_person(struct Client *source_p, struct Client *target_p)
     }
   }
 
+  if (HasUMode(source_p, UMODE_OPER) && IsCaptured(target_p))
+    sendto_one_numeric(source_p, &me, RPL_ISCAPTURED, target_p->name);
+
   if ((ConfigServerHide.hide_servers || IsHidden(target_p->servptr)) &&
       !(HasUMode(source_p, UMODE_OPER) || target_p == source_p))
     sendto_one_numeric(source_p, &me, RPL_WHOISSERVER, target_p->name,
@@ -192,9 +195,11 @@ whois_person(struct Client *source_p, struct Client *target_p)
   }
 
   if (HasUMode(source_p, UMODE_OPER) || source_p == target_p)
+  {
     sendto_one_numeric(source_p, &me, RPL_WHOISACTUALLY, target_p->name,
-                       target_p->username, target_p->host,
-                       target_p->sockhost);
+      target_p->username, target_p->realhost,
+        HasFlag(target_p, FLAGS_IP_SPOOFED) ? "255.255.255.255" : target_p->sockhost);
+  }
 
   if (HasUMode(target_p, UMODE_SSL))
     sendto_one_numeric(source_p, &me, RPL_WHOISSECURE, target_p->name);
@@ -212,7 +217,9 @@ whois_person(struct Client *source_p, struct Client *target_p)
 
   if (HasUMode(target_p, UMODE_WHOIS) && target_p != source_p)
     sendto_one_notice(target_p, &me, ":WHOIS: %s (%s@%s) performed a WHOIS on you from %s",
-      source_p->name, source_p->username, source_p->sockhost, source_p->servptr->name);
+      source_p->name, source_p->username,
+      HasFlag(source_p, FLAGS_IP_SPOOFED) ? "255.255.255.255" : source_p->sockhost,
+      source_p->servptr->name);
 }
 
 /* do_whois()

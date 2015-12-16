@@ -847,12 +847,12 @@ stats_tklines(struct Client *source_p, int parc, char *parv[])
     const struct MaskItem *conf = NULL;
 
     if (MyConnect(source_p))
-      conf = find_conf_by_address(source_p->host,
+      conf = find_conf_by_address(source_p->realhost,
                                   &source_p->connection->ip, CONF_KLINE,
                                   source_p->connection->aftype,
                                   source_p->username, NULL, 1);
     else
-      conf = find_conf_by_address(source_p->host, NULL, CONF_KLINE, 0,
+      conf = find_conf_by_address(source_p->realhost, NULL, CONF_KLINE, 0,
                                   source_p->username, NULL, 1);
 
     if (!conf)
@@ -883,12 +883,12 @@ stats_klines(struct Client *source_p, int parc, char *parv[])
 
     /* Search for a kline */
     if (MyConnect(source_p))
-      conf = find_conf_by_address(source_p->host,
+      conf = find_conf_by_address(source_p->realhost,
                                   &source_p->connection->ip, CONF_KLINE,
                                   source_p->connection->aftype,
                                   source_p->username, NULL, 0);
     else
-      conf = find_conf_by_address(source_p->host, NULL, CONF_KLINE, 0,
+      conf = find_conf_by_address(source_p->realhost, NULL, CONF_KLINE, 0,
                                   source_p->username, NULL, 0);
 
     if (!conf)
@@ -1465,7 +1465,7 @@ do_stats(struct Client *source_p, int parc, char *parv[])
     sendto_realops_flags(UMODE_SPY, L_ALL, SEND_NOTICE,
                          "STATS %c requested by %s (%s@%s) [%s]",
                          statchar, source_p->name, source_p->username,
-                         source_p->host, source_p->servptr->name);
+                         source_p->realhost, source_p->servptr->name);
   }
 
   sendto_one_numeric(source_p, &me, RPL_ENDOFSTATS, statchar);

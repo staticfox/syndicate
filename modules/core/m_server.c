@@ -126,12 +126,14 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
     ubuf[1] = '\0';
   }
 
-  sendto_one(client_p, ":%s UID %s %u %ju %s %s %s %s %s %s :%s",
+  sendto_one(client_p, ":%s UID %s %u %ju %s %s %s %s %s %s %s :%s",
              target_p->servptr->id,
              target_p->name, target_p->hopcount + 1,
              target_p->tsinfo,
              ubuf, target_p->username, target_p->host,
-             target_p->sockhost, target_p->id,
+             (MyClient(target_p) && HasFlag(target_p, FLAGS_IP_SPOOFED)) ?
+             "0" : target_p->sockhost,
+             target_p->id, target_p->realhost,
              target_p->account, target_p->info);
 
   if (!EmptyString(target_p->certfp))

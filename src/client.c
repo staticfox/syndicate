@@ -347,7 +347,7 @@ check_conf_klines(void)
       continue;  /* and go examine next Client */
     }
 
-    if ((conf = find_conf_by_address(client_p->host, &client_p->connection->ip,
+    if ((conf = find_conf_by_address(client_p->realhost, &client_p->connection->ip,
                                      CONF_KLINE, client_p->connection->aftype,
                                      client_p->username, NULL, 1)))
     {
@@ -741,13 +741,13 @@ exit_client(struct Client *source_p, const char *comment)
 
       sendto_realops_flags(UMODE_CCONN, L_ALL, SEND_NOTICE,
                            "Client exiting: %s (%s@%s) [%s] [%s]",
-                           source_p->name, source_p->username, source_p->host,
+                           source_p->name, source_p->username, source_p->realhost,
                            source_p->sockhost, comment);
 
       ilog(LOG_TYPE_USER, "%s (%3u:%02u:%02u): %s!%s@%s %ju/%ju",
            date_ctime(source_p->connection->firsttime), (unsigned int)(on_for / 3600),
            (unsigned int)((on_for % 3600)/60), (unsigned int)(on_for % 60),
-           source_p->name, source_p->username, source_p->host,
+           source_p->name, source_p->username, source_p->realhost,
            source_p->connection->send.bytes>>10,
            source_p->connection->recv.bytes>>10);
     }
@@ -788,7 +788,7 @@ exit_client(struct Client *source_p, const char *comment)
     sendto_realops_flags(UMODE_FARCONNECT, L_ALL, SEND_NOTICE,
                          "Client exiting at %s: %s (%s@%s) [%s] [%s]",
                          source_p->servptr->name, source_p->name,
-                         source_p->username, source_p->host, source_p->sockhost, comment);
+                         source_p->username, source_p->realhost, source_p->sockhost, comment);
 
   if (IsServer(source_p))
   {

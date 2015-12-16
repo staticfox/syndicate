@@ -181,6 +181,7 @@ auth_dns_callback(void *vptr, const struct irc_ssaddr *addr, const char *name, s
     else
     {
       strlcpy(auth->client->host, name, sizeof(auth->client->host));
+      strlcpy(auth->client->realhost, name, sizeof(auth->client->realhost));
       sendheader(auth->client, REPORT_FIN_DNS);
     }
   }
