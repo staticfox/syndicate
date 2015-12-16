@@ -145,6 +145,9 @@ channel                     { return CHANNEL; }
 cidr_bitlen_ipv4            { return CIDR_BITLEN_IPV4; }
 cidr_bitlen_ipv6            { return CIDR_BITLEN_IPV6; }
 class                       { return CLASS; }
+cloak_key1                  { return CLOAK_KEY1; }
+cloak_key2                  { return CLOAK_KEY2; }
+cloak_key3                  { return CLOAK_KEY3; }
 close                       { return CLOSE; }
 cluster                     { return T_CLUSTER; }
 command                     { return T_COMMAND; }
@@ -168,6 +171,7 @@ dline_min_cidr              { return DLINE_MIN_CIDR; }
 dline_min_cidr6             { return DLINE_MIN_CIDR6; }
 dots_in_ident               { return DOTS_IN_IDENT; }
 email                       { return EMAIL; }
+enable_cloak_system         { return ENABLE_CLOAK_SYSTEM; }
 encrypted                   { return ENCRYPTED; }
 exceed_limit                { return EXCEED_LIMIT; }
 exempt                      { return EXEMPT; }

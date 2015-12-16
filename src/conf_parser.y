@@ -170,6 +170,9 @@ reset_block_state(void)
 %token  CIDR_BITLEN_IPV4
 %token  CIDR_BITLEN_IPV6
 %token  CLASS
+%token  CLOAK_KEY1
+%token  CLOAK_KEY2
+%token  CLOAK_KEY3
 %token  CLOSE
 %token  CONNECT
 %token  CONNECTFREQ
@@ -188,6 +191,7 @@ reset_block_state(void)
 %token  DLINE_MIN_CIDR6
 %token  DOTS_IN_IDENT
 %token  EMAIL
+%token  ENABLE_CLOAK_SYSTEM
 %token  ENCRYPTED
 %token  EXCEED_LIMIT
 %token  EXEMPT
@@ -2576,6 +2580,10 @@ general_item:       general_away_count |
                     general_stats_e_disabled |
                     general_max_watch |
                     general_cycle_on_host_change |
+                    general_enable_cloak_system |
+                    general_cloak_key1 |
+                    general_cloak_key2 |
+                    general_cloak_key3 |
                     error;
 
 
@@ -2594,6 +2602,33 @@ general_max_watch: MAX_WATCH '=' NUMBER ';'
   ConfigGeneral.max_watch = $3;
 };
 
+general_cloak_key1: CLOAK_KEY1 '=' QSTRING ';'
+{
+  if (conf_parser_ctx.pass == 2)
+  {
+    MyFree(ConfigGeneral.cloak_key1);
+    ConfigGeneral.cloak_key1 = xstrdup(yylval.string);
+  }
+};
+
+general_cloak_key2: CLOAK_KEY2 '=' QSTRING ';'
+{
+  if (conf_parser_ctx.pass == 2)
+  {
+    MyFree(ConfigGeneral.cloak_key2);
+    ConfigGeneral.cloak_key2 = xstrdup(yylval.string);
+  }
+};
+
+general_cloak_key3: CLOAK_KEY3 '=' QSTRING ';'
+{
+  if (conf_parser_ctx.pass == 2)
+  {
+    MyFree(ConfigGeneral.cloak_key3);
+    ConfigGeneral.cloak_key3 = xstrdup(yylval.string);
+  }
+};
+
 general_cycle_on_host_change: CYCLE_ON_HOST_CHANGE '=' TBOOL ';'
 {
   if (conf_parser_ctx.pass == 2)
@@ -2608,6 +2643,12 @@ general_dline_min_cidr: DLINE_MIN_CIDR '=' NUMBER ';'
 general_dline_min_cidr6: DLINE_MIN_CIDR6 '=' NUMBER ';'
 {
   ConfigGeneral.dline_min_cidr6 = $3;
+};
+
+general_enable_cloak_system: ENABLE_CLOAK_SYSTEM '=' TBOOL ';'
+{
+  if (conf_parser_ctx.pass == 2)
+    ConfigGeneral.enable_cloak_system = yylval.number;
 };
 
 general_kline_min_cidr: KLINE_MIN_CIDR '=' NUMBER ';'
