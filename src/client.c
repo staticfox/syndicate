@@ -388,7 +388,7 @@ check_conf_klines(void)
 void
 conf_try_ban(struct Client *client_p, struct MaskItem *conf)
 {
-  char ban_type = '\0';
+  char ban_type = '?';
 
   switch (conf->type)
   {
@@ -613,6 +613,8 @@ exit_one_client(struct Client *source_p, const char *comment)
     DLINK_FOREACH_SAFE(node, node_next, source_p->channel.head)
       remove_user_from_channel(node->data);
 
+    client_clear_svstags(source_p);
+
     whowas_add_history(source_p, 0);
     whowas_off_history(source_p);
 
@@ -736,7 +738,6 @@ exit_client(struct Client *source_p, const char *comment)
         free_list_task(source_p);
 
       watch_del_watch_list(source_p);
-      client_clear_svstags(source_p);
 
       sendto_realops_flags(UMODE_CCONN, L_ALL, SEND_NOTICE,
                            "Client exiting: %s (%s@%s) [%s] [%s]",
