@@ -149,133 +149,134 @@ extern int yydebug;
     NAME = 359,
     NEED_IDENT = 360,
     NEED_PASSWORD = 361,
-    NETWORK_DESC = 362,
-    NETWORK_NAME = 363,
-    NICK = 364,
-    NO_OPER_FLOOD = 365,
-    NO_TILDE = 366,
-    NUMBER = 367,
-    NUMBER_PER_CIDR = 368,
-    NUMBER_PER_IP = 369,
-    OPER_ONLY_UMODES = 370,
-    OPER_UMODES = 371,
-    OPERATOR = 372,
-    OPERS_BYPASS_CALLERID = 373,
-    PACE_WAIT = 374,
-    PACE_WAIT_SIMPLE = 375,
-    PASSWORD = 376,
-    PATH = 377,
-    PING_COOKIE = 378,
-    PING_TIME = 379,
-    PORT = 380,
-    QSTRING = 381,
-    RANDOM_IDLE = 382,
-    REASON = 383,
-    REDIRPORT = 384,
-    REDIRSERV = 385,
-    REHASH = 386,
-    REMOTE = 387,
-    REMOTEBAN = 388,
-    RESV = 389,
-    RESV_EXEMPT = 390,
-    RSA_PRIVATE_KEY_FILE = 391,
-    SECONDS = 392,
-    MINUTES = 393,
-    HOURS = 394,
-    DAYS = 395,
-    WEEKS = 396,
-    MONTHS = 397,
-    YEARS = 398,
-    SEND_PASSWORD = 399,
-    SENDQ = 400,
-    SERVERHIDE = 401,
-    SERVERINFO = 402,
-    SHORT_MOTD = 403,
-    SPOOF = 404,
-    SPOOF_NOTICE = 405,
-    SQUIT = 406,
-    SSL_CERTIFICATE_FILE = 407,
-    SSL_CERTIFICATE_FINGERPRINT = 408,
-    SSL_CONNECTION_REQUIRED = 409,
-    SSL_DH_ELLIPTIC_CURVE = 410,
-    SSL_DH_PARAM_FILE = 411,
-    SSL_MESSAGE_DIGEST_ALGORITHM = 412,
-    STATS_E_DISABLED = 413,
-    STATS_I_OPER_ONLY = 414,
-    STATS_K_OPER_ONLY = 415,
-    STATS_M_OPER_ONLY = 416,
-    STATS_O_OPER_ONLY = 417,
-    STATS_P_OPER_ONLY = 418,
-    STATS_U_OPER_ONLY = 419,
-    T_ALL = 420,
-    T_BOTS = 421,
-    T_CALLERID = 422,
-    T_CCONN = 423,
-    T_COMMAND = 424,
-    T_CLUSTER = 425,
-    T_DEAF = 426,
-    T_DEBUG = 427,
-    T_DLINE = 428,
-    T_EXTERNAL = 429,
-    T_FARCONNECT = 430,
-    T_FILE = 431,
-    T_FULL = 432,
-    T_GLOBOPS = 433,
-    T_INVISIBLE = 434,
-    T_IPV4 = 435,
-    T_IPV6 = 436,
-    T_LOCOPS = 437,
-    T_LOG = 438,
-    T_NCHANGE = 439,
-    T_NONONREG = 440,
-    T_OPERWALL = 441,
-    T_OPERWALLS = 442,
-    T_OPME = 443,
-    T_PREPEND = 444,
-    T_PSEUDO = 445,
-    T_RECVQ = 446,
-    T_REJ = 447,
-    T_RESTART = 448,
-    T_SERVER = 449,
-    T_SERVICE = 450,
-    T_SERVNOTICE = 451,
-    T_SET = 452,
-    T_SHARED = 453,
-    T_SIZE = 454,
-    T_SKILL = 455,
-    T_SOFTCALLERID = 456,
-    T_SPY = 457,
-    T_SSL = 458,
-    T_SSL_CIPHER_LIST = 459,
-    T_TARGET = 460,
-    T_UMODES = 461,
-    T_UNAUTH = 462,
-    T_UNDLINE = 463,
-    T_UNLIMITED = 464,
-    T_UNRESV = 465,
-    T_UNXLINE = 466,
-    T_WALLOP = 467,
-    T_WALLOPS = 468,
-    T_WEBIRC = 469,
-    TBOOL = 470,
-    THROTTLE_COUNT = 471,
-    THROTTLE_TIME = 472,
-    TKLINE_EXPIRE_NOTICES = 473,
-    TMASKED = 474,
-    TS_MAX_DELTA = 475,
-    TS_WARN_DELTA = 476,
-    TWODOTS = 477,
-    TYPE = 478,
-    UNKLINE = 479,
-    USE_LOGGING = 480,
-    USER = 481,
-    VHOST = 482,
-    VHOST6 = 483,
-    WARN_NO_CONNECT_BLOCK = 484,
-    WHOIS = 485,
-    WHOIS_NOTIFY = 486,
-    XLINE = 487,
-    XLINE_EXEMPT = 488
+    NETADMIN = 362,
+    NETWORK_DESC = 363,
+    NETWORK_NAME = 364,
+    NICK = 365,
+    NO_OPER_FLOOD = 366,
+    NO_TILDE = 367,
+    NUMBER = 368,
+    NUMBER_PER_CIDR = 369,
+    NUMBER_PER_IP = 370,
+    OPER_ONLY_UMODES = 371,
+    OPER_UMODES = 372,
+    OPERATOR = 373,
+    OPERS_BYPASS_CALLERID = 374,
+    PACE_WAIT = 375,
+    PACE_WAIT_SIMPLE = 376,
+    PASSWORD = 377,
+    PATH = 378,
+    PING_COOKIE = 379,
+    PING_TIME = 380,
+    PORT = 381,
+    QSTRING = 382,
+    RANDOM_IDLE = 383,
+    REASON = 384,
+    REDIRPORT = 385,
+    REDIRSERV = 386,
+    REHASH = 387,
+    REMOTE = 388,
+    REMOTEBAN = 389,
+    RESV = 390,
+    RESV_EXEMPT = 391,
+    RSA_PRIVATE_KEY_FILE = 392,
+    SECONDS = 393,
+    MINUTES = 394,
+    HOURS = 395,
+    DAYS = 396,
+    WEEKS = 397,
+    MONTHS = 398,
+    YEARS = 399,
+    SEND_PASSWORD = 400,
+    SENDQ = 401,
+    SERVERHIDE = 402,
+    SERVERINFO = 403,
+    SHORT_MOTD = 404,
+    SPOOF = 405,
+    SPOOF_NOTICE = 406,
+    SQUIT = 407,
+    SSL_CERTIFICATE_FILE = 408,
+    SSL_CERTIFICATE_FINGERPRINT = 409,
+    SSL_CONNECTION_REQUIRED = 410,
+    SSL_DH_ELLIPTIC_CURVE = 411,
+    SSL_DH_PARAM_FILE = 412,
+    SSL_MESSAGE_DIGEST_ALGORITHM = 413,
+    STATS_E_DISABLED = 414,
+    STATS_I_OPER_ONLY = 415,
+    STATS_K_OPER_ONLY = 416,
+    STATS_M_OPER_ONLY = 417,
+    STATS_O_OPER_ONLY = 418,
+    STATS_P_OPER_ONLY = 419,
+    STATS_U_OPER_ONLY = 420,
+    T_ALL = 421,
+    T_BOTS = 422,
+    T_CALLERID = 423,
+    T_CCONN = 424,
+    T_COMMAND = 425,
+    T_CLUSTER = 426,
+    T_DEAF = 427,
+    T_DEBUG = 428,
+    T_DLINE = 429,
+    T_EXTERNAL = 430,
+    T_FARCONNECT = 431,
+    T_FILE = 432,
+    T_FULL = 433,
+    T_GLOBOPS = 434,
+    T_INVISIBLE = 435,
+    T_IPV4 = 436,
+    T_IPV6 = 437,
+    T_LOCOPS = 438,
+    T_LOG = 439,
+    T_NCHANGE = 440,
+    T_NONONREG = 441,
+    T_OPERWALL = 442,
+    T_OPERWALLS = 443,
+    T_OPME = 444,
+    T_PREPEND = 445,
+    T_PSEUDO = 446,
+    T_RECVQ = 447,
+    T_REJ = 448,
+    T_RESTART = 449,
+    T_SERVER = 450,
+    T_SERVICE = 451,
+    T_SERVNOTICE = 452,
+    T_SET = 453,
+    T_SHARED = 454,
+    T_SIZE = 455,
+    T_SKILL = 456,
+    T_SOFTCALLERID = 457,
+    T_SPY = 458,
+    T_SSL = 459,
+    T_SSL_CIPHER_LIST = 460,
+    T_TARGET = 461,
+    T_UMODES = 462,
+    T_UNAUTH = 463,
+    T_UNDLINE = 464,
+    T_UNLIMITED = 465,
+    T_UNRESV = 466,
+    T_UNXLINE = 467,
+    T_WALLOP = 468,
+    T_WALLOPS = 469,
+    T_WEBIRC = 470,
+    TBOOL = 471,
+    THROTTLE_COUNT = 472,
+    THROTTLE_TIME = 473,
+    TKLINE_EXPIRE_NOTICES = 474,
+    TMASKED = 475,
+    TS_MAX_DELTA = 476,
+    TS_WARN_DELTA = 477,
+    TWODOTS = 478,
+    TYPE = 479,
+    UNKLINE = 480,
+    USE_LOGGING = 481,
+    USER = 482,
+    VHOST = 483,
+    VHOST6 = 484,
+    WARN_NO_CONNECT_BLOCK = 485,
+    WHOIS = 486,
+    WHOIS_NOTIFY = 487,
+    XLINE = 488,
+    XLINE_EXEMPT = 489
   };
 #endif
 /* Tokens.  */
@@ -383,133 +384,134 @@ extern int yydebug;
 #define NAME 359
 #define NEED_IDENT 360
 #define NEED_PASSWORD 361
-#define NETWORK_DESC 362
-#define NETWORK_NAME 363
-#define NICK 364
-#define NO_OPER_FLOOD 365
-#define NO_TILDE 366
-#define NUMBER 367
-#define NUMBER_PER_CIDR 368
-#define NUMBER_PER_IP 369
-#define OPER_ONLY_UMODES 370
-#define OPER_UMODES 371
-#define OPERATOR 372
-#define OPERS_BYPASS_CALLERID 373
-#define PACE_WAIT 374
-#define PACE_WAIT_SIMPLE 375
-#define PASSWORD 376
-#define PATH 377
-#define PING_COOKIE 378
-#define PING_TIME 379
-#define PORT 380
-#define QSTRING 381
-#define RANDOM_IDLE 382
-#define REASON 383
-#define REDIRPORT 384
-#define REDIRSERV 385
-#define REHASH 386
-#define REMOTE 387
-#define REMOTEBAN 388
-#define RESV 389
-#define RESV_EXEMPT 390
-#define RSA_PRIVATE_KEY_FILE 391
-#define SECONDS 392
-#define MINUTES 393
-#define HOURS 394
-#define DAYS 395
-#define WEEKS 396
-#define MONTHS 397
-#define YEARS 398
-#define SEND_PASSWORD 399
-#define SENDQ 400
-#define SERVERHIDE 401
-#define SERVERINFO 402
-#define SHORT_MOTD 403
-#define SPOOF 404
-#define SPOOF_NOTICE 405
-#define SQUIT 406
-#define SSL_CERTIFICATE_FILE 407
-#define SSL_CERTIFICATE_FINGERPRINT 408
-#define SSL_CONNECTION_REQUIRED 409
-#define SSL_DH_ELLIPTIC_CURVE 410
-#define SSL_DH_PARAM_FILE 411
-#define SSL_MESSAGE_DIGEST_ALGORITHM 412
-#define STATS_E_DISABLED 413
-#define STATS_I_OPER_ONLY 414
-#define STATS_K_OPER_ONLY 415
-#define STATS_M_OPER_ONLY 416
-#define STATS_O_OPER_ONLY 417
-#define STATS_P_OPER_ONLY 418
-#define STATS_U_OPER_ONLY 419
-#define T_ALL 420
-#define T_BOTS 421
-#define T_CALLERID 422
-#define T_CCONN 423
-#define T_COMMAND 424
-#define T_CLUSTER 425
-#define T_DEAF 426
-#define T_DEBUG 427
-#define T_DLINE 428
-#define T_EXTERNAL 429
-#define T_FARCONNECT 430
-#define T_FILE 431
-#define T_FULL 432
-#define T_GLOBOPS 433
-#define T_INVISIBLE 434
-#define T_IPV4 435
-#define T_IPV6 436
-#define T_LOCOPS 437
-#define T_LOG 438
-#define T_NCHANGE 439
-#define T_NONONREG 440
-#define T_OPERWALL 441
-#define T_OPERWALLS 442
-#define T_OPME 443
-#define T_PREPEND 444
-#define T_PSEUDO 445
-#define T_RECVQ 446
-#define T_REJ 447
-#define T_RESTART 448
-#define T_SERVER 449
-#define T_SERVICE 450
-#define T_SERVNOTICE 451
-#define T_SET 452
-#define T_SHARED 453
-#define T_SIZE 454
-#define T_SKILL 455
-#define T_SOFTCALLERID 456
-#define T_SPY 457
-#define T_SSL 458
-#define T_SSL_CIPHER_LIST 459
-#define T_TARGET 460
-#define T_UMODES 461
-#define T_UNAUTH 462
-#define T_UNDLINE 463
-#define T_UNLIMITED 464
-#define T_UNRESV 465
-#define T_UNXLINE 466
-#define T_WALLOP 467
-#define T_WALLOPS 468
-#define T_WEBIRC 469
-#define TBOOL 470
-#define THROTTLE_COUNT 471
-#define THROTTLE_TIME 472
-#define TKLINE_EXPIRE_NOTICES 473
-#define TMASKED 474
-#define TS_MAX_DELTA 475
-#define TS_WARN_DELTA 476
-#define TWODOTS 477
-#define TYPE 478
-#define UNKLINE 479
-#define USE_LOGGING 480
-#define USER 481
-#define VHOST 482
-#define VHOST6 483
-#define WARN_NO_CONNECT_BLOCK 484
-#define WHOIS 485
-#define WHOIS_NOTIFY 486
-#define XLINE 487
-#define XLINE_EXEMPT 488
+#define NETADMIN 362
+#define NETWORK_DESC 363
+#define NETWORK_NAME 364
+#define NICK 365
+#define NO_OPER_FLOOD 366
+#define NO_TILDE 367
+#define NUMBER 368
+#define NUMBER_PER_CIDR 369
+#define NUMBER_PER_IP 370
+#define OPER_ONLY_UMODES 371
+#define OPER_UMODES 372
+#define OPERATOR 373
+#define OPERS_BYPASS_CALLERID 374
+#define PACE_WAIT 375
+#define PACE_WAIT_SIMPLE 376
+#define PASSWORD 377
+#define PATH 378
+#define PING_COOKIE 379
+#define PING_TIME 380
+#define PORT 381
+#define QSTRING 382
+#define RANDOM_IDLE 383
+#define REASON 384
+#define REDIRPORT 385
+#define REDIRSERV 386
+#define REHASH 387
+#define REMOTE 388
+#define REMOTEBAN 389
+#define RESV 390
+#define RESV_EXEMPT 391
+#define RSA_PRIVATE_KEY_FILE 392
+#define SECONDS 393
+#define MINUTES 394
+#define HOURS 395
+#define DAYS 396
+#define WEEKS 397
+#define MONTHS 398
+#define YEARS 399
+#define SEND_PASSWORD 400
+#define SENDQ 401
+#define SERVERHIDE 402
+#define SERVERINFO 403
+#define SHORT_MOTD 404
+#define SPOOF 405
+#define SPOOF_NOTICE 406
+#define SQUIT 407
+#define SSL_CERTIFICATE_FILE 408
+#define SSL_CERTIFICATE_FINGERPRINT 409
+#define SSL_CONNECTION_REQUIRED 410
+#define SSL_DH_ELLIPTIC_CURVE 411
+#define SSL_DH_PARAM_FILE 412
+#define SSL_MESSAGE_DIGEST_ALGORITHM 413
+#define STATS_E_DISABLED 414
+#define STATS_I_OPER_ONLY 415
+#define STATS_K_OPER_ONLY 416
+#define STATS_M_OPER_ONLY 417
+#define STATS_O_OPER_ONLY 418
+#define STATS_P_OPER_ONLY 419
+#define STATS_U_OPER_ONLY 420
+#define T_ALL 421
+#define T_BOTS 422
+#define T_CALLERID 423
+#define T_CCONN 424
+#define T_COMMAND 425
+#define T_CLUSTER 426
+#define T_DEAF 427
+#define T_DEBUG 428
+#define T_DLINE 429
+#define T_EXTERNAL 430
+#define T_FARCONNECT 431
+#define T_FILE 432
+#define T_FULL 433
+#define T_GLOBOPS 434
+#define T_INVISIBLE 435
+#define T_IPV4 436
+#define T_IPV6 437
+#define T_LOCOPS 438
+#define T_LOG 439
+#define T_NCHANGE 440
+#define T_NONONREG 441
+#define T_OPERWALL 442
+#define T_OPERWALLS 443
+#define T_OPME 444
+#define T_PREPEND 445
+#define T_PSEUDO 446
+#define T_RECVQ 447
+#define T_REJ 448
+#define T_RESTART 449
+#define T_SERVER 450
+#define T_SERVICE 451
+#define T_SERVNOTICE 452
+#define T_SET 453
+#define T_SHARED 454
+#define T_SIZE 455
+#define T_SKILL 456
+#define T_SOFTCALLERID 457
+#define T_SPY 458
+#define T_SSL 459
+#define T_SSL_CIPHER_LIST 460
+#define T_TARGET 461
+#define T_UMODES 462
+#define T_UNAUTH 463
+#define T_UNDLINE 464
+#define T_UNLIMITED 465
+#define T_UNRESV 466
+#define T_UNXLINE 467
+#define T_WALLOP 468
+#define T_WALLOPS 469
+#define T_WEBIRC 470
+#define TBOOL 471
+#define THROTTLE_COUNT 472
+#define THROTTLE_TIME 473
+#define TKLINE_EXPIRE_NOTICES 474
+#define TMASKED 475
+#define TS_MAX_DELTA 476
+#define TS_WARN_DELTA 477
+#define TWODOTS 478
+#define TYPE 479
+#define UNKLINE 480
+#define USE_LOGGING 481
+#define USER 482
+#define VHOST 483
+#define VHOST6 484
+#define WARN_NO_CONNECT_BLOCK 485
+#define WHOIS 486
+#define WHOIS_NOTIFY 487
+#define XLINE 488
+#define XLINE_EXEMPT 489
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -521,7 +523,7 @@ union YYSTYPE
   int number;
   char *string;
 
-#line 525 "conf_parser.h" /* yacc.c:1909  */
+#line 527 "conf_parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
