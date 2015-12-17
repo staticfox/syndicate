@@ -111,7 +111,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
     else
     {
       user = nick;
-      nick = "*";
+      strcpy(nick, "*");
     }
 
     if (!valid_wild_card(source_p, 3, nick, user, host))
@@ -208,7 +208,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
     else
     {
       user = nick;
-      nick = "*";
+      strcpy(nick, "*");
     }
 
     if (IsClient(source_p))
