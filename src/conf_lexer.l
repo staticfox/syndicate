@@ -248,6 +248,7 @@ name                        { return NAME; }
 nchange                     { return T_NCHANGE; }
 need_ident                  { return NEED_IDENT; }
 need_password               { return NEED_PASSWORD; }
+netadmin                    { return NETADMIN; }
 network_desc                { return NETWORK_DESC; }
 network_name                { return NETWORK_NAME; }
 nick                        { return NICK; }

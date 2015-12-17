@@ -1079,7 +1079,7 @@ static const struct oper_privs
   { OPER_FLAG_KLINE,          'K' },
   { OPER_FLAG_LOCOPS,         'L' },
   { OPER_FLAG_MODULE,         'M' },
-  { OPER_FLAG_NICK_RESV,      'N' },
+  { OPER_FLAG_NETADMIN,       'N' },
   { OPER_FLAG_OPME,           'O' },
   { OPER_FLAG_REHASH,         'P' },
   { OPER_FLAG_REMOTEBAN,      'Q' },
@@ -1095,6 +1095,7 @@ static const struct oper_privs
   { OPER_FLAG_WALLOPS,        'a' },
   { OPER_FLAG_XLINE,          'b' },
   { OPER_FLAG_OPERWALLS,      'c' },
+  { OPER_FLAG_NICK_RESV,      'n' },
   { 0, '\0' }
 };
 

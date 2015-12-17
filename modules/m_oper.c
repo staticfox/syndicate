@@ -70,6 +70,11 @@ oper_up(struct Client *source_p)
   if (HasOFlag(source_p, OPER_FLAG_ADMIN))
     AddUMode(source_p, UMODE_ADMIN);
 
+#ifdef CONF_NETADMIN
+  if (HasOFlag(source_p, OPER_FLAG_NETADMIN))
+    AddUMode(source_p, UMODE_NETADMIN);
+#endif
+
   if (!EmptyString(conf->whois))
   {
     client_attach_svstag(source_p, RPL_WHOISOPERATOR, "+", conf->whois);

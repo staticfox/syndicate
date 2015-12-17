@@ -257,6 +257,7 @@ reset_block_state(void)
 %token  NAME
 %token  NEED_IDENT
 %token  NEED_PASSWORD
+%token  NETADMIN
 %token  NETWORK_DESC
 %token  NETWORK_NAME
 %token  NICK
@@ -1446,6 +1447,10 @@ oper_flags_item: KILL ':' REMOTE
 {
   if (conf_parser_ctx.pass == 2)
     block_state.port.value |= OPER_FLAG_OPERWALLS;
+} | NETADMIN
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.port.value |= OPER_FLAG_NETADMIN;
 };
 
 

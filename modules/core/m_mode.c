@@ -128,6 +128,33 @@ set_user_mode(struct Client *source_p, const int parc, char *parv[])
 
         break;
 
+      case 'N':
+        if (what == MODE_ADD)
+        {
+          if (MyConnect(source_p) && !HasOFlag(source_p, OPER_FLAG_NETADMIN) && !HasUMode(source_p, UMODE_OPER))
+            sendto_one_numeric(source_p, &me, ERR_UMODEUNKNOWNFLAG);
+
+          /* If NETADMIN is not defined from the configure script,
+           * we drop the request and force it to be done via SVSMODE.
+           */
+#ifndef CONF_NETADMIN
+          else if (MyConnect(source_p))
+          {
+            sendto_one_numeric(source_p, &me, ERR_UMODEUNKNOWNFLAG);
+            break;
+          }
+#endif
+          else
+            AddUMode(source_p, UMODE_NETADMIN);
+        }
+        else
+        {
+          if (HasUMode(source_p, UMODE_NETADMIN))
+            DelUMode(source_p, UMODE_NETADMIN);
+        }
+
+        break;
+
       case 'S':  /* Only servers may set +S in a burst */
       case 'W':  /* Only servers may set +W in a burst */
       case 'r':  /* Only services may set +r */

@@ -181,7 +181,8 @@ enum
   UMODE_HIDEIDLE     = 0x04000000U,  /**< Hides idle and signon time in WHOIS */
   UMODE_HIDECHANS    = 0x08000000U,  /**< Hides channel list in WHOIS */
   UMODE_OPERWALL     = 0x10000000U,  /**< Send operwall messages to them */
-  UMODE_WHOIS        = 0x20000000U   /**< Notify user on WHOIS */
+  UMODE_WHOIS        = 0x20000000U,  /**< Notify user on WHOIS */
+  UMODE_NETADMIN     = 0x40000000U   /**< Network Admin */
 };
 
 #define HasUMode(x, y) ((x)->umodes &   (y))
@@ -220,7 +221,8 @@ enum
   OPER_FLAG_UNXLINE        = 0x02000000U,  /**< Oper can use UNXLINE command */
   OPER_FLAG_WALLOPS        = 0x04000000U,  /**< Oper can use WALLOPS command */
   OPER_FLAG_XLINE          = 0x08000000U,  /**< Oper can use XLINE command */
-  OPER_FLAG_OPERWALLS      = 0x10000000U   /**< Oper can use OPERWALL command */
+  OPER_FLAG_OPERWALLS      = 0x10000000U,  /**< Oper can use OPERWALL command */
+  OPER_FLAG_NETADMIN       = 0x20000000U   /**< Oper can set user mode +N */
 };
 
 #define HasOFlag(x, y) ((x)->connection->operflags &   (y))

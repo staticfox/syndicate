@@ -60,6 +60,7 @@ const struct user_modes  umode_tab[] =
   { 'F', UMODE_FARCONNECT   },
   { 'G', UMODE_SOFTCALLERID },
   { 'H', UMODE_HIDDEN       },
+  { 'N', UMODE_NETADMIN     },
   { 'R', UMODE_REGONLY      },
   { 'S', UMODE_SSL          },
   { 'W', UMODE_WEBIRC       },
