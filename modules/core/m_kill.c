@@ -107,7 +107,8 @@ mo_kill(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
-  if (IsServer(target_p) || IsMe(target_p) || HasFlag(target_p, FLAGS_SERVICE))
+  if (IsServer(target_p) || IsMe(target_p) ||
+    HasFlag(target_p, FLAGS_SERVICE) || HasUMode(target_p, UMODE_NETADMIN))
   {
     sendto_one_numeric(source_p, &me, ERR_CANTKILLSERVER);
     return 0;
@@ -191,7 +192,8 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
   else
     reason = def_reason;
 
-  if (IsServer(target_p) || IsMe(target_p) || HasFlag(target_p, FLAGS_SERVICE))
+  if (IsServer(target_p) || IsMe(target_p) ||
+    HasFlag(target_p, FLAGS_SERVICE) || HasUMode(target_p, UMODE_NETADMIN))
   {
     sendto_one_numeric(source_p, &me, ERR_CANTKILLSERVER);
     return 0;
