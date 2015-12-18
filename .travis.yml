@@ -2,15 +2,13 @@ language: c
 
 os:
   - linux
-  - osx
 
 compiler:
  - gcc
  - clang
 
 script:
- - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
- - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./configure --disable-openssl --enable-assert; else ./configure --enable-assert; fi
+ - ./configure --enable-assert
  - make
  - sudo make install
 
