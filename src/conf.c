@@ -56,6 +56,7 @@
 #include "motd.h"
 #include "ipcache.h"
 #include "isupport.h"
+#include "cloak.h"
 
 
 struct config_channel_entry ConfigChannel;
@@ -935,6 +936,8 @@ conf_rehash(int sig)
   /* don't close listeners until we know we can go ahead with the rehash */
 
   read_conf_files(0);
+
+  init_cloak();
 
   load_conf_modules();
   check_conf_klines();

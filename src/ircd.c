@@ -59,6 +59,7 @@
 #include "ipcache.h"
 #include "isupport.h"
 #include "userhost.h"
+#include "cloak.h"
 
 
 #ifdef HAVE_LIBGEOIP
@@ -520,6 +521,8 @@ main(int argc, char *argv[])
 #ifdef HAVE_LIBGEOIP
   geoip_ctx = GeoIP_new(GEOIP_MEMORY_CACHE);
 #endif
+
+  init_cloak();
 
   if (EmptyString(ConfigServerInfo.name))
   {
