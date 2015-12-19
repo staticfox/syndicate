@@ -432,7 +432,10 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
   if (IsClient(client_p))
     sendto_one_numeric(client_p, &me, ERR_YOUREBANNEDCREEP, conf->reason);
 
-  exit_client(client_p, conf->reason);
+  if (EmptyString(ConfigGeneral.kline_reason))
+    exit_client(client_p, conf->reason);
+  else
+    exit_client(client_p, ConfigGeneral.kline_reason);
 }
 
 /* update_client_exit_stats()

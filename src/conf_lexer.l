@@ -188,6 +188,7 @@ gecos                       { return GECOS; }
 general                     { return GENERAL; }
 kline_min_cidr              { return KLINE_MIN_CIDR; }
 kline_min_cidr6             { return KLINE_MIN_CIDR6; }
+kline_reason                { return KLINE_REASON; }
 globops                     { return T_GLOBOPS; }
 have_ident                  { return NEED_IDENT; }
 hidden                      { return HIDDEN; }

@@ -228,6 +228,7 @@ reset_block_state(void)
 %token  KLINE_EXEMPT
 %token  KLINE_MIN_CIDR
 %token  KLINE_MIN_CIDR6
+%token  KLINE_REASON
 %token  KNOCK_CLIENT_COUNT
 %token  KNOCK_CLIENT_TIME
 %token  KNOCK_DELAY_CHANNEL
@@ -2589,6 +2590,7 @@ general_item:       general_away_count |
                     general_cloak_key1 |
                     general_cloak_key2 |
                     general_cloak_key3 |
+                    general_kline_reason |
                     error;
 
 
@@ -2664,6 +2666,15 @@ general_kline_min_cidr: KLINE_MIN_CIDR '=' NUMBER ';'
 general_kline_min_cidr6: KLINE_MIN_CIDR6 '=' NUMBER ';'
 {
   ConfigGeneral.kline_min_cidr6 = $3;
+};
+
+general_kline_reason: KLINE_REASON '=' QSTRING ';'
+{
+  if (conf_parser_ctx.pass == 2)
+  {
+    MyFree(ConfigGeneral.kline_reason);
+    ConfigGeneral.kline_reason = xstrdup(yylval.string);
+  }
 };
 
 general_tkline_expire_notices: TKLINE_EXPIRE_NOTICES '=' TBOOL ';'

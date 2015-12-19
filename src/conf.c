@@ -876,6 +876,7 @@ set_default_conf(void)
   ConfigGeneral.cloak_key1 = NULL;
   ConfigGeneral.cloak_key2 = NULL;
   ConfigGeneral.cloak_key3 = NULL;
+  ConfigGeneral.kline_reason = NULL;
 }
 
 static void
@@ -1253,9 +1254,11 @@ clear_out_old_conf(void)
   MyFree(ConfigGeneral.cloak_key1);
   MyFree(ConfigGeneral.cloak_key2);
   MyFree(ConfigGeneral.cloak_key3);
+  MyFree(ConfigGeneral.kline_reason);
   ConfigGeneral.cloak_key1 = NULL;
   ConfigGeneral.cloak_key2 = NULL;
   ConfigGeneral.cloak_key3 = NULL;
+  ConfigGeneral.kline_reason = NULL;
 }
 
 /* read_conf_files()

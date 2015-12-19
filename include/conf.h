@@ -211,6 +211,7 @@ struct config_general_entry
   char *cloak_key1;
   char *cloak_key2;
   char *cloak_key3;
+  char *kline_reason;
 
   unsigned int dline_min_cidr;
   unsigned int dline_min_cidr6;

@@ -269,6 +269,12 @@ static const struct InfoStruct info_table[] =
     "How many away_count aways are allowed in this time"
   },
   {
+    "kline_reason",
+    OUTPUT_STRING,
+    &ConfigGeneral.kline_reason,
+    "Default K-Line QUIT reason"
+  },
+  {
     "dline_min_cidr",
     OUTPUT_DECIMAL,
     &ConfigGeneral.dline_min_cidr,
