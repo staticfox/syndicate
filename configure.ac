@@ -1,9 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_REVISION([$Id$])
+AC_REVISION([$Revision: 1.00$])
 
 AC_PREREQ(2.69)
-AC_INIT([ircd-hybrid], [TRUNK], [bugs@ircd-hybrid.org])
+AC_INIT([ircd-syndicate], [DEV], [staticfox@staticfox.net])
 AM_INIT_AUTOMAKE(1.15 subdir-objects)
 AM_MAINTAINER_MODE
 AC_CONFIG_MACRO_DIR([m4])
@@ -84,6 +84,6 @@ AC_OUTPUT
 echo "###############################################################################"
 echo "Configuration complete.  Type make (or gmake on some *BSD machines) to compile."
 echo
-echo "ircd-hybrid will be installed in ${prefix}.  To change this, run:"
+echo "ircd-syndicate will be installed in ${prefix}.  To change this, run:"
 echo "   ./configure --prefix=DIRECTORY"
 echo "###############################################################################"
