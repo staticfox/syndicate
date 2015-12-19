@@ -6,6 +6,7 @@ AC_PREREQ(2.69)
 AC_INIT([ircd-syndicate], [DEV], [staticfox@staticfox.net])
 AM_INIT_AUTOMAKE(1.15 subdir-objects)
 AM_MAINTAINER_MODE
+AM_SILENT_RULES([yes])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR(src/ircd.c)
