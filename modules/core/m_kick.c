@@ -99,6 +99,12 @@ m_kick(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
+  if (HasFlag(target_p, FLAGS_SERVICE))
+  {
+    sendto_one_numeric(source_p, &me, ERR_ISCHANSERVICE, chptr->name);
+    return 0;
+  }
+
   if (!can_kick_deop(member_source, member_target))
   {
     sendto_one_numeric(source_p, &me, ERR_CHANOPRIVSNEEDED, chptr->name);
