@@ -144,8 +144,11 @@ extern void channel_modes(struct Channel *, struct Client *, char *, char *);
 extern void check_spambot_warning(struct Client *, const char *);
 extern void channel_free(struct Channel *);
 extern void channel_set_topic(struct Channel *, const char *, const char *, time_t, int);
+extern void local_join_channel(struct Client *, struct Channel *, int);
+extern void local_part_channel(struct Client *, struct Channel *, const char *, int);
+extern void try_reveal_delayed_user(struct Client *, struct Membership *, struct Channel *);
 
-extern const char *get_member_status(const struct Membership *, const int);
+extern const char *get_member_status(const struct Membership *, const int, const int);
 
 extern struct Channel *channel_make(const char *);
 extern struct Membership *find_channel_link(struct Client *, struct Channel *);

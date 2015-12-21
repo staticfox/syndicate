@@ -56,6 +56,7 @@ extern mp_pool_t *ban_pool;
 const struct mode_letter chan_modes[] =
 {
   { MODE_NOCTRL,     'c' },
+  { MODE_WASDELJOINS,'d' },
   { MODE_INVITEONLY, 'i' },
   { MODE_MODERATED,  'm' },
   { MODE_NOPRIVMSGS, 'n' },
@@ -64,6 +65,7 @@ const struct mode_letter chan_modes[] =
   { MODE_SECRET,     's' },
   { MODE_TOPICLIMIT, 't' },
   { MODE_NOCTCP,     'C' },
+  { MODE_DELJOINS,   'D' },
   { MODE_MODREG,     'M' },
   { MODE_OPERONLY,   'O' },
   { MODE_REGONLY,    'R' },
@@ -447,6 +449,150 @@ chm_simple(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
 }
 
 static void
+chm_deljoins(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
+               char **parv, int *errors, int alev, int dir, char c, unsigned int d)
+{
+  const dlink_node *node = NULL;
+  unsigned int set = 0;
+  unsigned char delay_mode = get_chan_mode_letter(MODE_WASDELJOINS);
+
+  if (alev < CHACCESS_HALFOP)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one_numeric(source_p, &me,
+                         alev == CHACCESS_NOTONCHAN ? ERR_NOTONCHANNEL :
+                         ERR_CHANOPRIVSNEEDED, chptr->name);
+
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  /* If have already dealt with this simple mode, ignore it */
+  if (simple_modes_mask & d)
+    return;
+
+  simple_modes_mask |= d;
+
+  /* setting + */
+  if ((dir == MODE_ADD) && !(chptr->mode.mode & d))
+  {
+    chptr->mode.mode |= d;
+
+    /* If we're +d, unset it and set +D */
+    if (chptr->mode.mode & MODE_WASDELJOINS)
+    {
+      chptr->mode.mode &= ~MODE_WASDELJOINS;
+
+      if (delay_mode != '\0')
+      {
+        sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s MODE %s -%c",
+          me.name, chptr->name, delay_mode);
+        sendto_server(source_p, 0, 0, ":%s TMODE %ju %s -%c",
+          me.id, chptr->creationtime, chptr->name, delay_mode);
+      }
+    }
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].arg = NULL;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].dir = dir;
+  }
+  else if ((dir == MODE_DEL) && (chptr->mode.mode & d))
+  {
+    /* setting - */
+    chptr->mode.mode &= ~d;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].arg = NULL;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].dir = dir;
+
+    /* Don't check again if it's already set */
+    if (chptr->mode.mode & MODE_WASDELJOINS)
+      return;
+
+    /* Find if we have any hidden users */
+    DLINK_FOREACH(node, chptr->members.head)
+    {
+      const struct Membership *member = node->data;
+      if (member->flags & CHFL_DELAYED)
+        set++;
+    }
+
+    /* Set +d because there are still users hidden */
+    if (set > 0)
+    {
+      chptr->mode.mode |= MODE_WASDELJOINS;
+      if (delay_mode != '\0')
+      {
+        sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s MODE %s +%c",
+          me.name, chptr->name, delay_mode);
+        sendto_server(source_p, 0, 0, ":%s TMODE %ju %s +%c",
+          me.id, chptr->creationtime, chptr->name, delay_mode);
+      }
+    }
+  }
+}
+
+static void
+chm_wasdeljoin(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
+               char **parv, int *errors, int alev, int dir, char c, unsigned int d)
+{
+  const dlink_node *node = NULL;
+
+  if (!IsServer(source_p))
+  {
+    if (!(*errors & SM_ERR_ONLYSERVER))
+      sendto_one_numeric(source_p, &me,
+                         alev == CHACCESS_NOTONCHAN ? ERR_NOTONCHANNEL :
+                         ERR_ONLYSERVERSCANCHANGE, chptr->name);
+
+    *errors |= SM_ERR_ONLYSERVER;
+    return;
+  }
+
+  if (simple_modes_mask & d)
+    return;
+
+  simple_modes_mask |= d;
+
+  if (dir == MODE_ADD)
+  {
+    chptr->mode.mode |= d;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].arg = NULL;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].dir = dir;
+  }
+  else if (dir == MODE_DEL) /* && (chptr->mode.mode & d)) */
+  {
+    /* setting - */
+    chptr->mode.mode &= ~d;
+
+    /*
+     * Received -d, another server must have had its last member
+     * do an action to reveal itself. Reveal all hidden users.
+     */
+    DLINK_FOREACH(node, chptr->members.head)
+    {
+      struct Membership *member = node->data;
+      if (member->flags & CHFL_DELAYED)
+      {
+        member->flags &= ~CHFL_DELAYED;
+        local_join_channel(member->client_p, chptr, 3);
+      }
+    }
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].arg = NULL;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].dir = dir;
+  }
+}
+
+
+static void
 chm_registered(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
                char **parv, int *errors, int alev, int dir, char c, unsigned int d)
 {
@@ -807,6 +953,8 @@ chm_voice(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
+  try_reveal_delayed_user(target_p, member, chptr);
+
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
   mode_changes[mode_count].id = target_p->id;
@@ -864,6 +1012,8 @@ chm_hop(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       DelMemberFlag(member, CHFL_HALFOP);
       break;
   }
+
+  try_reveal_delayed_user(target_p, member, chptr);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -923,6 +1073,8 @@ chm_op(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
+  try_reveal_delayed_user(target_p, member, chptr);
+
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
   mode_changes[mode_count].id = target_p->id;
@@ -980,6 +1132,8 @@ chm_protect(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       DelMemberFlag(member, CHFL_PROTECT);
       break;
   }
+
+  try_reveal_delayed_user(target_p, member, chptr);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1039,6 +1193,8 @@ chm_owner(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       DelMemberFlag(member, CHFL_OWNER);
       break;
   }
+
+  try_reveal_delayed_user(target_p, member, chptr);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1223,7 +1379,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_nosuch,  0 },                   /* A */
   { chm_nosuch,  0 },                   /* B */
   { chm_simple,  MODE_NOCTCP },         /* C */
-  { chm_nosuch,  0 },                   /* D */
+  { chm_deljoins,  MODE_DELJOINS },     /* D */
   { chm_nosuch,  0 },                   /* E */
   { chm_nosuch,  0 },                   /* F */
   { chm_nosuch,  0 },                   /* G */
@@ -1255,7 +1411,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_protect, 0 },                   /* a */
   { chm_ban,     0 },                   /* b */
   { chm_simple, MODE_NOCTRL},           /* c */
-  { chm_nosuch,  0 },                   /* d */
+  { chm_wasdeljoin, MODE_WASDELJOINS }, /* d */
   { chm_except,  0 },                   /* e */
   { chm_nosuch,  0 },                   /* f */
   { chm_nosuch,  0 },                   /* g */
@@ -1685,4 +1841,15 @@ set_channel_mode(struct Client *source_p, struct Channel *chptr,
 
   send_mode_changes_client(source_p, chptr);
   send_mode_changes_server(source_p, chptr);
+}
+
+/* Just because I hate hard coding data */
+unsigned char get_chan_mode_letter(unsigned int mode)
+{
+  for (const struct mode_letter *tab = chan_modes; tab->mode; ++tab)
+  {
+    if (tab->mode == mode)
+      return tab->letter;
+  }
+  return '\0';
 }

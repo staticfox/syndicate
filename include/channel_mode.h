@@ -76,7 +76,8 @@ enum
   CHFL_BAN_SILENCED = 0x00000080U,
   /* More channel modes */
   CHFL_PROTECT      = 0x00000100U,  /* Channel admin/protect mode */
-  CHFL_OWNER        = 0x00000200U   /* Channel owner */
+  CHFL_OWNER        = 0x00000200U,  /* Channel owner */
+  CHFL_DELAYED      = 0x00000400U   /* Joined under MODE_DELJOINS */
 };
 
 /* channel modes ONLY */
@@ -95,7 +96,9 @@ enum
   MODE_NOCTRL     = 0x00000400U,  /**< Prevents users from sending messages containing control codes to the channel */
   MODE_MODREG     = 0x00000800U,  /**< Unregistered/unidentified clients cannot send text to the channel */
   MODE_NOCTCP     = 0x00001000U,  /**< Clients cannot send CTCP messages to the channel */
-  MODE_NONOTICE   = 0x00002000U   /**< Clients cannot send NOTICE to the channel */
+  MODE_NONOTICE   = 0x00002000U,  /**< Clients cannot send NOTICE to the channel */
+  MODE_DELJOINS   = 0x00004000U,  /**< New join messages are delayed */
+  MODE_WASDELJOINS= 0x00008000U   /**< Not DELJOINS, but some joins pending */
 };
 
 /* name invisible */
@@ -134,4 +137,5 @@ extern void set_channel_mode(struct Client *, struct Channel *,
                              struct Membership *, int, char **);
 extern void clear_ban_cache_channel(struct Channel *);
 extern void clear_ban_cache_client(struct Client *);
+unsigned char get_chan_mode_letter(unsigned int);
 #endif /* INCLUDED_channel_mode_h */

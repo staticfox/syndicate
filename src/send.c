@@ -36,6 +36,7 @@
 #include "server.h"
 #include "conf_class.h"
 #include "log.h"
+#include "channel_mode.h"
 
 
 static uintmax_t current_serial;
@@ -510,6 +511,10 @@ sendto_common_channels_local(struct Client *user, int touser, unsigned int posca
   DLINK_FOREACH(cptr, user->channel.head)
   {
     chptr = ((struct Membership *)cptr->data)->chptr;
+
+    /* To users, we don't exist in this channel yet. */
+    if (((struct Membership *)cptr->data)->flags & CHFL_DELAYED)
+      continue;
 
     DLINK_FOREACH(uptr, chptr->locmembers.head)
     {

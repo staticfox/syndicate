@@ -221,20 +221,8 @@ ms_join(struct Client *source_p, int parc, char *parv[])
 
   if (!IsMember(source_p, chptr))
   {
-    add_user_to_channel(chptr, source_p, 0, 1);
-
-    sendto_channel_local(NULL, chptr, 0, CAP_EXTENDED_JOIN, 0, ":%s!%s@%s JOIN %s %s :%s",
-                         source_p->name, source_p->username,
-                         source_p->host, chptr->name, source_p->account, source_p->info);
-    sendto_channel_local(NULL, chptr, 0, 0, CAP_EXTENDED_JOIN, ":%s!%s@%s JOIN :%s",
-                         source_p->name, source_p->username,
-                         source_p->host, chptr->name);
-
-    if (source_p->away[0])
-      sendto_channel_local(source_p, chptr, 0, CAP_AWAY_NOTIFY, 0,
-                           ":%s!%s@%s AWAY :%s",
-                           source_p->name, source_p->username,
-                           source_p->host, source_p->away);
+    add_user_to_channel(chptr, source_p, (chptr->mode.mode & MODE_DELJOINS) ? CHFL_DELAYED : 0, 1);
+    local_join_channel(source_p, chptr, (chptr->mode.mode & MODE_DELJOINS) ? 1 : 2);
   }
 
   sendto_server(source_p, 0, 0, ":%s JOIN %ju %s +",

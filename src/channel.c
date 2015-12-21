@@ -471,6 +471,10 @@ channel_member_names(struct Client *client_p, struct Channel *chptr,
       if (HasUMode(member->client_p, UMODE_INVISIBLE) && !is_member)
         continue;
 
+      /* Show them in /NAMES if they're delayed. But them only. */
+      if ((member->flags & CHFL_DELAYED) && member->client_p != client_p)
+        continue;
+
       if (!uhnames)
         tlen = strlen(member->client_p->name) + 1;  /* +1 for space */
       else
@@ -504,10 +508,10 @@ channel_member_names(struct Client *client_p, struct Channel *chptr,
       }
 
       if (!uhnames)
-        t += sprintf(t, "%s%s ", get_member_status(member, multi_prefix),
+        t += sprintf(t, "%s%s ", get_member_status(member, multi_prefix, 0),
                      member->client_p->name);
       else
-        t += sprintf(t, "%s%s!%s@%s ", get_member_status(member, multi_prefix),
+        t += sprintf(t, "%s%s!%s@%s ", get_member_status(member, multi_prefix, 0),
                      member->client_p->name, member->client_p->username,
                      member->client_p->host);
     }
@@ -593,7 +597,8 @@ clear_invites_client(struct Client *client_p)
  *
  * inputs       - pointer to struct Membership
  *              - YES if we can combine different flags
- * output       - string either @, +, % or "" depending on whether
+ *              - YES if we want to show the delayed prefix
+ * output       - string either <, ~, &, @, +, % or "" depending on whether
  *                chanop, voiced or user
  * side effects -
  *
@@ -601,10 +606,17 @@ clear_invites_client(struct Client *client_p)
  * (like in get_client_name)
  */
 const char *
-get_member_status(const struct Membership *member, const int combine)
+get_member_status(const struct Membership *member, const int combine, const int show_delayed)
 {
   static char buffer[CMEMBER_STATUS_FLAGS_LEN + 1];  /* +1 for \0 */
   char *p = buffer;
+
+  if ((member->flags & CHFL_DELAYED) && show_delayed)
+  {
+    if (!combine)
+      return "<";
+    *p++ = '<';
+  }
 
   if (member->flags & CHFL_OWNER)
   {
@@ -613,28 +625,28 @@ get_member_status(const struct Membership *member, const int combine)
     *p++ = '~';
   }
 
-  else if (member->flags & CHFL_PROTECT)
+  if (member->flags & CHFL_PROTECT)
   {
     if (!combine)
       return "&";
     *p++ = '&';
   }
 
-  else if (member->flags & CHFL_CHANOP)
+  if (member->flags & CHFL_CHANOP)
   {
     if (!combine)
       return "@";
     *p++ = '@';
   }
 
-  else if (member->flags & CHFL_HALFOP)
+  if (member->flags & CHFL_HALFOP)
   {
     if (!combine)
       return "%";
     *p++ = '%';
   }
 
-  else if (member->flags & CHFL_VOICE)
+  if (member->flags & CHFL_VOICE)
     *p++ = '+';
   *p = '\0';
 
@@ -864,6 +876,11 @@ can_send(struct Channel *chptr, struct Client *client_p,
       return ERR_CANNOTSENDTOCHAN;
   }
 
+  /* If they are muted under the effect of +D,
+   * join them to the channel.
+   */
+  try_reveal_delayed_user(client_p, member, chptr);
+
   return CAN_SEND_NONOP;
 }
 
@@ -950,6 +967,95 @@ channel_set_topic(struct Channel *chptr, const char *topic,
   chptr->topic_time = topicts;
 }
 
+/*! \brief Locally joins a user to a channel
+ * \param source_p Pointer to the source client to add
+ * \param chptr Pointer to the channel
+ * \param option Who should get the JOIN message
+ */
+void
+local_join_channel(struct Client *client_p, struct Channel *chptr, int option)
+{
+  /* Only send the JOIN message to the client, they joined under +D */
+  if (option == 1)
+  {
+    /* Not my client, not my problem */
+    if (!MyConnect(client_p))
+      return;
+
+    if (!!HasCap(client_p, CAP_EXTENDED_JOIN))
+      sendto_one(client_p, ":%s!%s@%s JOIN %s %s :%s",
+                 client_p->name, client_p->username,
+                 client_p->host, chptr->name, client_p->account, client_p->info);
+    else
+      sendto_one(client_p, ":%s!%s@%s JOIN :%s",
+                 client_p->name, client_p->username,
+                 client_p->host, chptr->name);
+  }
+  else
+  {
+    /*
+     * If option is 2 then everyone, including the client, gets the JOIN message.
+     * Otherwise (if it's 3), send the JOIN message to everyone but the client,
+     * which "pseudo" joins them to the channel after CHFL_DELAYJOIN was removed.
+     */
+    sendto_channel_local(option == 2 ? NULL : client_p, chptr, 0, CAP_EXTENDED_JOIN, 0, ":%s!%s@%s JOIN %s %s :%s",
+                         client_p->name, client_p->username,
+                         client_p->host, chptr->name, client_p->account, client_p->info);
+    sendto_channel_local(option == 2 ? NULL : client_p, chptr, 0, 0, CAP_EXTENDED_JOIN, ":%s!%s@%s JOIN :%s",
+                         client_p->name, client_p->username,
+                         client_p->host, chptr->name);
+
+    if (client_p->away[0])
+      sendto_channel_local(client_p, chptr, 0, CAP_AWAY_NOTIFY, 0,
+                           ":%s!%s@%s AWAY :%s",
+                           client_p->name, client_p->username,
+                           client_p->host, client_p->away);
+  }
+}
+
+/*! \brief Locally parts a user from a channel
+ * \param source_p Pointer to the source client to add
+ * \param chptr Pointer to the channel
+ * \param reason Part reason
+ * \param selfonly Wether or not source_p will be the only recipient
+ */
+void
+local_part_channel(struct Client *client_p, struct Channel *chptr, const char *reason, int selfonly)
+{
+  if (selfonly)
+  {
+    if (!MyConnect(client_p))
+      return;
+
+    if (EmptyString(reason))
+    {
+      sendto_one(client_p, ":%s!%s@%s PART %s",
+              client_p->name, client_p->username,
+              client_p->host, chptr->name);
+    }
+    else
+    {
+      sendto_one(client_p, ":%s PART %s :%s",
+              client_p->name, client_p->username,
+              client_p->host, chptr->name, reason);
+    }
+  }
+  else /* send to all */
+    if (EmptyString(reason))
+    {
+      sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s!%s@%s PART %s",
+                         client_p->name, client_p->username,
+                         client_p->host, chptr->name);
+    }
+    else
+    {
+    sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s!%s@%s PART %s :%s",
+                         client_p->name, client_p->username,
+                         client_p->host, chptr->name, reason);
+    }
+
+}
+
 /* do_join_0()
  *
  * inputs	- pointer to client doing join 0
@@ -971,13 +1077,11 @@ channel_do_join_0(struct Client *client_p)
   DLINK_FOREACH_SAFE(node, node_next, client_p->channel.head)
   {
     struct Channel *chptr = ((struct Membership *)node->data)->chptr;
+    struct Membership *member = find_channel_link(client_p, chptr);
 
     sendto_server(client_p, 0, 0, ":%s PART %s",
                   client_p->id, chptr->name);
-    sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s!%s@%s PART %s",
-                         client_p->name, client_p->username,
-                         client_p->host, chptr->name);
-
+    local_part_channel(client_p, chptr, NULL, (member->flags & CHFL_DELAYED) ? 1 : 0);
     remove_user_from_channel(node->data);
   }
 }
@@ -1089,6 +1193,12 @@ channel_do_join(struct Client *client_p, char *channel, char *key_list)
         flags = CHFL_CHANOP;
       else
         flags = 0;
+
+      /*
+       * If the channel is in +D, set their flag to CHFL_DELAYED.
+       */
+      if ((chptr->mode.mode & MODE_DELJOINS))
+        flags |= CHFL_DELAYED;
     }
     else
     {
@@ -1138,18 +1248,12 @@ channel_do_join(struct Client *client_p, char *channel, char *key_list)
                     client_p->id, chptr->creationtime,
                     chptr->name);
 
-      sendto_channel_local(NULL, chptr, 0, CAP_EXTENDED_JOIN, 0, ":%s!%s@%s JOIN %s %s :%s",
-                           client_p->name, client_p->username,
-                           client_p->host, chptr->name, client_p->account, client_p->info);
-      sendto_channel_local(NULL, chptr, 0, 0, CAP_EXTENDED_JOIN, ":%s!%s@%s JOIN :%s",
-                           client_p->name, client_p->username,
-                           client_p->host, chptr->name);
-
-      if (client_p->away[0])
-        sendto_channel_local(client_p, chptr, 0, CAP_AWAY_NOTIFY, 0,
-                             ":%s!%s@%s AWAY :%s",
-                             client_p->name, client_p->username,
-                             client_p->host, client_p->away);
+      /*
+       * Only introduce them publically if +D is not set.
+       * Otherwise, send the JOIN command to the source
+       * client to keep them synced.
+       */
+      local_join_channel(client_p, chptr, (chptr->mode.mode & MODE_DELJOINS) ? 1 : 2);
     }
 
     del_invite(chptr, client_p);
@@ -1194,6 +1298,11 @@ channel_part_one_client(struct Client *client_p, const char *name, const char *r
     check_spambot_warning(client_p, NULL);
 
   /*
+   * Check if they are still under the effect of +D. If they are,
+   * don't announce that they left.
+   */
+
+  /*
    * Remove user from the old channel (if any)
    * only allow /part reasons in -m chans
    */
@@ -1204,17 +1313,13 @@ channel_part_one_client(struct Client *client_p, const char *name, const char *r
   {
     sendto_server(client_p, 0, 0, ":%s PART %s :%s",
                   client_p->id, chptr->name, reason);
-    sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s!%s@%s PART %s :%s",
-                         client_p->name, client_p->username,
-                         client_p->host, chptr->name, reason);
+    local_part_channel(client_p, chptr, reason, (member->flags & CHFL_DELAYED) ? 1 : 0);
   }
   else
   {
     sendto_server(client_p, 0, 0, ":%s PART %s",
                   client_p->id, chptr->name);
-    sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s!%s@%s PART %s",
-                         client_p->name, client_p->username,
-                         client_p->host, chptr->name);
+    local_part_channel(client_p, chptr, NULL, (member->flags & CHFL_DELAYED) ? 1 : 0);
   }
 
   remove_user_from_channel(member);
@@ -1234,4 +1339,52 @@ channel_do_part(struct Client *client_p, char *channel, const char *reason)
   for (name = strtok_r(channel, ",", &p); name;
        name = strtok_r(NULL,    ",", &p))
     channel_part_one_client(client_p, name, buf);
+}
+
+void
+try_reveal_delayed_user(struct Client *client_p, struct Membership *member, struct Channel *chptr)
+{
+  const dlink_node *node = NULL;
+  unsigned char delay_mode = get_chan_mode_letter(MODE_WASDELJOINS);
+
+  /* We aren't +d or +D, next! */
+  if (!(chptr->mode.mode & MODE_WASDELJOINS) &&
+    !(chptr->mode.mode & MODE_DELJOINS))
+    return;
+
+  /* Sent a message through -n */
+  if (member == NULL)
+    return;
+
+  /* Unset the delayed flag and introduce them to the channel */
+  if (member->flags & CHFL_DELAYED)
+  {
+    member->flags &= ~CHFL_DELAYED;
+    local_join_channel(member->client_p, chptr, 3);
+  }
+
+  /* If we're +d, try to see if we can unset it now */
+  if (chptr->mode.mode & MODE_WASDELJOINS)
+  {
+    DLINK_FOREACH(node, chptr->members.head)
+    {
+      const struct Membership *lmem = node->data;
+      if (lmem->flags & CHFL_DELAYED)
+        return;
+    }
+
+    /*
+     * If we've made it this far then we are wanting to remove
+     * +d, which we can do now.
+     */
+    chptr->mode.mode &= ~MODE_WASDELJOINS;
+
+    if (delay_mode != '\0')
+    {
+      sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s MODE %s -%c",
+        me.name, chptr->name, delay_mode);
+      sendto_server(client_p, 0, 0, ":%s TMODE %ju %s -%c",
+        me.id, chptr->creationtime, chptr->name, delay_mode);
+    }
+  }
 }

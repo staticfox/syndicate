@@ -806,6 +806,10 @@ user_set_hostmask(struct Client *target_p, const char *hostname, const int what)
     int len = 0;
     const struct Membership *member = node->data;
 
+    /* They're hidden, don't pseudo join them */
+    if (member->flags & CHFL_DELAYED)
+      continue;
+
     if (has_member_flags(member, CHFL_OWNER))
     {
       *p++ = 'q';

@@ -234,7 +234,9 @@ do_who_on_channel(struct Client *source_p, struct Channel *chptr,
         if (!HasUMode(target_p, UMODE_OPER) ||
             (HasUMode(target_p, UMODE_HIDDEN) && !HasUMode(source_p, UMODE_OPER)))
           continue;
-      do_who(source_p, target_p, chptr->name, get_member_status(member, !!HasCap(source_p, CAP_MULTI_PREFIX)));
+      if ((member->flags & CHFL_DELAYED) && target_p != source_p)
+        continue;
+      do_who(source_p, target_p, chptr->name, get_member_status(member, !!HasCap(source_p, CAP_MULTI_PREFIX), 1));
     }
   }
 }
@@ -300,7 +302,7 @@ m_who(struct Client *source_p, int parc, char *parv[])
 
     if (node)
       do_who(source_p, target_p, chptr->name,
-             get_member_status(node->data, !!HasCap(source_p, CAP_MULTI_PREFIX)));
+             get_member_status(node->data, !!HasCap(source_p, CAP_MULTI_PREFIX), 0));
     else
       do_who(source_p, target_p, NULL, "");
 
