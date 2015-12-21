@@ -561,6 +561,12 @@ register_remote_user(struct Client *source_p)
   userhost_add(source_p->username, source_p->realhost, 1);
   AddFlag(source_p, FLAGS_USERHOST);
 
+  if (ConfigGeneral.enable_cloak_system && !HasFlag(source_p, FLAGS_IP_SPOOFED))
+  {
+    make_virthost(source_p->realhost, source_p->cloaked_host, sizeof(source_p->cloaked_host));
+    make_virthost(source_p->sockhost, source_p->cloaked_ip, sizeof(source_p->cloaked_ip));
+  }
+
   if (HasFlag(source_p->servptr, FLAGS_EOB))
     sendto_realops_flags(UMODE_FARCONNECT, L_ALL, SEND_NOTICE,
                          "Client connecting at %s: %s (%s@%s) [%s] [%s] <%s>",
