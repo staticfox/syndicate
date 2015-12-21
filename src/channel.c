@@ -132,6 +132,9 @@ remove_user_from_channel(struct Membership *member)
   struct Client *const client_p = member->client_p;
   struct Channel *const chptr = member->chptr;
 
+  /* Keep synced with CHFL_DEALYED count for potential -d */
+  try_reveal_delayed_user(client_p, member, chptr, 1);
+
   dlinkDelete(&member->channode, &chptr->members);
 
   if (MyConnect(client_p))
@@ -876,11 +879,6 @@ can_send(struct Channel *chptr, struct Client *client_p,
       return ERR_CANNOTSENDTOCHAN;
   }
 
-  /* If they are muted under the effect of +D,
-   * join them to the channel.
-   */
-  try_reveal_delayed_user(client_p, member, chptr);
-
   return CAN_SEND_NONOP;
 }
 
@@ -1077,11 +1075,9 @@ channel_do_join_0(struct Client *client_p)
   DLINK_FOREACH_SAFE(node, node_next, client_p->channel.head)
   {
     struct Channel *chptr = ((struct Membership *)node->data)->chptr;
-    struct Membership *member = find_channel_link(client_p, chptr);
 
     sendto_server(client_p, 0, 0, ":%s PART %s",
                   client_p->id, chptr->name);
-    local_part_channel(client_p, chptr, NULL, (member->flags & CHFL_DELAYED) ? 1 : 0);
     remove_user_from_channel(node->data);
   }
 }
@@ -1342,7 +1338,7 @@ channel_do_part(struct Client *client_p, char *channel, const char *reason)
 }
 
 void
-try_reveal_delayed_user(struct Client *client_p, struct Membership *member, struct Channel *chptr)
+try_reveal_delayed_user(struct Client *client_p, struct Membership *member, struct Channel *chptr, const int leaving)
 {
   const dlink_node *node = NULL;
   unsigned char delay_mode = get_chan_mode_letter(MODE_WASDELJOINS);
@@ -1360,7 +1356,9 @@ try_reveal_delayed_user(struct Client *client_p, struct Membership *member, stru
   if (member->flags & CHFL_DELAYED)
   {
     member->flags &= ~CHFL_DELAYED;
-    local_join_channel(member->client_p, chptr, 3);
+    /* Only send a join if we aren't leaving */
+    if (!leaving)
+      local_join_channel(member->client_p, chptr, 3);
   }
 
   /* If we're +d, try to see if we can unset it now */

@@ -272,8 +272,11 @@ msg_channel(int p_or_n, struct Client *source_p, struct Channel *chptr,
   {
     if (result == CAN_SEND_OPV ||
         !flood_attack_channel(p_or_n, source_p, chptr))
+    {
+      try_reveal_delayed_user(source_p, find_channel_link(source_p, chptr), chptr, 0);
       sendto_channel_butone(source_p, source_p, chptr, type, "%s %s%s :%s",
                             command[p_or_n], prefix, chptr->name, text);
+    }
   }
   else if (p_or_n != NOTICE)
     sendto_one_numeric(source_p, &me, result, chptr->name, text);

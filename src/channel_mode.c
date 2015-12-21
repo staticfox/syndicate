@@ -953,7 +953,7 @@ chm_voice(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
-  try_reveal_delayed_user(target_p, member, chptr);
+  try_reveal_delayed_user(target_p, member, chptr, 0);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1013,7 +1013,7 @@ chm_hop(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
-  try_reveal_delayed_user(target_p, member, chptr);
+  try_reveal_delayed_user(target_p, member, chptr, 0);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1073,7 +1073,7 @@ chm_op(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
-  try_reveal_delayed_user(target_p, member, chptr);
+  try_reveal_delayed_user(target_p, member, chptr, 0);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1133,7 +1133,7 @@ chm_protect(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
-  try_reveal_delayed_user(target_p, member, chptr);
+  try_reveal_delayed_user(target_p, member, chptr, 0);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;
@@ -1194,7 +1194,7 @@ chm_owner(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
   }
 
-  try_reveal_delayed_user(target_p, member, chptr);
+  try_reveal_delayed_user(target_p, member, chptr, 0);
 
   mode_changes[mode_count].letter = c;
   mode_changes[mode_count].arg = target_p->name;

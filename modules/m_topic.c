@@ -85,7 +85,7 @@ m_topic(struct Client *source_p, int parc, char *parv[])
 
     /* Attempt to reveal the user if we're -t */
     if (!(chptr->mode.mode & MODE_TOPICLIMIT))
-      try_reveal_delayed_user(source_p, find_channel_link(source_p, chptr), chptr);
+      try_reveal_delayed_user(source_p, find_channel_link(source_p, chptr), chptr, 0);
 
     if (!(chptr->mode.mode & MODE_TOPICLIMIT) || has_member_flags(member,
       CHFL_OWNER | CHFL_PROTECT | CHFL_CHANOP | CHFL_HALFOP))
