@@ -49,7 +49,9 @@ oper_up(struct Client *source_p)
   const unsigned int old = source_p->umodes;
   const struct MaskItem *const conf = source_p->connection->confs.head->data;
 
-  ++Count.oper;
+  if (!HasFlag(source_p, FLAGS_SERVICE))
+    ++Count.oper;
+
   SetOper(source_p);
 
   if (conf->modes)

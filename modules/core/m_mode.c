@@ -101,7 +101,9 @@ set_user_mode(struct Client *source_p, const int parc, char *parv[])
         {
           if (!MyConnect(source_p) && !HasUMode(source_p, UMODE_OPER))
           {
-            ++Count.oper;
+            if (!HasFlag(source_p, FLAGS_SERVICE))
+              ++Count.oper;
+
             SetOper(source_p);
           }
         }
@@ -111,7 +113,9 @@ set_user_mode(struct Client *source_p, const int parc, char *parv[])
             break;
 
           ClearOper(source_p);
-          --Count.oper;
+
+          if (!HasFlag(source_p, FLAGS_SERVICE))
+            --Count.oper;
 
           if (MyConnect(source_p))
           {

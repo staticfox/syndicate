@@ -452,7 +452,7 @@ update_client_exit_stats(struct Client *client_p)
     assert(Count.total > 0);
 
     --Count.total;
-    if (HasUMode(client_p, UMODE_OPER))
+    if (HasUMode(client_p, UMODE_OPER) && !HasFlag(client_p, FLAGS_SERVICE))
       --Count.oper;
     if (HasUMode(client_p, UMODE_INVISIBLE))
       --Count.invisi;
