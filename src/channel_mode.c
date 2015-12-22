@@ -124,12 +124,13 @@ add_id(struct Client *client_p, struct Channel *chptr, char *banid, unsigned int
   char host[HOSTLEN + 1] = "";
   struct split_nuh_item nuh;
 
-  /* Don't let local clients overflow the b/e/I lists */
+  /* Don't let local clients overflow the b/e/I/x lists */
   if (MyClient(client_p))
   {
     unsigned int num_mask = dlink_list_length(&chptr->banlist) +
                             dlink_list_length(&chptr->exceptlist) +
-                            dlink_list_length(&chptr->invexlist);
+                            dlink_list_length(&chptr->invexlist) +
+                            dlink_list_length(&chptr->quietlist);
 
     if (num_mask >= ConfigChannel.max_bans)
     {
@@ -169,6 +170,10 @@ add_id(struct Client *client_p, struct Channel *chptr, char *banid, unsigned int
       break;
     case CHFL_INVEX:
       list = &chptr->invexlist;
+      break;
+    case CHFL_QUIET:
+      list = &chptr->quietlist;
+      clear_ban_cache_channel(chptr);
       break;
     default:
       assert(0);
@@ -254,6 +259,10 @@ del_id(struct Channel *chptr, char *banid, unsigned int type)
       break;
     case CHFL_INVEX:
       list = &chptr->invexlist;
+      break;
+    case CHFL_QUIET:
+      list = &chptr->quietlist;
+      clear_ban_cache_channel(chptr);
       break;
     default:
       assert(0);
@@ -734,6 +743,74 @@ chm_ban(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
       break;
     case MODE_DEL:
       if (!del_id(chptr, mask, CHFL_BAN))
+        return;
+      break;
+    default:
+      assert(0);
+  }
+
+  mode_changes[mode_count].letter = c;
+  mode_changes[mode_count].arg = mask;
+  mode_changes[mode_count].id = NULL;
+  mode_changes[mode_count++].dir = dir;
+}
+
+static void
+chm_quiet(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
+        char **parv, int *errors, int alev, int dir, char c, unsigned int d)
+{
+  char *mask = NULL;
+
+  if (dir == MODE_QUERY || parc <= *parn)
+  {
+    dlink_node *node = NULL;
+
+    if (*errors & SM_ERR_RPL_B)
+      return;
+
+    *errors |= SM_ERR_RPL_B;
+
+    DLINK_FOREACH(node, chptr->quietlist.head)
+    {
+      const struct Ban *ban = node->data;
+      sendto_one_numeric(source_p, &me, RPL_BANLIST, chptr->name,
+                         ban->name, ban->user, ban->host,
+                         ban->who, ban->when);
+    }
+
+    sendto_one_numeric(source_p, &me, RPL_ENDOFBANLIST, chptr->name);
+    return;
+  }
+
+  if (alev < CHACCESS_HALFOP)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one_numeric(source_p, &me,
+                         alev == CHACCESS_NOTONCHAN ? ERR_NOTONCHANNEL :
+                         ERR_CHANOPRIVSNEEDED, chptr->name);
+
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  mask = nuh_mask[*parn];
+  strlcpy(mask, parv[*parn], sizeof(nuh_mask[*parn]));
+  ++(*parn);
+
+  if (*mask == ':' || (!MyConnect(source_p) && strchr(mask, ' ')))
+    return;
+
+  switch (dir)
+  {
+    case MODE_ADD:
+      if (!add_id(source_p, chptr, mask, CHFL_QUIET))
+        return;
+      break;
+    case MODE_DEL:
+      if (!del_id(chptr, mask, CHFL_QUIET))
         return;
       break;
     default:
@@ -1414,7 +1491,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_nosuch,     0               },  /* u */
   { chm_voice,      0               },  /* v */
   { chm_nosuch,     0               },  /* w */
-  { chm_nosuch,     0               },  /* x */
+  { chm_quiet,      0               },  /* x */
   { chm_nosuch,     0               },  /* y */
   { chm_nosuch,     0               },  /* z */
   { chm_nosuch,  0 },			/* 0x7b */

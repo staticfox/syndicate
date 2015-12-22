@@ -49,7 +49,7 @@
  *      - parv[0] = command
  *      - parv[1] = timestamp
  *      - parv[2] = channel name
- *      - parv[3] = type of ban to add ('b' 'I' or 'e')
+ *      - parv[3] = type of ban to add ('b', 'I', 'e' or 'x')
  *      - parv[4] = space delimited list of masks to add
  */
 static int
@@ -81,6 +81,9 @@ ms_bmask(struct Client *source_p, int parc, char *parv[])
       break;
     case 'I':
       mode_type = CHFL_INVEX;
+      break;
+    case 'x':
+      mode_type = CHFL_QUIET;
       break;
     default:
       return 0;

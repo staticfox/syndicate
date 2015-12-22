@@ -284,6 +284,7 @@ channel_send_modes(struct Client *client_p, struct Channel *chptr)
   channel_send_mask_list(client_p, chptr, &chptr->banlist, 'b');
   channel_send_mask_list(client_p, chptr, &chptr->exceptlist, 'e');
   channel_send_mask_list(client_p, chptr, &chptr->invexlist, 'I');
+  channel_send_mask_list(client_p, chptr, &chptr->quietlist, 'x');
 }
 
 /*! \brief Check if the user has privleges to kick or deop
@@ -419,6 +420,7 @@ channel_free(struct Channel *chptr)
   channel_free_mask_list(&chptr->banlist);
   channel_free_mask_list(&chptr->exceptlist);
   channel_free_mask_list(&chptr->invexlist);
+  channel_free_mask_list(&chptr->quietlist);
 
   dlinkDelete(&chptr->node, &channel_list);
   hash_del_channel(chptr);
@@ -712,6 +714,20 @@ is_banned(const struct Channel *chptr, const struct Client *client_p)
   return 0;
 }
 
+/*!
+ * \param chptr    Pointer to channel block
+ * \param client_p Pointer to client to check access fo
+ * \return 0 if not banned, 1 otherwise
+ */
+int
+is_quieted(const struct Channel *chptr, const struct Client *client_p)
+{
+  if (find_bmask(client_p, &chptr->quietlist))
+    return 1;
+
+  return 0;
+}
+
 /*! Tests if a client can join a certain channel
  * \param client_p Pointer to client attempting to join
  * \param chptr    Pointer to channel
@@ -867,6 +883,12 @@ can_send(struct Channel *chptr, struct Client *client_p,
       if (!(member->flags & CHFL_BAN_CHECKED))
       {
         if (is_banned(chptr, client_p))
+        {
+          member->flags |= (CHFL_BAN_CHECKED | CHFL_BAN_SILENCED);
+          return ERR_CANNOTSENDTOCHAN;
+        }
+
+        if (is_quieted(chptr, client_p))
         {
           member->flags |= (CHFL_BAN_CHECKED | CHFL_BAN_SILENCED);
           return ERR_CANNOTSENDTOCHAN;

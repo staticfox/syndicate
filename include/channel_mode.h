@@ -65,19 +65,22 @@ enum
 /* Channel related flags */
 enum
 {
-  CHFL_CHANOP       = 0x00000001U,  /* Channel operator   */
-  CHFL_HALFOP       = 0x00000002U,  /* Channel half op    */
-  CHFL_VOICE        = 0x00000004U,  /* the power to speak */
-  CHFL_BAN          = 0x00000008U,  /* ban channel flag */
-  CHFL_EXCEPTION    = 0x00000010U,  /* exception to ban channel flag */
-  CHFL_INVEX        = 0x00000020U,
+  /* Channel status flags */
+  CHFL_OWNER        = 0x00000001U,  /* Channel owner */
+  CHFL_PROTECT      = 0x00000002U,  /* Channel admin/protect mode */
+  CHFL_CHANOP       = 0x00000004U,  /* Channel operator   */
+  CHFL_HALFOP       = 0x00000008U,  /* Channel half op    */
+  CHFL_VOICE        = 0x00000010U,  /* the power to speak */
+  /* bmask flags */
+  CHFL_BAN          = 0x00000020U,  /* ban channel flag */
+  CHFL_EXCEPTION    = 0x00000040U,  /* exception to ban channel flag */
+  CHFL_INVEX        = 0x00000080U,  /* can bypass +i */
+  CHFL_QUIET        = 0x00000100U,  /* quiet channel flag */
   /* Cache flags for silence on ban */
-  CHFL_BAN_CHECKED  = 0x00000040U,
-  CHFL_BAN_SILENCED = 0x00000080U,
-  /* More channel modes */
-  CHFL_PROTECT      = 0x00000100U,  /* Channel admin/protect mode */
-  CHFL_OWNER        = 0x00000200U,  /* Channel owner */
-  CHFL_DELAYED      = 0x00000400U   /* Joined under MODE_DELJOINS */
+  CHFL_BAN_CHECKED  = 0x00000200U,
+  CHFL_BAN_SILENCED = 0x00000400U,
+  /* Hidden by +D */
+  CHFL_DELAYED      = 0x00000800U   /* Joined under MODE_DELJOINS */
 };
 
 /* channel modes ONLY */

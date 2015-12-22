@@ -86,6 +86,7 @@ struct Channel
   dlink_list banlist;
   dlink_list exceptlist;
   dlink_list invexlist;
+  dlink_list quietlist;
 
   float number_joined;
 
@@ -125,6 +126,7 @@ extern int is_any_op(struct Membership *);
 extern int channel_check_name(const char *, const int);
 extern int can_send(struct Channel *, struct Client *, struct Membership *, const char *, int);
 extern int is_banned(const struct Channel *, const struct Client *);
+extern int is_quieted(const struct Channel *, const struct Client *);
 extern int has_member_flags(const struct Membership *, const unsigned int);
 
 extern void channel_do_join(struct Client *, char *, char *);
