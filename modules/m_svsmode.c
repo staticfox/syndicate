@@ -108,7 +108,7 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
         {
           ClearOper(target_p);
 
-          if (!HasFlag(source_p, FLAGS_SERVICE))
+          if (!HasFlag(target_p, FLAGS_SERVICE))
             --Count.oper;
 
           if (MyConnect(target_p))
