@@ -172,7 +172,6 @@ dline_min_cidr              { return DLINE_MIN_CIDR; }
 dline_min_cidr6             { return DLINE_MIN_CIDR6; }
 dots_in_ident               { return DOTS_IN_IDENT; }
 email                       { return EMAIL; }
-enable_cloak_system         { return ENABLE_CLOAK_SYSTEM; }
 encrypted                   { return ENCRYPTED; }
 exceed_limit                { return EXCEED_LIMIT; }
 exempt                      { return EXEMPT; }

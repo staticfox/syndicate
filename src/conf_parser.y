@@ -192,7 +192,6 @@ reset_block_state(void)
 %token  DLINE_MIN_CIDR6
 %token  DOTS_IN_IDENT
 %token  EMAIL
-%token  ENABLE_CLOAK_SYSTEM
 %token  ENCRYPTED
 %token  EXCEED_LIMIT
 %token  EXEMPT
@@ -2587,7 +2586,6 @@ general_item:       general_away_count |
                     general_stats_e_disabled |
                     general_max_watch |
                     general_cycle_on_host_change |
-                    general_enable_cloak_system |
                     general_cloak_key1 |
                     general_cloak_key2 |
                     general_cloak_key3 |
@@ -2661,12 +2659,6 @@ general_dline_min_cidr: DLINE_MIN_CIDR '=' NUMBER ';'
 general_dline_min_cidr6: DLINE_MIN_CIDR6 '=' NUMBER ';'
 {
   ConfigGeneral.dline_min_cidr6 = $3;
-};
-
-general_enable_cloak_system: ENABLE_CLOAK_SYSTEM '=' TBOOL ';'
-{
-  if (conf_parser_ctx.pass == 2)
-    ConfigGeneral.enable_cloak_system = yylval.number;
 };
 
 general_kline_min_cidr: KLINE_MIN_CIDR '=' NUMBER ';'
