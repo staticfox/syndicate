@@ -226,6 +226,9 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
     if (dlink_list_length(&chptr->invexlist))
       remove_ban_list(chptr, source_p, &chptr->invexlist, 'I');
 
+    if (dlink_list_length(&chptr->quietlist))
+      remove_ban_list(chptr, source_p, &chptr->quietlist, 'x');
+
     clear_ban_cache_channel(chptr);
     clear_invites_channel(chptr);
 
