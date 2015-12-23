@@ -148,6 +148,7 @@ class                       { return CLASS; }
 cloak_key1                  { return CLOAK_KEY1; }
 cloak_key2                  { return CLOAK_KEY2; }
 cloak_key3                  { return CLOAK_KEY3; }
+cloak_mask                  { return CLOAK_MASK; }
 close                       { return CLOSE; }
 cluster                     { return T_CLUSTER; }
 command                     { return T_COMMAND; }

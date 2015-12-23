@@ -173,6 +173,7 @@ reset_block_state(void)
 %token  CLOAK_KEY1
 %token  CLOAK_KEY2
 %token  CLOAK_KEY3
+%token  CLOAK_MASK
 %token  CLOSE
 %token  CONNECT
 %token  CONNECTFREQ
@@ -2590,6 +2591,7 @@ general_item:       general_away_count |
                     general_cloak_key1 |
                     general_cloak_key2 |
                     general_cloak_key3 |
+                    general_cloak_mask |
                     general_kline_reason |
                     error;
 
@@ -2633,6 +2635,15 @@ general_cloak_key3: CLOAK_KEY3 '=' QSTRING ';'
   {
     MyFree(ConfigGeneral.cloak_key3);
     ConfigGeneral.cloak_key3 = xstrdup(yylval.string);
+  }
+};
+
+general_cloak_mask: CLOAK_MASK '=' QSTRING ';'
+{
+  if (conf_parser_ctx.pass == 2)
+  {
+    MyFree(ConfigGeneral.cloak_mask);
+    ConfigGeneral.cloak_mask = xstrdup(yylval.string);
   }
 };
 

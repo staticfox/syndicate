@@ -151,6 +151,13 @@ init_cloak(void)
     errors = 1;
   }
 
+  /* Don't allow huge names */
+  if(strlen(ConfigGeneral.cloak_mask) > 50)
+  {
+    ilog(LOG_TYPE_IRCD, "Your cloak mask needs to be under 50 characters");
+    errors = 1;
+  }
+
   if(errors > 0)
   {
     ilog(LOG_TYPE_IRCD, "There were errors with your cloak keys. The cloaking system has been disabled");
@@ -306,7 +313,7 @@ hidehost_normalhost(const char *host)
   {
     unsigned int len;
     p++;
-    snprintf(result, sizeof(result), "%s-%X.", ConfigServerInfo.network_name, alpha);
+    snprintf(result, sizeof(result), "%s-%X.", ConfigGeneral.cloak_mask, alpha);
     len = strlen(result) + strlen(p);
     if(len <= HOSTLEN)
       strlcat(result, p, sizeof(result));
@@ -314,7 +321,7 @@ hidehost_normalhost(const char *host)
       strlcat(result, p + (len - HOSTLEN), sizeof(result));
   }
   else
-    snprintf(result, sizeof(result), "%s-%X", ConfigServerInfo.network_name, alpha);
+    snprintf(result, sizeof(result), "%s-%X", ConfigGeneral.cloak_mask, alpha);
 
   return result;
 }

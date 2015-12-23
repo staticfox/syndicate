@@ -876,6 +876,7 @@ set_default_conf(void)
   ConfigGeneral.cloak_key1 = NULL;
   ConfigGeneral.cloak_key2 = NULL;
   ConfigGeneral.cloak_key3 = NULL;
+  ConfigGeneral.cloak_mask = NULL;
   ConfigGeneral.kline_reason = NULL;
 }
 
@@ -893,6 +894,9 @@ validate_conf(void)
 
   if (EmptyString(ConfigServerInfo.network_desc))
     ConfigServerInfo.network_desc = xstrdup(NETWORK_DESC_DEFAULT);
+
+  if (EmptyString(ConfigGeneral.cloak_mask))
+    ConfigGeneral.cloak_mask = xstrdup(ConfigServerInfo.network_name);
 }
 
 /* read_conf()
@@ -1254,10 +1258,12 @@ clear_out_old_conf(void)
   MyFree(ConfigGeneral.cloak_key1);
   MyFree(ConfigGeneral.cloak_key2);
   MyFree(ConfigGeneral.cloak_key3);
+  MyFree(ConfigGeneral.cloak_mask);
   MyFree(ConfigGeneral.kline_reason);
   ConfigGeneral.cloak_key1 = NULL;
   ConfigGeneral.cloak_key2 = NULL;
   ConfigGeneral.cloak_key3 = NULL;
+  ConfigGeneral.cloak_mask = NULL;
   ConfigGeneral.kline_reason = NULL;
 }
 
