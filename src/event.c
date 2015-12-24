@@ -81,6 +81,24 @@ event_addish(struct event *ev, void *data)
 }
 
 void
+event_delete_by_name(const char *name)
+{
+  dlink_node *node;
+
+  DLINK_FOREACH(node, event_list.head)
+  {
+    struct event *ev = node->data;
+
+    if (strcmp(ev->name, name) == 0)
+    {
+      dlinkDelete(&ev->node, &event_list);
+      ev->active = 0;
+      return;
+    }
+  }
+}
+
+void
 event_delete(struct event *ev)
 {
   if (!ev->active)

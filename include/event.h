@@ -50,4 +50,5 @@ extern void event_addish(struct event *, void *);
 extern void event_delete(struct event *);
 extern void event_run(void);
 extern void event_set_back_events(time_t);
+extern void event_delete_by_name(const char *);
 #endif /* INCLUDED_event_h */
