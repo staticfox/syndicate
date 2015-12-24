@@ -217,6 +217,7 @@ reset_block_state(void)
 %token  INVITE_CLIENT_COUNT
 %token  INVITE_CLIENT_TIME
 %token  INVITE_DELAY_CHANNEL
+%token  BLOCKINVITES
 %token  IP
 %token  IRCD_AUTH
 %token  IRCD_FLAGS
@@ -1323,6 +1324,10 @@ oper_umodes_item:  T_BOTS
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_WHOIS;
+} | BLOCKINVITES
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.modes.value |= UMODE_BLOCKINVITES;
 };
 
 oper_flags: IRCD_FLAGS
@@ -2925,6 +2930,9 @@ umode_oitem:     T_BOTS
 } | WHOIS_NOTIFY
 {
   ConfigGeneral.oper_umodes |= UMODE_WHOIS;
+} | BLOCKINVITES
+{
+  ConfigGeneral.oper_umodes |= UMODE_BLOCKINVITES;
 };
 
 general_oper_only_umodes: OPER_ONLY_UMODES

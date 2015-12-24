@@ -182,7 +182,8 @@ enum
   UMODE_HIDECHANS    = 0x08000000U,  /**< Hides channel list in WHOIS */
   UMODE_OPERWALL     = 0x10000000U,  /**< Send operwall messages to them */
   UMODE_WHOIS        = 0x20000000U,  /**< Notify user on WHOIS */
-  UMODE_NETADMIN     = 0x40000000U   /**< Network Admin */
+  UMODE_NETADMIN     = 0x40000000U,  /**< Network Admin */
+  UMODE_BLOCKINVITES = 0x80000000U   /**< Disable receiving /INVITEs */
 };
 
 #define HasUMode(x, y) ((x)->umodes &   (y))

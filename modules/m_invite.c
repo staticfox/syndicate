@@ -110,6 +110,12 @@ m_invite(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
+  if (HasUMode(target_p, UMODE_BLOCKINVITES) && !HasUMode(source_p, UMODE_OPER))
+  {
+    sendto_one_numeric(source_p, &me, ERR_NOINVITE, target_p->name);
+    return 0;
+  }
+
   if ((source_p->connection->invite.last_attempt + ConfigChannel.invite_client_time) < CurrentTime)
     source_p->connection->invite.count = 0;
 
