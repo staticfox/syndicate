@@ -126,9 +126,12 @@ mo_connect(struct Client *source_p, int parc, char *parv[])
     return 0;
   }
 
-  /*
-   * Notify all operators about remote connect requests
-   */
+  sendto_wallops_flags(UMODE_WALLOP, &me, "Local CONNECT %s %d from %s",
+    conf->name, port, source_p->name);
+
+  sendto_server(&me, 0, 0, ":%s WALLOPS :Local CONNECT %s %d from %s",
+    me.id, conf->name, port, source_p->name);
+
   ilog(LOG_TYPE_IRCD, "CONNECT From %s : %s %s",
        source_p->name, parv[1], parv[2] ? parv[2] : "");
 
@@ -243,14 +246,14 @@ ms_connect(struct Client *source_p, int parc, char *parv[])
   /*
    * Notify all operators about remote connect requests
    */
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_GLOBAL, "from %s: Remote CONNECT %s %d from %s",
-                       me.name, parv[1], port, source_p->name);
-  sendto_server(NULL, 0, 0,
-                ":%s GLOBOPS :Remote CONNECT %s %d from %s",
-                me.id, parv[1], port, source_p->name);
+  sendto_wallops_flags(UMODE_WALLOP, &me, "Remote CONNECT %s %d from %s",
+    conf->name, port, source_p->name);
+
+  sendto_server(&me, 0, 0, ":%s WALLOPS :Remote CONNECT %s %d from %s",
+    me.id, conf->name, port, source_p->name);
 
   ilog(LOG_TYPE_IRCD, "CONNECT From %s : %s %d",
-       source_p->name, parv[1], port);
+       source_p->name, conf->name, port);
 
   conf->port = port;
 
