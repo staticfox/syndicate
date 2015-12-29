@@ -961,6 +961,20 @@ chm_invex(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   mode_changes[mode_count++].dir = dir;
 }
 
+static int
+is_service_modify(struct Client *source_p, struct Client *target_p,
+                  struct Channel *chptr, int *errors)
+{
+  if (HasFlag(target_p, FLAGS_SERVICE) && !IsServer(source_p))
+  {
+    if (!(*errors & ERR_ISCHANSERVICE))
+      sendto_one_numeric(source_p, &me, ERR_ISCHANSERVICE, chptr->name);
+    *errors |= ERR_ISCHANSERVICE;
+    return 1;
+  }
+  return 0;
+}
+
 static void
 chm_voice(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
           char **parv, int *errors, int alev, int dir, char c, unsigned int d)
@@ -995,6 +1009,9 @@ chm_voice(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   }
 
   if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  if (is_service_modify(source_p, target_p, chptr, errors))
     return;
 
   switch (dir)
@@ -1057,6 +1074,9 @@ chm_hop(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
     return;
 
+  if (is_service_modify(source_p, target_p, chptr, errors))
+    return;
+
   switch (dir)
   {
     case MODE_ADD:
@@ -1115,6 +1135,9 @@ chm_op(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   }
 
   if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  if (is_service_modify(source_p, target_p, chptr, errors))
     return;
 
   switch (dir)
@@ -1177,6 +1200,9 @@ chm_protect(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
     return;
 
+  if (is_service_modify(source_p, target_p, chptr, errors))
+    return;
+
   switch (dir)
   {
     case MODE_ADD:
@@ -1236,6 +1262,9 @@ chm_owner(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
   }
 
   if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  if (is_service_modify(source_p, target_p, chptr, errors))
     return;
 
   switch (dir)
