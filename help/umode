@@ -5,12 +5,7 @@ User modes: (* designates that the umode is oper only)
      USER MODE    DESCRIPTION
 -----------------------------------------------------------------
        * a     - Is marked as a server admin in stats o/p.
-       * b     - Can see warnings about possible bots/join floods.
-       * c     - Can see client connections and exits.
-       * d     - Can see server debug messages.
          D     - "Deaf": don't receive channel messages.
-       * e     - Can see new server introduction and split messages.
-       * f     - Can see 'auth {} block is full' notices.
        * F     - Can see remote client connection/quit notices.
          g     - "Caller ID" mode: only allow accepted clients to message you.
          G     - "Soft Caller ID": only allow accepted clients and clients
@@ -18,10 +13,8 @@ User modes: (* designates that the umode is oper only)
        * h     - Can see WHOIS notices.
        * H     - Operator status is hidden to other users.
          i     - Designates this client as 'invisible'.
-       * j     - Can see 'rejected' client notices.
-       * k     - Can see server kill messages.
+         I     - Block /INVITE messages.
        * l     - Can see oper locops (local wallops).
-       * n     - Can see client nick changes.
        * N     - Designates this client as a network admin.
        * o     - Designates this client as an IRC Operator.
                  Use the OPER command to attain this.
@@ -32,7 +25,6 @@ User modes: (* designates that the umode is oper only)
          R     - Only allow registered clients to message you.
          s     - Can see generic server messages and oper kills.
          S     - Client is connected via SSL/TLS.
-       * u     - Can see unauthorized client connections.
          w     - Can see server wallops.
          W     - User is connected using a webirc gateway.
          x     - User's host has been spoofed by services.

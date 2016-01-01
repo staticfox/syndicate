@@ -100,7 +100,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
 
   if (!channel_check_name(parv[2], 0))
   {
-    sendto_realops_flags(UMODE_DEBUG, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_DEBUG, L_ALL, SEND_NOTICE,
                          "*** Too long or invalid channel name from %s(via %s): %s",
                          source_p->name, source_p->from->name, parv[2]);
     return 0;
@@ -155,7 +155,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
   {
     if (newts < 800000000)
     {
-      sendto_realops_flags(UMODE_DEBUG, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_DEBUG, L_ALL, SEND_NOTICE,
                            "*** Bogus TS %ju on %s ignored from %s(via %s)",
                            newts, chptr->name,
                            source_p->name, source_p->from->name);
@@ -170,7 +170,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
       sendto_channel_local(NULL, chptr, 0, 0, 0,
                            ":%s NOTICE %s :*** Notice -- TS for %s changed from %ju to 0",
                            me.name, chptr->name, chptr->name, oldts);
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "Server %s changing TS on %s from %ju to 0",
                            source_p->name, chptr->name, oldts);
     }
@@ -274,7 +274,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
    */
   if (buflen >= (IRCD_BUFSIZE - IRCD_MAX(NICKLEN, IDLEN) - 2 - CMEMBER_STATUS_FLAGS_LEN - 1))
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Long SJOIN from server: %s(via %s) (ignored)",
                          source_p->name, source_p->from->name);
     return 0;

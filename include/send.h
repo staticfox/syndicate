@@ -87,4 +87,6 @@ extern void sendto_realops_flags_ratelimited(time_t *, const char *, ...) AFP(2,
 extern void sendto_anywhere(struct Client *, struct Client *,
                             const char *,
                             const char *, ...) AFP(4,5);
+extern void sendto_snomask_flags(unsigned int, int, int,
+                                 const char *, ...) AFP(4,5);
 #endif /* INCLUDED_send_h */

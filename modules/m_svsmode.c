@@ -57,9 +57,11 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
   const struct user_modes *tab = NULL;
   struct Client *target_p = NULL;
   int what = MODE_ADD;
+  int sno_what = MODE_ADD;
   unsigned int setmodes = 0;
   const char *modes = NULL, *extarg = NULL;
   time_t ts = 0;
+  char *p = NULL;
 
   if (!HasFlag(source_p, FLAGS_SERVICE))
     return 0;
@@ -138,6 +140,61 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
           --Count.invisi;
         }
 
+        break;
+
+      /* snomasks (SVSSNO) ? */
+      case 's':
+        if(((p = strchr(parv[1], 'o')) != NULL) || HasUMode(target_p, UMODE_OPER))
+        {
+          if (what == MODE_DEL)
+          {
+            DelUMode(target_p, UMODE_SERVNOTICE);
+            target_p->snomodes = 0;
+          }
+          else if (what == MODE_ADD && !EmptyString(extarg))
+          {
+            for (const char *mm = extarg; *mm; ++mm)
+            {
+              switch (*mm)
+              {
+                case '+':
+                  sno_what = MODE_ADD;
+                  break;
+                case '-':
+                  sno_what = MODE_DEL;
+                  break;
+                default:
+                  if ((tab = snomask_map[(unsigned char)*mm]))
+                  {
+                    if (sno_what == MODE_ADD)
+                      AddSno(target_p, tab->flag);
+                    else
+                      DelSno(target_p, tab->flag);
+                  }
+                  break;
+              }
+            }
+
+            /* Remove +s or add +s if necessary */
+            if (target_p->snomodes & 0)
+              DelUMode(target_p, UMODE_SERVNOTICE);
+            else if (!HasUMode(target_p, UMODE_SERVNOTICE))
+              AddUMode(target_p, UMODE_SERVNOTICE);
+          }
+        }
+        else
+        {
+          if (HasUMode(target_p, UMODE_SERVNOTICE))
+          {
+            DelUMode(target_p, UMODE_SERVNOTICE);
+            target_p->snomodes = 0;
+          }
+        }
+
+        if (MyConnect(target_p))
+          send_snomask_rpl(source_p);
+
+        send_snomask_rpl(target_p);
         break;
 
       case 'S':  /* Only servers may set +S in a burst */

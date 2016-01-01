@@ -73,7 +73,8 @@ enum
   CAPAB_SVS     = 0x00000800U,  /**< Supports services */
   CAPAB_DLN     = 0x00001000U,  /**< Can do DLINE message */
   CAPAB_UNDLN   = 0x00002000U,  /**< Can do UNDLINE message */
-  CAPAB_CHW     = 0x00004000U   /**< Can do channel wall @# */
+  CAPAB_CHW     = 0x00004000U,  /**< Can do channel wall @# */
+  CAPAB_SNO     = 0x00008000U,  /**< Can parse snomasks */
 };
 
 /*

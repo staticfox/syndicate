@@ -123,7 +123,7 @@ mo_kill(struct Client *source_p, int parc, char *parv[])
    * Do not change the format of this message. There's no point in changing messages
    * that have been around for ever, for no reason..
    */
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                        "Received KILL message for %s!%s@%s[%s/%s]. From %s Path: %s (%s)",
                        target_p->name, target_p->username, target_p->host,
                        target_p->servptr->name,
@@ -226,7 +226,7 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
    * local --fl
    */
   if (IsClient(source_p))  /* Send it normally */
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Received KILL message for %s!%s@%s[%s/%s]. From %s Path: %s!%s!%s!%s %s",
                          target_p->name, target_p->username, target_p->host,
                          target_p->servptr->name,
@@ -234,7 +234,7 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
                          source_p->servptr->name, source_p->host, source_p->username,
                          source_p->name, reason);
   else
-    sendto_realops_flags(UMODE_SKILL, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_SKILL, L_ALL, SEND_NOTICE,
                          "Received KILL message for %s!%s@%s[%s/%s]. From %s %s",
                          target_p->name, target_p->username, target_p->host,
                          target_p->servptr->name,

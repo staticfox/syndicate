@@ -90,7 +90,7 @@ parse_resv(struct Client *source_p, const char *name, time_t duration, const cha
       sendto_one_notice(source_p, &me, ":A %ju minute RESV has been placed on %s: %s",
                         duration / 60, type, name);
 
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "%s has placed a %ju minute RESV on %s: %s [%s]",
                          get_oper_name(source_p),
                          duration/60, type,
@@ -106,7 +106,7 @@ parse_resv(struct Client *source_p, const char *name, time_t duration, const cha
       sendto_one_notice(source_p, &me, ":A RESV has been placed on %s: %s",
                         type, name);
 
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "%s has placed a RESV on %s: %s [%s]",
                          get_oper_name(source_p), type,
                          conf->name, conf->reason);

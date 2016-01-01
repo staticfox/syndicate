@@ -1,0 +1,21 @@
+MODE <nick> +s <+|-><modes>
+
+Server notice modes:
+
+        MODE      DESCRIPTION
+-----------------------------------------------------------------
+         b     - Can see warnings about possible bots/join floods.
+         c     - Can see client connections and exits.
+         d     - Can see server debug messages.
+         e     - Can see new server introduction and split messages.
+         f     - Can see 'auth {} block is full' notices.
+         j     - Can see 'rejected' client notices.
+         k     - Can see server kill messages.
+         n     - Can see client nick changes.
+         l     - Can see K-line messages
+         m     - Can see D-line messages
+         s     - Can see general server notices
+         u     - Can see unauthorized client connections.
+         x     - Can see X-line messages
+
+- Requires Oper Priv: oper

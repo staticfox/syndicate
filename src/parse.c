@@ -117,10 +117,10 @@ parse_remove_unknown(struct Client *client_p, const char *lsender, char *lbuffer
    */
   if ((IsDigit(*lsender) && strlen(lsender) <= IRC_MAXSID) || strchr(lsender, '.'))
   {
-    sendto_realops_flags(UMODE_DEBUG, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_DEBUG, L_ADMIN, SEND_NOTICE,
                          "Unknown prefix (%s) from %s, Squitting %s",
                          lbuffer, get_client_name(client_p, SHOW_IP), lsender);
-    sendto_realops_flags(UMODE_DEBUG, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_DEBUG, L_OPER, SEND_NOTICE,
                          "Unknown prefix (%s) from %s, Squitting %s",
                          lbuffer, get_client_name(client_p, MASK_IP), lsender);
     sendto_one(client_p, ":%s SQUIT %s :(Unknown prefix (%s) from %s)",
@@ -294,11 +294,11 @@ parse(struct Client *client_p, char *pbuffer, char *bufend)
       if (from->from != client_p)
       {
         ++ServerStats.is_wrdi;
-        sendto_realops_flags(UMODE_DEBUG, L_ADMIN, SEND_NOTICE,
+        sendto_snomask_flags(SNO_DEBUG, L_ADMIN, SEND_NOTICE,
                              "Fake direction: dropped message from %s[%s] via %s",
                              from->name, from->from->name,
                              get_client_name(client_p, SHOW_IP));
-        sendto_realops_flags(UMODE_DEBUG, L_OPER, SEND_NOTICE,
+        sendto_snomask_flags(SNO_DEBUG, L_OPER, SEND_NOTICE,
                              "Fake direction: dropped message from %s[%s] via %s",
                              from->name, from->from->name,
                              get_client_name(client_p, MASK_IP));

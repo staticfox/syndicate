@@ -151,6 +151,7 @@ struct MaskItem
   unsigned int       active;
   unsigned int       htype;
   unsigned int       ref_count;  /* Number of *LOCAL* clients using this */
+  unsigned int       snomodes;
   int                bits;
   time_t             until;     /* Hold action until this time (calendar time) */
   time_t             setat;
@@ -260,6 +261,7 @@ struct config_general_entry
   unsigned int disable_auth;
   unsigned int cycle_on_host_change;
   unsigned int enable_cloak_system;
+  unsigned int snomodes;
 };
 
 struct config_channel_entry

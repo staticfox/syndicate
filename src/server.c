@@ -312,11 +312,11 @@ try_connections(void *unused)
        *   -- adrian
        */
       if (ConfigServerHide.hide_server_ips)
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+        sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "Connection to %s activated.",
                              conf->name);
       else
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+        sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "Connection to %s[%s] activated.",
                              conf->name, conf->host);
 
@@ -588,7 +588,7 @@ serv_connect(struct MaskItem *conf, struct Client *by)
   /* Still processing a DNS lookup? -> exit */
   if (conf->dns_pending)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Error connecting to %s: DNS lookup for connect{} in progress.",
                          conf->name);
     return 0;
@@ -596,7 +596,7 @@ serv_connect(struct MaskItem *conf, struct Client *by)
 
   if (conf->dns_failed)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Error connecting to %s: DNS lookup for connect{} failed.",
                          conf->name);
     return 0;
@@ -608,10 +608,10 @@ serv_connect(struct MaskItem *conf, struct Client *by)
    */
   if ((client_p = hash_find_server(conf->name)))
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "Server %s already present from %s",
                          conf->name, get_client_name(client_p, SHOW_IP));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "Server %s already present from %s",
                          conf->name, get_client_name(client_p, MASK_IP));
     if (by && IsClient(by) && !MyClient(by))
@@ -650,7 +650,7 @@ serv_connect(struct MaskItem *conf, struct Client *by)
    */
   if (!attach_connect_block(client_p, conf->name, conf->host))
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Host %s is not enabled for connecting: no connect {} block",
                          conf->name);
     if (by && IsClient(by) && !MyClient(by))
@@ -768,9 +768,9 @@ finish_ssl_server_handshake(struct Client *client_p)
                         client_p->name, CONF_SERVER);
   if (conf == NULL)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "Lost connect{} block for %s", get_client_name(client_p, SHOW_IP));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "Lost connect{} block for %s", get_client_name(client_p, MASK_IP));
 
     exit_client(client_p, "Lost connect{} block");
@@ -791,9 +791,9 @@ finish_ssl_server_handshake(struct Client *client_p)
    */
   if (IsDead(client_p))
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "%s went dead during handshake", get_client_name(client_p, SHOW_IP));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "%s went dead during handshake", get_client_name(client_p, MASK_IP));
     return;
   }
@@ -831,7 +831,7 @@ ssl_server_handshake(fde_t *fd, void *data)
       default:
       {
         const char *sslerr = ERR_error_string(ERR_get_error(), NULL);
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+        sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "Error connecting to %s: %s", client_p->name,
                              sslerr ? sslerr : "unknown SSL error");
         exit_client(client_p, "Error during SSL handshake");
@@ -916,10 +916,10 @@ serv_connect_callback(fde_t *fd, int status, void *data)
   if (status != COMM_OK)
   {
     /* We have an error, so report it and quit */
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "Error connecting to %s: %s",
                          get_client_name(client_p, SHOW_IP), comm_errstr(status));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "Error connecting to %s: %s",
                          get_client_name(client_p, MASK_IP), comm_errstr(status));
 
@@ -937,9 +937,9 @@ serv_connect_callback(fde_t *fd, int status, void *data)
                         client_p->name, CONF_SERVER);
   if (conf == NULL)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "Lost connect{} block for %s", get_client_name(client_p, SHOW_IP));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "Lost connect{} block for %s", get_client_name(client_p, MASK_IP));
 
     exit_client(client_p, "Lost connect{} block");
@@ -970,9 +970,9 @@ serv_connect_callback(fde_t *fd, int status, void *data)
    */
   if (IsDead(client_p))
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                          "%s went dead during handshake", get_client_name(client_p, SHOW_IP));
-    sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                          "%s went dead during handshake", get_client_name(client_p, MASK_IP));
     return;
   }

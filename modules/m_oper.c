@@ -59,6 +59,23 @@ oper_up(struct Client *source_p)
   else if (ConfigGeneral.oper_umodes)
     AddUMode(source_p, ConfigGeneral.oper_umodes);
 
+  /* If we are setting snomasks, make sure we have +s.
+   * Otherwise if we don't have snomasks then we also
+   * need to make sure we _don't_ have +s.
+   * Why? Who knows.
+   */
+  if (conf->snomodes)
+  {
+    if (!HasUMode(source_p, UMODE_SERVNOTICE))
+      AddUMode(source_p, UMODE_SERVNOTICE);
+    AddSno(source_p, conf->snomodes);
+  }
+  else
+  {
+    if (HasUMode(source_p, UMODE_SERVNOTICE))
+      DelUMode(source_p, UMODE_SERVNOTICE);
+  }
+
   if (!(old & UMODE_INVISIBLE) && HasUMode(source_p, UMODE_INVISIBLE))
     ++Count.invisi;
   else if ((old & UMODE_INVISIBLE) && !HasUMode(source_p, UMODE_INVISIBLE))
@@ -85,11 +102,13 @@ oper_up(struct Client *source_p)
                   RPL_WHOISOPERATOR, conf->whois);
   }
 
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "%s is now an operator",
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "%s is now an operator",
                        get_oper_name(source_p));
   sendto_server(NULL, 0, 0, ":%s GLOBOPS :%s is now an operator",
                 me.id, get_oper_name(source_p));
   send_umode_out(source_p, old);
+  if (HasUMode(source_p, UMODE_SERVNOTICE))
+    send_snomask_rpl(source_p);
   sendto_one_numeric(source_p, &me, RPL_YOUREOPER);
 }
 
@@ -104,7 +123,7 @@ failed_oper_notice(struct Client *source_p, const char *name,
                    const char *reason)
 {
   if (ConfigGeneral.failed_oper_notice)
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Failed OPER attempt as %s by %s (%s@%s) - %s",
                          name, source_p->name, source_p->username,
                          source_p->realhost, reason);

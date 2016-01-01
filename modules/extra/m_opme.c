@@ -94,7 +94,7 @@ mo_opme(struct Client *source_p, int parc, char *parv[])
 
   ilog(LOG_TYPE_IRCD, "%s used OPME on channel %s",
        get_oper_name(source_p), chptr->name);
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_GLOBAL, "from %s: %s used OPME on channel %s",
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_GLOBAL, "from %s: %s used OPME on channel %s",
                        me.name, get_oper_name(source_p), chptr->name);
   sendto_server(NULL, 0, 0, ":%s GLOBOPS :%s used OPME on channel %s",
                 me.id, get_oper_name(source_p), chptr->name);

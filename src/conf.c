@@ -341,7 +341,7 @@ verify_access(struct Client *client_p)
       if (IsConfSpoofNotice(conf))
 
         /* Remove this? */
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE, "%s spoofing: %s as %s",
+        sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE, "%s spoofing: %s as %s",
                              client_p->name, client_p->host, conf->name);
 
       strlcpy(client_p->host, conf->name, sizeof(client_p->host));
@@ -381,7 +381,7 @@ check_client(struct Client *source_p)
   switch (i)
   {
     case TOO_MANY:
-      sendto_realops_flags(UMODE_FULL, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_FULL, L_ALL, SEND_NOTICE,
                            "Too many on IP for %s (%s).",
                            get_client_name(source_p, SHOW_IP),
                            source_p->sockhost);
@@ -392,7 +392,7 @@ check_client(struct Client *source_p)
       break;
 
     case I_LINE_FULL:
-      sendto_realops_flags(UMODE_FULL, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_FULL, L_ALL, SEND_NOTICE,
                            "auth {} block is full for %s (%s).",
                            get_client_name(source_p, SHOW_IP),
                            source_p->sockhost);
@@ -405,7 +405,7 @@ check_client(struct Client *source_p)
     case NOT_AUTHORIZED:
       /* jdc - lists server name & port connections are on */
       /*       a purely cosmetical change */
-      sendto_realops_flags(UMODE_UNAUTH, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_UNAUTH, L_ALL, SEND_NOTICE,
                            "Unauthorized client connection from %s [%s] on [%s/%u].",
                            get_client_name(source_p, SHOW_IP),
                            source_p->sockhost,
@@ -865,11 +865,9 @@ set_default_conf(void)
   ConfigGeneral.ping_cookie = 0;
   ConfigGeneral.no_oper_flood = 0;
   ConfigGeneral.max_targets = MAX_TARGETS_DEFAULT;
-  ConfigGeneral.oper_only_umodes = UMODE_DEBUG | UMODE_LOCOPS | UMODE_HIDDEN | UMODE_FARCONNECT |
-                                   UMODE_UNAUTH | UMODE_EXTERNAL | UMODE_BOTS | UMODE_NCHANGE |
-                                   UMODE_SPY | UMODE_FULL | UMODE_SKILL | UMODE_REJ | UMODE_CCONN |
-                                   UMODE_OPERWALL;
-  ConfigGeneral.oper_umodes = UMODE_BOTS | UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
+  ConfigGeneral.oper_only_umodes = UMODE_LOCOPS | UMODE_HIDDEN | UMODE_FARCONNECT |
+                                   UMODE_SPY | UMODE_OPERWALL;
+  ConfigGeneral.oper_umodes = UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
   ConfigGeneral.throttle_count = 1;
   ConfigGeneral.throttle_time = 1;
   ConfigGeneral.enable_cloak_system = 0;
@@ -878,6 +876,7 @@ set_default_conf(void)
   ConfigGeneral.cloak_key3 = NULL;
   ConfigGeneral.cloak_mask = NULL;
   ConfigGeneral.kline_reason = NULL;
+  ConfigGeneral.snomodes = 0;
 }
 
 static void
@@ -933,7 +932,7 @@ void
 conf_rehash(int sig)
 {
   if (sig)
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Got signal SIGHUP, reloading configuration file(s)");
 
   restart_resolver();
@@ -1041,7 +1040,7 @@ expire_tklines(dlink_list *list)
       continue;
 
     if (ConfigGeneral.tkline_expire_notices)
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "Temporary %s for [%s] expired",
+      sendto_snomask_flags(SNO_XLINE, L_ALL, SEND_NOTICE, "Temporary %s for [%s] expired",
                            (conf->type == CONF_XLINE) ? "X-line" : "RESV", conf->name);
     conf_free(conf);
   }
@@ -1301,7 +1300,7 @@ read_conf_files(int cold)
     }
     else
     {
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                            "Unable to read configuration file '%s': %s",
                            filename, strerror(errno));
       return;
@@ -1353,11 +1352,11 @@ conf_add_class_to_conf(struct MaskItem *conf, const char *name)
     conf->class = class_default;
 
     if (conf->type == CONF_CLIENT || conf->type == CONF_OPER)
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                            "Warning *** Defaulting to default class for %s@%s",
                            conf->user, conf->host);
     else
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                            "Warning *** Defaulting to default class for %s",
                            conf->name);
   }
@@ -1378,7 +1377,7 @@ yyerror(const char *msg)
     return;
 
   strip_tabs(newlinebuf, linebuf, sizeof(newlinebuf));
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+  sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                        "\"%s\", line %u: %s: %s",
                        conffilebuf, lineno + 1, msg, newlinebuf);
   ilog(LOG_TYPE_IRCD, "\"%s\", line %u: %s: %s",
@@ -1391,7 +1390,7 @@ conf_error_report(const char *msg)
   char newlinebuf[IRCD_BUFSIZE];
 
   strip_tabs(newlinebuf, linebuf, sizeof(newlinebuf));
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+  sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                        "\"%s\", line %u: %s: %s",
                        conffilebuf, lineno + 1, msg, newlinebuf);
   ilog(LOG_TYPE_IRCD, "\"%s\", line %u: %s: %s",

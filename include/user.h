@@ -38,7 +38,11 @@ struct user_modes
 extern const struct user_modes *umode_map[];
 extern const struct user_modes  umode_tab[];
 
+extern const struct user_modes *snomask_map[];
+extern const struct user_modes  snomask_tab[];
+
 extern void user_modes_init(void);
+extern void snomask_init(void);
 extern void send_umode(struct Client *, struct Client *,
                        unsigned int, char *);
 extern void send_umode_out(struct Client *, unsigned int);
@@ -54,4 +58,7 @@ extern void delete_isupport(const char *);
 extern void init_isupport(void);
 extern void rebuild_isupport_message_line(void);
 extern void user_set_hostmask(struct Client *, const char *, const int);
+extern void send_snomask(struct Client *, unsigned int, char *);
+extern void send_snomask_out(struct Client *, unsigned int);
+extern void send_snomask_rpl(struct Client *);
 #endif

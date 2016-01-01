@@ -117,7 +117,7 @@ report_error(int level, const char* text, const char* who, int error)
 {
   who = (who) ? who : "";
 
-  sendto_realops_flags(UMODE_DEBUG, level, SEND_NOTICE,
+  sendto_snomask_flags(SNO_DEBUG, level, SEND_NOTICE,
                        text, who, strerror(error));
   ilog(LOG_TYPE_IRCD, text, who, strerror(error));
 }

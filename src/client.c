@@ -242,10 +242,10 @@ check_pings_list(dlink_list *list)
            */
           if (IsServer(client_p) || IsHandshake(client_p))
           {
-            sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+            sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                                  "No response from %s, closing link",
                                  get_client_name(client_p, SHOW_IP));
-            sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+            sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                                  "No response from %s, closing link",
                                  get_client_name(client_p, MASK_IP));
             ilog(LOG_TYPE_IRCD, "No response from %s, closing link",
@@ -395,7 +395,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
     case CONF_KLINE:
       if (HasFlag(client_p, FLAGS_EXEMPTKLINE))
       {
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+        sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "KLINE over-ruled for %s, client is kline_exempt",
                              get_client_name(client_p, HIDE_IP));
         return;
@@ -412,7 +412,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
     case CONF_XLINE:
       if (HasFlag(client_p, FLAGS_EXEMPTXLINE))
       {
-        sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+        sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "XLINE over-ruled for %s, client is xline_exempt",
                              get_client_name(client_p, HIDE_IP));
         return;
@@ -426,7 +426,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
       break;
   }
 
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "%c-line active for %s",
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "%c-line active for %s",
                        ban_type, get_client_name(client_p, HIDE_IP));
 
   if (IsClient(client_p))
@@ -458,7 +458,7 @@ update_client_exit_stats(struct Client *client_p)
       --Count.invisi;
   }
   else if (IsServer(client_p))
-    sendto_realops_flags(UMODE_EXTERNAL, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_EXTERNAL, L_ALL, SEND_NOTICE,
                          "Server %s split from %s",
                          client_p->name, client_p->servptr->name);
 }
@@ -742,7 +742,7 @@ exit_client(struct Client *source_p, const char *comment)
 
       watch_del_watch_list(source_p);
 
-      sendto_realops_flags(UMODE_CCONN, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_CCONN, L_ALL, SEND_NOTICE,
                            "Client exiting: %s (%s@%s) [%s] [%s]",
                            source_p->name, source_p->username, source_p->realhost,
                            source_p->sockhost, comment);
@@ -819,7 +819,7 @@ exit_client(struct Client *source_p, const char *comment)
 
     if (MyConnect(source_p))
     {
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "%s was connected for %s. %ju/%ju sendK/recvK.",
                            source_p->name, time_dissect(CurrentTime - source_p->connection->firsttime),
                            source_p->connection->send.bytes >> 10,
@@ -892,12 +892,12 @@ dead_link_on_read(struct Client *client_p, int error)
     if (error == 0)
     {
       /* Admins get the real IP */
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ADMIN, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ADMIN, SEND_NOTICE,
                            "Server %s closed the connection",
                            get_client_name(client_p, SHOW_IP));
 
       /* Opers get a masked IP */
-      sendto_realops_flags(UMODE_SERVNOTICE, L_OPER, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_OPER, SEND_NOTICE,
                            "Server %s closed the connection",
                            get_client_name(client_p, MASK_IP));
 
@@ -912,7 +912,7 @@ dead_link_on_read(struct Client *client_p, int error)
                    get_client_name(client_p, MASK_IP), current_error);
     }
 
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "%s was connected for %s",
                          client_p->name, time_dissect(CurrentTime - client_p->connection->firsttime));
   }
@@ -941,7 +941,7 @@ exit_aborted_clients(void)
 
     if (target_p == NULL)
     {
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "Warning: null client on abort_list!");
       dlinkDelete(ptr, &abort_list);
       free_dlink_node(ptr);

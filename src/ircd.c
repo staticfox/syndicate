@@ -160,7 +160,7 @@ set_time(void)
   {
     ilog(LOG_TYPE_IRCD, "System clock is running backwards - (%ju < %ju)",
          newtime.tv_sec, CurrentTime);
-    sendto_realops_flags(UMODE_DEBUG, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_DEBUG, L_ALL, SEND_NOTICE,
                          "System clock is running backwards - (%ju < %ju)",
                          newtime.tv_sec, CurrentTime);
     event_set_back_events(CurrentTime - newtime.tv_sec);
@@ -199,7 +199,7 @@ io_loop(void)
     if (doremotd)
     {
       motd_recache();
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "Got signal SIGUSR1, reloading motd file(s)");
       doremotd = 0;
     }
@@ -518,6 +518,7 @@ main(int argc, char *argv[])
   read_links_file();
   motd_init();
   user_modes_init();
+  snomask_init();
 #ifdef HAVE_LIBGEOIP
   geoip_ctx = GeoIP_new(GEOIP_MEMORY_CACHE);
 #endif

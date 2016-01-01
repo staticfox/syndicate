@@ -43,6 +43,7 @@ enum irc_numerics
   RPL_CREATED              =  3,
   RPL_MYINFO               =  4,
   RPL_ISUPPORT             =  5,
+  RPL_SNOMASK              =  8,
   RPL_REDIR                = 10,
   RPL_MAP                  = 15,
   RPL_MAPMORE              = 16,

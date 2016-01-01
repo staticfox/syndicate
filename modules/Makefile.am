@@ -45,6 +45,7 @@ modules_LTLIBRARIES = m_accept.la    \
                       m_resv.la      \
                       m_set.la       \
                       m_shedding.la  \
+                      m_sno.la       \
                       m_stats.la     \
                       m_svinfo.la    \
                       m_svsjoin.la   \
@@ -113,6 +114,7 @@ m_restart_la_LDFLAGS = $(MODULE_FLAGS)
 m_resv_la_LDFLAGS = $(MODULE_FLAGS)
 m_set_la_LDFLAGS = $(MODULE_FLAGS)
 m_shedding_la_LDFLAGS = $(MODULE_FLAGS)
+m_sno_la_LDFLAGS = $(MODULE_FLAGS)
 m_stats_la_LDFLAGS = $(MODULE_FLAGS)
 m_svinfo_la_LDFLAGS = $(MODULE_FLAGS)
 m_svsjoin_la_LDFLAGS = $(MODULE_FLAGS)
@@ -180,6 +182,7 @@ m_restart_la_SOURCES = m_restart.c
 m_resv_la_SOURCES = m_resv.c
 m_set_la_SOURCES = m_set.c
 m_shedding_la_SOURCES = m_shedding.c
+m_sno_la_SOURCE = m_sno.c
 m_stats_la_SOURCES = m_stats.c
 m_svinfo_la_SOURCES = m_svinfo.c
 m_svsjoin_la_SOURCES = m_svsjoin.c

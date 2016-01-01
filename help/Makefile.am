@@ -45,6 +45,7 @@ dist_helpf_DATA = accept    \
                   restart   \
                   resv      \
                   set       \
+                  snomask   \
                   squit     \
                   stats     \
                   time      \

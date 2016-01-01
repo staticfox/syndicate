@@ -41,6 +41,75 @@
 #include "modules.h"
 #include "packet.h"
 
+static void
+set_sno_mask(struct Client *source_p, int what, const char *modes)
+{
+  const struct user_modes *tab = NULL;
+  const unsigned int setmodes = source_p->snomodes;
+  int sno_what = MODE_ADD;
+  /*
+   * Non-opers shouldn't ever need information like this. However,
+   * with configurability in mind this will most likely get changed
+   * in the future.
+   */
+  if (!HasUMode(source_p, UMODE_OPER))
+  {
+    sendto_one_numeric(source_p, &me, ERR_UMODEUNKNOWNFLAG);
+    return;
+  }
+
+  // Unset all snomasks
+  if (what == MODE_DEL && HasUMode(source_p, UMODE_SERVNOTICE))
+  {
+    source_p->snomodes = 0;
+    DelUMode(source_p, UMODE_SERVNOTICE);
+    send_snomask_rpl(source_p);
+    return;
+  }
+
+  // Only reply with what we have
+  if (what == MODE_ADD && modes == NULL)
+  {
+    send_snomask_rpl(source_p);
+    return;
+  }
+
+  // Figure out what we're adding or removing
+  for (const char *m = modes; *m; ++m)
+  {
+    switch (*m)
+    {
+      case '+':
+        sno_what = MODE_ADD;
+        break;
+      case '-':
+        sno_what = MODE_DEL;
+        break;
+      default:
+        if ((tab = snomask_map[(unsigned char)*m]))
+        {
+          if (sno_what == MODE_ADD)
+            AddSno(source_p, tab->flag);
+          else
+            DelSno(source_p, tab->flag);
+        }
+        else if (MyConnect(source_p))
+          continue;
+        break;
+    }
+
+  }
+
+  /* Remove +s or add +s if necessary */
+  if (source_p->snomodes & 0)
+    DelUMode(source_p, UMODE_SERVNOTICE);
+  else if (!HasUMode(source_p, UMODE_SERVNOTICE))
+    AddUMode(source_p, UMODE_SERVNOTICE);
+
+  send_snomask_rpl(source_p);
+  send_snomask_out(source_p, setmodes);
+  return;
+}
 
 /* set_user_mode()
  *
@@ -130,6 +199,10 @@ set_user_mode(struct Client *source_p, const int parc, char *parv[])
           }
         }
 
+        break;
+
+      case 's':
+        set_sno_mask(source_p, what, parv[3]);
         break;
 
       case 'N':

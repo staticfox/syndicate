@@ -90,7 +90,7 @@ send_message(struct Client *to, struct dbuf_block *buf)
   if (dbuf_length(&to->connection->buf_sendq) + buf->size > get_sendq(&to->connection->confs))
   {
     if (IsServer(to))
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "Max SendQ limit exceeded for %s: %zu > %u",
                            get_client_name(to, HIDE_IP),
                            (dbuf_length(&to->connection->buf_sendq) + buf->size),
@@ -136,7 +136,7 @@ send_message_remote(struct Client *to, struct Client *from, struct dbuf_block *b
 
   if (to == from->from)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Send message to %s dropped from %s (Fake Dir)",
                          to->name, from->name);
     return;
@@ -838,6 +838,60 @@ sendto_realops_flags(unsigned int flags, int level, int type, const char *patter
   }
 }
 
+/* sendto_snomask_flags()
+ *
+ * inputs - flag types of messages to show to real opers
+ *    - flag indicating opers/admins
+ *    - var args input message
+ * output - NONE
+ * side effects - Send to *local* ops only but NOT +s nonopers.
+ */
+void
+sendto_snomask_flags(unsigned int flags, int level, int type, const char *pattern, ...)
+{
+  const char *ntype = NULL;
+  dlink_node *node = NULL;
+  char nbuf[IRCD_BUFSIZE] = "";
+  va_list args;
+
+  va_start(args, pattern);
+  vsnprintf(nbuf, sizeof(nbuf), pattern, args);
+  va_end(args);
+
+  switch (type)
+  {
+    case SEND_NOTICE:
+      ntype = "Notice";
+      break;
+    case SEND_GLOBAL:
+      ntype = "Global";
+      break;
+    case SEND_LOCOPS:
+      ntype = "LocOps";
+      break;
+    default:
+      assert(0);
+  }
+
+  DLINK_FOREACH(node, oper_list.head)
+  {
+    struct Client *client_p = node->data;
+    assert(HasUMode(client_p, UMODE_OPER));
+
+    /*
+     * If we're sending it to opers and they're an admin, skip.
+     * If we're sending it to admins, and they're not, skip.
+     */
+    if (((level == L_ADMIN) && !HasUMode(client_p, UMODE_ADMIN)) ||
+        ((level == L_OPER) && HasUMode(client_p, UMODE_ADMIN)))
+      continue;
+
+    if (HasSno(client_p, flags))
+      sendto_one(client_p, ":%s NOTICE %s :*** %s -- %s",
+                 me.name, client_p->name, ntype, nbuf);
+  }
+}
+
 /* ts_warn()
  *
  * inputs       - var args message
@@ -860,7 +914,7 @@ sendto_realops_flags_ratelimited(time_t *rate, const char *pattern, ...)
   vsnprintf(buffer, sizeof(buffer), pattern, args);
   va_end(args);
 
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "%s", buffer);
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "%s", buffer);
   ilog(LOG_TYPE_IRCD, "%s", buffer);
 }
 

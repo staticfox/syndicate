@@ -1,7 +1,7 @@
 /*
  *  ircd-hybrid: an advanced, lightweight Internet Relay Chat Daemon (ircd)
  *
- *  Copyright (c) 2015 GeeksIRC development
+ *  Copyright (c) 2015-2016 ircd-syndicate development team
  *  Copyright (c) 1997-2015 ircd-hybrid development team
  *
  *  This program is free software; you can redistribute it and/or modify

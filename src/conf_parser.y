@@ -98,6 +98,7 @@ static struct
     unsigned int value;
   } flags,
     modes,
+    snomodes,
     size,
     type,
     port,
@@ -290,12 +291,26 @@ reset_block_state(void)
 %token  RESV
 %token  RESV_EXEMPT
 %token  RSA_PRIVATE_KEY_FILE
+%token  S_BOTS
+%token  S_CCONN
+%token  S_DLINESPAM
+%token  S_EXTERNAL
+%token  S_FULL
+%token  S_KLINESPAM
+%token  S_NCHANGE
+%token  S_REJ
+%token  S_SERVREJ
+%token  S_SKILL
+%token  S_SNOGENERAL
+%token  S_UNAUTH
+%token  S_XLINESPAM
 %token  SECONDS MINUTES HOURS DAYS WEEKS MONTHS YEARS
 %token  SEND_PASSWORD
 %token  SENDQ
 %token  SERVERHIDE
 %token  SERVERINFO
 %token  SHORT_MOTD
+%token  SNOMODES
 %token  SPOOF
 %token  SPOOF_NOTICE
 %token  SQUIT
@@ -313,25 +328,20 @@ reset_block_state(void)
 %token  STATS_P_OPER_ONLY
 %token  STATS_U_OPER_ONLY
 %token  T_ALL
-%token  T_BOTS
 %token  T_CALLERID
-%token  T_CCONN
 %token  T_COMMAND
 %token  T_CLUSTER
 %token  T_DEAF
-%token  T_DEBUG
+%token  S_DEBUG
 %token  T_DLINE
-%token  T_EXTERNAL
 %token  T_FARCONNECT
 %token  T_FILE
-%token  T_FULL
 %token  T_GLOBOPS
 %token  T_INVISIBLE
 %token  T_IPV4
 %token  T_IPV6
 %token  T_LOCOPS
 %token  T_LOG
-%token  T_NCHANGE
 %token  T_NONONREG
 %token  T_OPERWALL
 %token  T_OPERWALLS
@@ -339,7 +349,6 @@ reset_block_state(void)
 %token  T_PREPEND
 %token  T_PSEUDO
 %token  T_RECVQ
-%token  T_REJ
 %token  T_RESTART
 %token  T_SERVER
 %token  T_SERVICE
@@ -347,14 +356,13 @@ reset_block_state(void)
 %token  T_SET
 %token  T_SHARED
 %token  T_SIZE
-%token  T_SKILL
+%token  T_SNOMODES
 %token  T_SOFTCALLERID
 %token  T_SPY
 %token  T_SSL
 %token  T_SSL_CIPHER_LIST
 %token  T_TARGET
 %token  T_UMODES
-%token  T_UNAUTH
 %token  T_UNDLINE
 %token  T_UNLIMITED
 %token  T_UNRESV
@@ -1083,7 +1091,7 @@ logging_file_type_item:  USER
 {
   if (conf_parser_ctx.pass == 2)
     block_state.type.value = LOG_TYPE_KILL;
-} | T_DEBUG
+} | S_DEBUG
 {
   if (conf_parser_ctx.pass == 2)
     block_state.type.value = LOG_TYPE_DEBUG;
@@ -1143,6 +1151,7 @@ oper_entry: OPERATOR
 
     conf->flags = block_state.flags.value;
     conf->modes = block_state.modes.value;
+    conf->snomodes = block_state.snomodes.value;
     conf->port  = block_state.port.value;
     conf->htype = parse_netmask(conf->host, &conf->addr, &conf->bits);
 
@@ -1161,6 +1170,7 @@ oper_item:      oper_name |
                 oper_ssl_certificate_fingerprint |
                 oper_ssl_connection_required |
                 oper_flags |
+                oper_snomodes |
                 error ';' ;
 
 oper_name: NAME '=' QSTRING ';'
@@ -1228,26 +1238,10 @@ oper_umodes: T_UMODES
 } '='  oper_umodes_items ';' ;
 
 oper_umodes_items: oper_umodes_items ',' oper_umodes_item | oper_umodes_item;
-oper_umodes_item:  T_BOTS
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_BOTS;
-} | T_CCONN
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_CCONN;
-} | T_DEAF
+oper_umodes_item:  T_DEAF
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_DEAF;
-} | T_DEBUG
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_DEBUG;
-} | T_FULL
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_FULL;
 } | HIDDEN
 {
   if (conf_parser_ctx.pass == 2)
@@ -1260,30 +1254,10 @@ oper_umodes_item:  T_BOTS
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_HIDEIDLE;
-} | T_SKILL
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_SKILL;
-} | T_NCHANGE
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_NCHANGE;
-} | T_REJ
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_REJ;
-} | T_UNAUTH
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_UNAUTH;
 } | T_SPY
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_SPY;
-} | T_EXTERNAL
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_EXTERNAL;
 } | T_SERVNOTICE
 {
   if (conf_parser_ctx.pass == 2)
@@ -1328,6 +1302,71 @@ oper_umodes_item:  T_BOTS
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_BLOCKINVITES;
+};
+
+oper_snomodes: T_SNOMODES
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value = 0;
+} '='  oper_snomodes_items ';' ;
+
+oper_snomodes_items: oper_snomodes_items ',' oper_snomodes_item | oper_snomodes_item;
+oper_snomodes_item:  S_CCONN
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_CCONN;
+} | S_DEBUG
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_DEBUG;
+} | S_EXTERNAL
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_EXTERNAL;
+} | S_FULL
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_FULL;
+} | S_REJ
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_REJ;
+} | S_SKILL
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_SKILL;
+} | S_NCHANGE
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_NCHANGE;
+} | S_UNAUTH
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_UNAUTH;
+} | S_KLINESPAM
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value |= SNO_KLINE;
+} | S_DLINESPAM
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value += SNO_DLINE;
+} | S_XLINESPAM
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value += SNO_XLINE;
+} | S_BOTS
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value += SNO_BOTS;
+} | S_SERVREJ
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value += SNO_SERVREJ;
+} | S_SNOGENERAL
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.snomodes.value += SNO_GENERAL;
 };
 
 oper_flags: IRCD_FLAGS
@@ -2858,21 +2897,9 @@ general_oper_umodes: OPER_UMODES
 } '='  umode_oitems ';' ;
 
 umode_oitems:    umode_oitems ',' umode_oitem | umode_oitem;
-umode_oitem:     T_BOTS
-{
-  ConfigGeneral.oper_umodes |= UMODE_BOTS;
-} | T_CCONN
-{
-  ConfigGeneral.oper_umodes |= UMODE_CCONN;
-} | T_DEAF
+umode_oitem:     T_DEAF
 {
   ConfigGeneral.oper_umodes |= UMODE_DEAF;
-} | T_DEBUG
-{
-  ConfigGeneral.oper_umodes |= UMODE_DEBUG;
-} | T_FULL
-{
-  ConfigGeneral.oper_umodes |= UMODE_FULL;
 } | HIDDEN
 {
   ConfigGeneral.oper_umodes |= UMODE_HIDDEN;
@@ -2882,24 +2909,9 @@ umode_oitem:     T_BOTS
 } | HIDE_IDLE
 {
   ConfigGeneral.oper_umodes |= UMODE_HIDEIDLE;
-} | T_SKILL
-{
-  ConfigGeneral.oper_umodes |= UMODE_SKILL;
-} | T_NCHANGE
-{
-  ConfigGeneral.oper_umodes |= UMODE_NCHANGE;
-} | T_REJ
-{
-  ConfigGeneral.oper_umodes |= UMODE_REJ;
-} | T_UNAUTH
-{
-  ConfigGeneral.oper_umodes |= UMODE_UNAUTH;
 } | T_SPY
 {
   ConfigGeneral.oper_umodes |= UMODE_SPY;
-} | T_EXTERNAL
-{
-  ConfigGeneral.oper_umodes |= UMODE_EXTERNAL;
 } | T_SERVNOTICE
 {
   ConfigGeneral.oper_umodes |= UMODE_SERVNOTICE;
@@ -2941,42 +2953,15 @@ general_oper_only_umodes: OPER_ONLY_UMODES
 } '='  umode_items ';' ;
 
 umode_items:  umode_items ',' umode_item | umode_item;
-umode_item:   T_BOTS
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_BOTS;
-} | T_CCONN
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_CCONN;
-} | T_DEAF
+umode_item:   T_DEAF
 {
   ConfigGeneral.oper_only_umodes |= UMODE_DEAF;
-} | T_DEBUG
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_DEBUG;
-} | T_FULL
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_FULL;
-} | T_SKILL
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_SKILL;
 } | HIDDEN
 {
   ConfigGeneral.oper_only_umodes |= UMODE_HIDDEN;
-} | T_NCHANGE
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_NCHANGE;
-} | T_REJ
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_REJ;
-} | T_UNAUTH
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_UNAUTH;
 } | T_SPY
 {
   ConfigGeneral.oper_only_umodes |= UMODE_SPY;
-} | T_EXTERNAL
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_EXTERNAL;
 } | T_SERVNOTICE
 {
   ConfigGeneral.oper_only_umodes |= UMODE_SERVNOTICE;

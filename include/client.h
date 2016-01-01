@@ -152,44 +152,57 @@ enum
 /* umodes, settable flags */
 enum
 {
-  UMODE_SERVNOTICE   = 0x00000001U,  /**< Server notices such as kill */
-  UMODE_CCONN        = 0x00000002U,  /**< Can see client connection notices */
-  UMODE_REJ          = 0x00000004U,  /**< Bot Rejections */
-  UMODE_SKILL        = 0x00000008U,  /**< Server Killed */
-  UMODE_FULL         = 0x00000010U,  /**< Full messages */
-  UMODE_SPY          = 0x00000020U,  /**< See STATS / LINKS */
-  UMODE_DEBUG        = 0x00000040U,  /**< 'debugging' info */
-  UMODE_NCHANGE      = 0x00000080U,  /**< Nick change notice */
-  UMODE_WALLOP       = 0x00000100U,  /**< Send wallops to them */
-  UMODE_INVISIBLE    = 0x00000200U,  /**< Makes user invisible */
-  UMODE_BOTS         = 0x00000400U,  /**< Shows bots */
-  UMODE_EXTERNAL     = 0x00000800U,  /**< Show servers introduced and splitting */
-  UMODE_CALLERID     = 0x00001000U,  /**< Block unless caller id's */
-  UMODE_SOFTCALLERID = 0x00002000U,  /**< Block unless on common channel */
-  UMODE_UNAUTH       = 0x00004000U,  /**< Show unauth connects here */
-  UMODE_LOCOPS       = 0x00008000U,  /**< Can see LOCOPS messages */
-  UMODE_DEAF         = 0x00010000U,  /**< Don't receive channel messages */
-  UMODE_REGISTERED   = 0x00020000U,  /**< User has identified for that nick. */
-  UMODE_REGONLY      = 0x00040000U,  /**< Only registered nicks may PM */
-  UMODE_HIDDEN       = 0x00080000U,  /**< IRC operator status is hidden */
-  UMODE_OPER         = 0x00100000U,  /**< IRC operator */
-  UMODE_ADMIN        = 0x00200000U,  /**< Admin on server */
-  UMODE_FARCONNECT   = 0x00400000U,  /**< Can see remote client connects/exits */
-  UMODE_HIDDENHOST   = 0x00800000U,  /**< User's host is hidden */
-  UMODE_SSL          = 0x01000000U,  /**< User is connected via TLS/SSL */
-  UMODE_WEBIRC       = 0x02000000U,  /**< User connected via a webirc gateway */
-  UMODE_HIDEIDLE     = 0x04000000U,  /**< Hides idle and signon time in WHOIS */
-  UMODE_HIDECHANS    = 0x08000000U,  /**< Hides channel list in WHOIS */
-  UMODE_OPERWALL     = 0x10000000U,  /**< Send operwall messages to them */
-  UMODE_WHOIS        = 0x20000000U,  /**< Notify user on WHOIS */
-  UMODE_NETADMIN     = 0x40000000U,  /**< Network Admin */
-  UMODE_BLOCKINVITES = 0x80000000U   /**< Disable receiving /INVITEs */
+  UMODE_SERVNOTICE   = 0x000001U,  /**< Server notices such as kill */
+  UMODE_SPY          = 0x000002U,  /**< See STATS / LINKS */
+  UMODE_WALLOP       = 0x000004U,  /**< Send wallops to them */
+  UMODE_INVISIBLE    = 0x000008U,  /**< Makes user invisible */
+  UMODE_CALLERID     = 0x000010U,  /**< Block unless caller id's */
+  UMODE_SOFTCALLERID = 0x000020U,  /**< Block unless on common channel */
+  UMODE_LOCOPS       = 0x000040U,  /**< Can see LOCOPS messages */
+  UMODE_DEAF         = 0x000080U,  /**< Don't receive channel messages */
+  UMODE_REGISTERED   = 0x000100U,  /**< User has identified for that nick. */
+  UMODE_REGONLY      = 0x000200U,  /**< Only registered nicks may PM */
+  UMODE_HIDDEN       = 0x000400U,  /**< IRC operator status is hidden */
+  UMODE_OPER         = 0x000800U,  /**< IRC operator */
+  UMODE_ADMIN        = 0x001000U,  /**< Admin on server */
+  UMODE_FARCONNECT   = 0x002000U,  /**< Can see remote client connects/exits */
+  UMODE_HIDDENHOST   = 0x004000U,  /**< User's host is hidden */
+  UMODE_SSL          = 0x008000U,  /**< User is connected via TLS/SSL */
+  UMODE_WEBIRC       = 0x010000U,  /**< User connected via a webirc gateway */
+  UMODE_HIDEIDLE     = 0x020000U,  /**< Hides idle and signon time in WHOIS */
+  UMODE_HIDECHANS    = 0x040000U,  /**< Hides channel list in WHOIS */
+  UMODE_OPERWALL     = 0x080000U,  /**< Send operwall messages to them */
+  UMODE_WHOIS        = 0x100000U,  /**< Notify user on WHOIS */
+  UMODE_NETADMIN     = 0x200000U,  /**< Network Admin */
+  UMODE_BLOCKINVITES = 0x400000U   /**< Disable receiving /INVITEs */
+};
+
+/* nomasks, settable flags */
+enum
+{
+  SNO_BOTS     = 0x0001U,  /**< Show bots */
+  SNO_CCONN    = 0x0002U,  /**< Can see client connection notices */
+  SNO_DEBUG    = 0x0004U,  /**< 'debugging' info */
+  SNO_EXTERNAL = 0x0008U,  /**< Show servers introduced and splitting */
+  SNO_FULL     = 0x0010U,  /**< Full messages */
+  SNO_REJ      = 0x0020U,  /**< Bot Rejections */
+  SNO_SKILL    = 0x0040U,  /**< Server Killed */
+  SNO_NCHANGE  = 0x0080U,  /**< Nick change notice */
+  SNO_UNAUTH   = 0x0100U,  /**< Show unauth connects here */
+  SNO_KLINE    = 0x0200U,  /**< Send K-line notices here */
+  SNO_DLINE    = 0x0400U,  /**< Send D-line notices here */
+  SNO_XLINE    = 0x0800U,  /**< Send X-line notices here */
+  SNO_SERVREJ  = 0x1000U,  /**< Shows rejected server connections */
+  SNO_GENERAL  = 0x2000U   /**< Shows general server notices */
 };
 
 #define HasUMode(x, y) ((x)->umodes &   (y))
 #define AddUMode(x, y) ((x)->umodes |=  (y))
 #define DelUMode(x, y) ((x)->umodes &= ~(y))
 
+#define HasSno(x, y) ((x)->snomodes &   (y))
+#define AddSno(x, y) ((x)->snomodes |=  (y))
+#define DelSno(x, y) ((x)->snomodes &= ~(y))
 
 /** irc-operator privilege flags */
 enum
@@ -244,7 +257,8 @@ enum
 
 #define ClearOper(x)            {(x)->umodes &= ~(UMODE_OPER|UMODE_ADMIN); \
                                  if (MyClient((x))) \
-                                  (x)->handler = CLIENT_HANDLER; }
+                                  (x)->handler = CLIENT_HANDLER; \
+                                  (x)->snomodes = 0; }
 
 #define IsFloodDone(x)          ((x)->flags &  FLAGS_FLOODDONE)
 #define IsHidden(x)             ((x)->flags &  FLAGS_HIDDEN)
@@ -387,6 +401,7 @@ struct Client
 
   unsigned int      flags;      /**< Client flags */
   unsigned int      umodes;     /**< User modes this client has set */
+  unsigned int      snomodes;   /**< Server notices the client is set to receive */
   unsigned int      hopcount;   /**< Number of servers to this 0 = local */
   unsigned int      status;     /**< Client type */
   unsigned int      handler;    /**< Handler index */

@@ -78,7 +78,7 @@ mo_shedding(struct Client *source_p, int parc, char *parv[])
 
   if(irccmp(parv[1], "OFF") == 0)
   {
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
           "User shedding DISABLED by %s", source_p->name);
     stop_shedding();
     return 0;
@@ -90,7 +90,7 @@ mo_shedding(struct Client *source_p, int parc, char *parv[])
   if (parc > 3)
     operstoo = !!atoi(parv[2]);
 
-  sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+  sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
           "User shedding ENABLED by %s (%s). Shedding interval: %d seconds (Opers too: %s)",
           source_p->name, parv[parc-1], rate, operstoo ? "Yes" : "No");
   /* Set a minimum because we need to do a bit of variance */

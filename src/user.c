@@ -52,6 +52,7 @@
 #include "cloak.h"
 
 static char umode_buffer[IRCD_BUFSIZE];
+static char snomask_buffer[IRCD_BUFSIZE];
 
 const struct user_modes *umode_map[256];
 const struct user_modes  umode_tab[] =
@@ -66,28 +67,39 @@ const struct user_modes  umode_tab[] =
   { 'S', UMODE_SSL          },
   { 'W', UMODE_WEBIRC       },
   { 'a', UMODE_ADMIN        },
-  { 'b', UMODE_BOTS         },
-  { 'c', UMODE_CCONN        },
-  { 'd', UMODE_DEBUG        },
-  { 'e', UMODE_EXTERNAL     },
-  { 'f', UMODE_FULL         },
   { 'g', UMODE_CALLERID     },
   { 'h', UMODE_WHOIS        },
   { 'i', UMODE_INVISIBLE    },
-  { 'j', UMODE_REJ          },
-  { 'k', UMODE_SKILL        },
   { 'l', UMODE_LOCOPS       },
-  { 'n', UMODE_NCHANGE      },
   { 'o', UMODE_OPER         },
   { 'p', UMODE_HIDECHANS    },
   { 'q', UMODE_HIDEIDLE     },
   { 'r', UMODE_REGISTERED   },
   { 's', UMODE_SERVNOTICE   },
-  { 'u', UMODE_UNAUTH       },
   { 'w', UMODE_WALLOP       },
   { 'x', UMODE_HIDDENHOST   },
   { 'y', UMODE_SPY          },
   { 'z', UMODE_OPERWALL     },
+  { '\0', 0 }
+};
+
+const struct user_modes *snomask_map[256];
+const struct user_modes  snomask_tab[] =
+{
+  { 'b', SNO_BOTS     },
+  { 'c', SNO_CCONN    },
+  { 'd', SNO_DEBUG    },
+  { 'e', SNO_EXTERNAL },
+  { 'f', SNO_FULL     },
+  { 'j', SNO_REJ      },
+  { 'k', SNO_SKILL    },
+  { 'l', SNO_KLINE    },
+  { 'm', SNO_DLINE    },
+  { 'n', SNO_NCHANGE  },
+  { 'r', SNO_SERVREJ  },
+  { 's', SNO_GENERAL  },
+  { 'u', SNO_UNAUTH   },
+  { 'x', SNO_XLINE    },
   { '\0', 0 }
 };
 
@@ -103,6 +115,20 @@ user_modes_init(void)
   }
 
   *umode_buffer_ptr = '\0';
+}
+
+void
+snomask_init(void)
+{
+  char *snomask_buffer_ptr = snomask_buffer;
+
+  for (const struct user_modes *tab = snomask_tab; tab->c; ++tab)
+  {
+    snomask_map[tab->c] = tab;
+    *snomask_buffer_ptr++ = tab->c;
+  }
+
+  *snomask_buffer_ptr = '\0';
 }
 
 /* show_lusers()
@@ -215,11 +241,14 @@ introduce_client(struct Client *source_p)
 {
   dlink_node *node = NULL;
   char ubuf[IRCD_BUFSIZE] = "";
+  char sbuf[IRCD_BUFSIZE] = "";
 
   if (MyClient(source_p))
     send_umode(source_p, source_p, 0, ubuf);
   else
     send_umode(NULL, source_p, 0, ubuf);
+
+  send_snomask(source_p, 0, sbuf);
 
   watch_check_hash(source_p, RPL_LOGON);
 
@@ -245,6 +274,9 @@ introduce_client(struct Client *source_p)
        (MyClient(source_p) && HasFlag(source_p, FLAGS_IP_SPOOFED)) ?
        "0" : source_p->sockhost, source_p->id, source_p->realhost,
        source_p->account, source_p->info);
+
+    if (sbuf[0] != '\0' && IsCapable(server, CAPAB_SNO))
+      sendto_one(server, ":%S SNO %s :%s", source_p->id, source_p->id, sbuf);
 
     if (!EmptyString(source_p->certfp))
       sendto_one(server, ":%s CERTFP %s", source_p->id, source_p->certfp);
@@ -304,7 +336,7 @@ check_xline(struct Client *source_p)
   if ((conf = find_matching_name_conf(CONF_XLINE, source_p->info, NULL, NULL, 0)))
   {
     ++conf->count;
-    sendto_realops_flags(UMODE_REJ, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_REJ, L_ALL, SEND_NOTICE,
                          "X-line Rejecting [%s] [%s], user %s [%s]",
                          source_p->info, conf->reason,
                          get_client_name(source_p, HIDE_IP),
@@ -430,7 +462,7 @@ register_local_user(struct Client *source_p)
   if ((Count.local >= GlobalSetOptions.maxclients + MAX_BUFFER) ||
       (Count.local >= GlobalSetOptions.maxclients && !HasFlag(source_p, FLAGS_NOLIMIT)))
   {
-    sendto_realops_flags(UMODE_FULL, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_FULL, L_ALL, SEND_NOTICE,
                          "Too many clients, rejecting %s[%s].",
                          source_p->name, source_p->realhost);
     ++ServerStats.is_ref;
@@ -442,7 +474,7 @@ register_local_user(struct Client *source_p)
   {
     char buf[IRCD_BUFSIZE] = "";
 
-    sendto_realops_flags(UMODE_REJ, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_REJ, L_ALL, SEND_NOTICE,
                          "Invalid username: %s (%s@%s)",
                          source_p->name, source_p->username, source_p->realhost);
     ++ServerStats.is_ref;
@@ -460,7 +492,7 @@ register_local_user(struct Client *source_p)
   strlcpy(source_p->id, id, sizeof(source_p->id));
   hash_add_id(source_p);
 
-  sendto_realops_flags(UMODE_CCONN, L_ALL, SEND_NOTICE,
+  sendto_snomask_flags(SNO_CCONN, L_ALL, SEND_NOTICE,
                        "Client connecting: %s (%s@%s) [%s] {%s} [%s] <%s>",
                        source_p->name, source_p->username, source_p->realhost,
                        (EmptyString(source_p->sockhost) || !strcmp("0", source_p->sockhost)) ? "255.255.255.255" : source_p->sockhost,
@@ -488,7 +520,7 @@ register_local_user(struct Client *source_p)
     Count.max_loc = Count.local;
 
     if (!(Count.max_loc % 10))
-      sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+      sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                            "New maximum local client connections: %u",
                            Count.max_loc);
   }
@@ -531,7 +563,7 @@ register_remote_user(struct Client *source_p)
 
   if ((target_p = source_p->servptr) && target_p->from != source_p->from)
   {
-    sendto_realops_flags(UMODE_DEBUG, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_DEBUG, L_ALL, SEND_NOTICE,
                          "Bad User [%s] :%s USER %s@%s %s, != %s[%s]",
                          source_p->from->name, source_p->name, source_p->username,
                          source_p->realhost, source_p->servptr->name,
@@ -743,6 +775,52 @@ send_umode(struct Client *client_p, struct Client *source_p,
                client_p->host, client_p->name, umode_buf);
 }
 
+/* send_snomask()
+ *
+ * inputs - source_p
+ *    - int old
+ *    - suplied umode_buf
+ * output - NONE
+ */
+void
+send_snomask(struct Client *source_p, unsigned int old, char *sno_buf)
+{
+  char *m = sno_buf;
+  int what = 0;
+
+  /*
+   * Build a string in sno_buf to represent the change in the user's
+   * mode between the new (source_p->umodes) and 'old'.
+   */
+  for (const struct user_modes *tab = snomask_tab; tab->c; ++tab)
+  {
+    if ((tab->flag & old) && !HasSno(source_p, tab->flag))
+    {
+      if (what == MODE_DEL)
+        *m++ = tab->c;
+      else
+      {
+        what = MODE_DEL;
+        *m++ = '-';
+        *m++ = tab->c;
+      }
+    }
+    else if (!(tab->flag & old) && HasSno(source_p, tab->flag))
+    {
+      if (what == MODE_ADD)
+        *m++ = tab->c;
+      else
+      {
+        what = MODE_ADD;
+        *m++ = '+';
+        *m++ = tab->c;
+      }
+    }
+  }
+
+  *m = '\0';
+}
+
 /* send_umode_out()
  *
  * inputs	-
@@ -759,6 +837,34 @@ send_umode_out(struct Client *source_p, unsigned int old)
   if (buf[0])
     sendto_server(source_p, 0, 0, ":%s MODE %s :%s",
                   source_p->id, source_p->id, buf);
+}
+
+void
+send_snomask_out(struct Client *source_p, unsigned int old)
+{
+  char buf[IRCD_BUFSIZE] = "";
+
+  send_snomask(source_p, old, buf);
+
+  if (buf[0])
+    sendto_server(source_p, CAPAB_SNO, 0, ":%s SNO %s :%s",
+                  source_p->id, source_p->id, buf);
+}
+
+void
+send_snomask_rpl(struct Client *source_p)
+{
+  const struct user_modes *tab = NULL;
+  char buf[IRCD_BUFSIZE] = "";
+  char *m = buf;
+
+  *m++ = '+';
+  for (tab = snomask_tab; tab->c; ++tab)
+    if (HasSno(source_p, tab->flag))
+      *m++ = tab->c;
+  *m = '\0';
+
+  sendto_one_numeric(source_p, &me, RPL_SNOMASK, buf);
 }
 
 void

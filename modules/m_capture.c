@@ -79,7 +79,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
 
         if (!IsCaptured(target_p))
         {
-          sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "Captured %s (%s@%s)",
+          sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "Captured %s (%s@%s)",
                                target_p->name, target_p->username,
                                target_p->realhost);
           SetCaptured(target_p);
@@ -136,7 +136,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
       }
     }
 
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Bulk captured %s!%s@%s, %u local match(es)",
                          nick, user, host, matches);
   }
@@ -177,7 +177,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
         {
           ClearCaptured(target_p);
 
-          sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE, "Uncaptured %s (%s@%s)",
+          sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "Uncaptured %s (%s@%s)",
                                target_p->name, target_p->username,
                                target_p->realhost);
         }
@@ -230,7 +230,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
       }
     }
 
-    sendto_realops_flags(UMODE_SERVNOTICE, L_ALL, SEND_NOTICE,
+    sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Bulk uncaptured %s!%s@%s, %u local match(es)",
                          nick, user, host, matches);
   }

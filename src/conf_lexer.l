@@ -136,11 +136,11 @@ auth                        { return IRCD_AUTH; }
 autoconn                    { return AUTOCONN; }
 away_count                  { return AWAY_COUNT; }
 away_time                   { return AWAY_TIME; }
-bots                        { return T_BOTS; }
+bots                        { return S_BOTS; }
 caller_id_wait              { return CALLER_ID_WAIT; }
 callerid                    { return T_CALLERID; }
 can_flood                   { return CAN_FLOOD; }
-cconn                       { return T_CCONN; }
+cconn                       { return S_CCONN; }
 channel                     { return CHANNEL; }
 cidr_bitlen_ipv4            { return CIDR_BITLEN_IPV4; }
 cidr_bitlen_ipv6            { return CIDR_BITLEN_IPV6; }
@@ -156,7 +156,7 @@ connect                     { return CONNECT; }
 connectfreq                 { return CONNECTFREQ; }
 cycle_on_host_change        { return CYCLE_ON_HOST_CHANGE; }
 deaf                        { return T_DEAF; }
-debug                       { return T_DEBUG; }
+debug                       { return S_DEBUG; }
 default_floodcount          { return DEFAULT_FLOODCOUNT; }
 default_join_flood_count    { return DEFAULT_JOIN_FLOOD_COUNT; }
 default_join_flood_time     { return DEFAULT_JOIN_FLOOD_TIME; }
@@ -168,6 +168,7 @@ disable_auth                { return DISABLE_AUTH; }
 disable_fake_channels       { return DISABLE_FAKE_CHANNELS; }
 disable_remote_commands     { return DISABLE_REMOTE_COMMANDS; }
 dline                       { return T_DLINE; }
+dlines                      { return S_DLINESPAM; }
 dline_min_cidr              { return DLINE_MIN_CIDR; }
 dline_min_cidr6             { return DLINE_MIN_CIDR6; }
 dots_in_ident               { return DOTS_IN_IDENT; }
@@ -175,7 +176,7 @@ email                       { return EMAIL; }
 encrypted                   { return ENCRYPTED; }
 exceed_limit                { return EXCEED_LIMIT; }
 exempt                      { return EXEMPT; }
-external                    { return T_EXTERNAL; }
+external                    { return S_EXTERNAL; }
 failed_oper_notice          { return FAILED_OPER_NOTICE; }
 farconnect                  { return T_FARCONNECT; }
 file                        { return T_FILE; }
@@ -183,12 +184,13 @@ flags                       { return IRCD_FLAGS; }
 flatten_links               { return FLATTEN_LINKS; }
 flatten_links_delay         { return FLATTEN_LINKS_DELAY; }
 flatten_links_file          { return FLATTEN_LINKS_FILE; }
-full                        { return T_FULL; }
+full                        { return S_FULL; }
 gecos                       { return GECOS; }
 general                     { return GENERAL; }
 kline_min_cidr              { return KLINE_MIN_CIDR; }
 kline_min_cidr6             { return KLINE_MIN_CIDR6; }
 kline_reason                { return KLINE_REASON; }
+klines                      { return S_KLINESPAM; }
 globops                     { return T_GLOBOPS; }
 have_ident                  { return NEED_IDENT; }
 hidden                      { return HIDDEN; }
@@ -247,7 +249,7 @@ module                      { return MODULE; }
 modules                     { return MODULES; }
 motd                        { return MOTD; }
 name                        { return NAME; }
-nchange                     { return T_NCHANGE; }
+nchange                     { return S_NCHANGE; }
 need_ident                  { return NEED_IDENT; }
 need_password               { return NEED_PASSWORD; }
 netadmin                    { return NETADMIN; }
@@ -283,8 +285,8 @@ reason                      { return REASON; }
 recvq                       { return T_RECVQ; }
 redirport                   { return REDIRPORT; }
 redirserv                   { return REDIRSERV; }
+rej                         { return S_REJ; }
 rehash                      { return REHASH; }
-rej                         { return T_REJ; }
 remote                      { return REMOTE; }
 remoteban                   { return REMOTEBAN; }
 restart                     { return T_RESTART; }
@@ -298,12 +300,15 @@ serverhide                  { return SERVERHIDE; }
 serverinfo                  { return SERVERINFO; }
 service                     { return T_SERVICE; }
 servnotice                  { return T_SERVNOTICE; }
+servrej                     { return S_SERVREJ; }
 set                         { return T_SET; }
 shared                      { return T_SHARED; }
 short_motd                  { return SHORT_MOTD; }
 sid                         { return IRCD_SID; }
 size                        { return T_SIZE; }
-skill                       { return T_SKILL; }
+skill                       { return S_SKILL; }
+snomodes                    { return T_SNOMODES; }
+snogeneral                  { return S_SNOGENERAL; }
 softcallerid                { return T_SOFTCALLERID; }
 spoof                       { return SPOOF; }
 spoof_notice                { return SPOOF_NOTICE; }
@@ -332,7 +337,7 @@ ts_max_delta                { return TS_MAX_DELTA; }
 ts_warn_delta               { return TS_WARN_DELTA; }
 type                        { return TYPE; }
 umodes                      { return T_UMODES; }
-unauth                      { return T_UNAUTH; }
+unauth                      { return S_UNAUTH; }
 undline                     { return T_UNDLINE; }
 unkline                     { return UNKLINE; }
 unlimited                   { return T_UNLIMITED; }
@@ -349,6 +354,7 @@ webirc                      { return T_WEBIRC; }
 whois                       { return WHOIS; }
 whoisnotify                 { return WHOIS_NOTIFY; }
 xline                       { return XLINE; }
+xlines                      { return S_XLINESPAM; }
 xline_exempt                { return XLINE_EXEMPT; }
 
 yes                         { yylval.number = 1; return TBOOL; }
