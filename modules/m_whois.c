@@ -189,6 +189,19 @@ whois_person(struct Client *source_p, struct Client *target_p)
     for (const struct user_modes *tab = umode_tab; tab->c; ++tab)
       if (HasUMode(target_p, tab->flag))
         *m++ = tab->c;
+
+    /* If they aren't an oper, then what the oper
+     * gets in terms of server notices is none of
+     * their business.
+     */
+    if (HasUMode(source_p, UMODE_OPER) && HasUMode(target_p, UMODE_SERVNOTICE))
+    {
+      m += sprintf(m, " +");
+      for (const struct user_modes *tab = snomask_tab; tab->c; ++tab)
+        if (HasSno(target_p, tab->flag))
+          *m++ = tab->c;
+    }
+
     *m = '\0';
 
     sendto_one_numeric(source_p, &me, RPL_WHOISMODES, target_p->name, buf);
