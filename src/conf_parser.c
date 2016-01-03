@@ -165,21 +165,21 @@ reset_block_state(void)
 
   DLINK_FOREACH_SAFE(node, node_next, block_state.mask.list.head)
   {
-    MyFree(node->data);
+    xfree(node->data);
     dlinkDelete(node, &block_state.mask.list);
     free_dlink_node(node);
   }
 
   DLINK_FOREACH_SAFE(node, node_next, block_state.leaf.list.head)
   {
-    MyFree(node->data);
+    xfree(node->data);
     dlinkDelete(node, &block_state.leaf.list);
     free_dlink_node(node);
   }
 
   DLINK_FOREACH_SAFE(node, node_next, block_state.hub.list.head)
   {
-    MyFree(node->data);
+    xfree(node->data);
     dlinkDelete(node, &block_state.hub.list);
     free_dlink_node(node);
   }
@@ -3091,7 +3091,7 @@ yyreduce:
 
   if (ConfigServerInfo.rsa_private_key_file)
   {
-    MyFree(ConfigServerInfo.rsa_private_key_file);
+    xfree(ConfigServerInfo.rsa_private_key_file);
     ConfigServerInfo.rsa_private_key_file = NULL;
   }
 
@@ -3267,7 +3267,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigServerInfo.description);
+    xfree(ConfigServerInfo.description);
     ConfigServerInfo.description = xstrdup(yylval.string);
     strlcpy(me.info, ConfigServerInfo.description, sizeof(me.info));
   }
@@ -3285,7 +3285,7 @@ yyreduce:
     if ((p = strchr(yylval.string, ' ')))
       *p = '\0';
 
-    MyFree(ConfigServerInfo.network_name);
+    xfree(ConfigServerInfo.network_name);
     ConfigServerInfo.network_name = xstrdup(yylval.string);
   }
 }
@@ -3298,7 +3298,7 @@ yyreduce:
   if (conf_parser_ctx.pass != 2)
     break;
 
-  MyFree(ConfigServerInfo.network_desc);
+  xfree(ConfigServerInfo.network_desc);
   ConfigServerInfo.network_desc = xstrdup(yylval.string);
 }
 #line 3305 "conf_parser.c" /* yacc.c:1646  */
@@ -3459,7 +3459,7 @@ yyreduce:
   if (conf_parser_ctx.pass != 2)
     break;
 
-  MyFree(ConfigAdminInfo.name);
+  xfree(ConfigAdminInfo.name);
   ConfigAdminInfo.name = xstrdup(yylval.string);
 }
 #line 3466 "conf_parser.c" /* yacc.c:1646  */
@@ -3471,7 +3471,7 @@ yyreduce:
   if (conf_parser_ctx.pass != 2)
     break;
 
-  MyFree(ConfigAdminInfo.email);
+  xfree(ConfigAdminInfo.email);
   ConfigAdminInfo.email = xstrdup(yylval.string);
 }
 #line 3478 "conf_parser.c" /* yacc.c:1646  */
@@ -3483,7 +3483,7 @@ yyreduce:
   if (conf_parser_ctx.pass != 2)
     break;
 
-  MyFree(ConfigAdminInfo.description);
+  xfree(ConfigAdminInfo.description);
   ConfigAdminInfo.description = xstrdup(yylval.string);
 }
 #line 3490 "conf_parser.c" /* yacc.c:1646  */
@@ -4494,7 +4494,7 @@ yyreduce:
     class = class_make();
 
   class->active = 1;
-  MyFree(class->name);
+  xfree(class->name);
   class->name = xstrdup(block_state.class.buf);
   class->ping_freq = block_state.ping_freq.value;
   class->max_perip = block_state.max_perip.value;
@@ -6647,7 +6647,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigServerHide.flatten_links_file);
+    xfree(ConfigServerHide.flatten_links_file);
     ConfigServerHide.flatten_links_file = xstrdup(yylval.string);
   }
 }
@@ -6686,7 +6686,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigServerHide.hidden_name);
+    xfree(ConfigServerHide.hidden_name);
     ConfigServerHide.hidden_name = xstrdup(yylval.string);
   }
 }
