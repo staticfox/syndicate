@@ -144,7 +144,7 @@ remove_user_from_channel(struct Membership *member)
 
   mp_pool_release(member);
 
-  if (chptr->members.head == NULL)
+  if (chptr->members.head == NULL && !(chptr->mode.mode & MODE_REGISTERED))
     channel_free(chptr);
 }
 

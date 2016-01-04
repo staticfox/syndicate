@@ -49,6 +49,7 @@ static char *mbuf;
 static int pargs;
 
 static void set_final_mode(struct Mode *, struct Mode *);
+static void remove_our_users(struct Channel *, const struct Mode *);
 static void remove_our_modes(struct Channel *, struct Client *);
 static void remove_a_mode(struct Channel *, struct Client *, int, char);
 static void remove_ban_list(struct Channel *, struct Client *, dlink_list *, char);
@@ -74,7 +75,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
   time_t         newts;
   time_t         oldts;
   time_t         tstosend;
-  struct Mode mode, *oldmode;
+  struct Mode mode, oldcopy, *oldmode;
   int            args = 0;
   char           keep_our_modes = 1;
   char           keep_new_modes = 1;
@@ -150,6 +151,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
   parabuf[0] = '\0';
   oldts = chptr->creationtime;
   oldmode = &chptr->mode;
+  oldcopy = chptr->mode;
 
   if (ConfigGeneral.ignore_bogus_ts)
   {
@@ -215,6 +217,7 @@ ms_sjoin(struct Client *source_p, int parc, char *parv[])
     if (!isnew)
       strlcpy(chptr->name, parv[2], sizeof(chptr->name));
 
+    remove_our_users(chptr, &oldcopy);
     remove_our_modes(chptr, source_p);
 
     if (dlink_list_length(&chptr->banlist))
@@ -697,6 +700,73 @@ remove_our_modes(struct Channel *chptr, struct Client *source_p)
   remove_a_mode(chptr, source_p, CHFL_CHANOP, 'o');
   remove_a_mode(chptr, source_p, CHFL_HALFOP, 'h');
   remove_a_mode(chptr, source_p, CHFL_VOICE,  'v');
+}
+
+/* should_remove()
+ *
+ * inputs - pointer to channel
+ *    - client pointer
+ *    - pointer to old modes
+ * output - NONE
+ * side effects - Determine wether or not the user is
+ *      split riding, strictly based of channel mode
+ *      differences.
+ */
+static const char *
+should_remove(struct Channel *chptr, const struct Client *client_p, const struct Mode *oldmode)
+{
+  if ((chptr->mode.mode & MODE_OPERONLY) && !HasUMode(client_p, UMODE_OPER))
+    return "Net Rider: You must be an oper to join";
+
+  if ((chptr->mode.mode & MODE_SSLONLY) && !HasFlag(client_p, FLAGS_SSL))
+    return "Net Rider: You must be using SSL to join";
+
+  if ((chptr->mode.mode & MODE_INVITEONLY) && !(oldmode->mode & MODE_INVITEONLY))
+    return "Net Rider: You must be invited to";
+
+  if (chptr->mode.key[0] && (!oldmode->key[0] || strcmp(chptr->mode.key, oldmode->key)))
+    return "Net Rider: You must use the correct key to join";
+
+  if ((chptr->mode.mode & MODE_REGONLY) && !HasUMode(client_p, UMODE_REGISTERED))
+    return "Net Rider: You must be registered to join";
+
+  return NULL;
+}
+
+/* remove_our_users()
+ *
+ * inputs - pointer to channel to remove users from
+ *        - pointer to the old modes the channel had
+ * output - NONE
+ * side effects - Determine wether or not users are net riding
+ *      and remove them if necessary.
+ */
+static void
+remove_our_users(struct Channel *chptr, const struct Mode *oldmode)
+{
+  dlink_node *node = NULL, *next = NULL;
+  unsigned int persistent = chptr->mode.mode & MODE_REGISTERED;
+
+  chptr->mode.mode |= MODE_REGISTERED;
+
+  DLINK_FOREACH_SAFE(node, next, chptr->members.head)
+  {
+    struct Membership *member = node->data;
+    const struct Client *client_p = member->client_p;
+    const char *res = should_remove(chptr, client_p, oldmode);
+
+    if(res)
+    {
+      sendto_channel_local(NULL, chptr, 0, 0, 0, ":%s KICK %s %s :%s %s",
+                    me.name, chptr->name, client_p->name, res, chptr->name);
+      sendto_server(&me, 0, 0, ":%s KICK %s %s :%s %s",
+                    me.id, chptr->name, client_p->id, res, chptr->name);
+      remove_user_from_channel(member);
+    }
+  }
+
+  if (!persistent)
+    chptr->mode.mode &= ~MODE_REGISTERED;
 }
 
 /* remove_a_mode()
