@@ -187,10 +187,7 @@ whois_person(struct Client *source_p, struct Client *target_p)
       if (HasUMode(target_p, tab->flag))
         *m++ = tab->c;
 
-    /* If they aren't an oper, then what the oper
-     * gets in terms of server notices is none of
-     * their business.
-     */
+    /* Show opers snomasks only */
     if (HasUMode(source_p, UMODE_OPER) && HasUMode(target_p, UMODE_SERVNOTICE))
     {
       m += sprintf(m, " +");
