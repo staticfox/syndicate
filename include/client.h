@@ -255,7 +255,7 @@ enum
 #define SetOper(x)              {(x)->umodes |= UMODE_OPER; \
                                  if (MyClient((x))) (x)->handler = OPER_HANDLER;}
 
-#define ClearOper(x)            {(x)->umodes &= ~(UMODE_OPER|UMODE_ADMIN); \
+#define ClearOper(x)            {(x)->umodes &= ~(UMODE_OPER|UMODE_ADMIN|UMODE_NETADMIN); \
                                  if (MyClient((x))) \
                                   (x)->handler = CLIENT_HANDLER; \
                                   (x)->snomodes = 0; }
