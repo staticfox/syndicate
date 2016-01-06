@@ -160,7 +160,7 @@ enum
   UMODE_SOFTCALLERID = 0x000020U,  /**< Block unless on common channel */
   UMODE_LOCOPS       = 0x000040U,  /**< Can see LOCOPS messages */
   UMODE_DEAF         = 0x000080U,  /**< Don't receive channel messages */
-  UMODE_REGISTERED   = 0x000100U,  /**< User has identified for that nick. */
+  UMODE_REGISTERED   = 0x000100U,  /**< User is logged in with services */
   UMODE_REGONLY      = 0x000200U,  /**< Only registered nicks may PM */
   UMODE_HIDDEN       = 0x000400U,  /**< IRC operator status is hidden */
   UMODE_OPER         = 0x000800U,  /**< IRC operator */

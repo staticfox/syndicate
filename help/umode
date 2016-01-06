@@ -20,8 +20,8 @@ User modes: (* designates that the umode is oper only)
                  Use the OPER command to attain this.
          p     - Hides channel list in WHOIS.
          q     - Hides idle and signon time in WHOIS.
-         r     - User has been registered and identified for its nick.
-                 This mode can only be set by servers and services.
+         r     - User has identified with services.
+                 This mode can only be set by servers.
          R     - Only allow registered clients to message you.
          s     - Can see generic server messages and oper kills.
          S     - Client is connected via SSL/TLS.

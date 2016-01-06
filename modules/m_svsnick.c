@@ -101,15 +101,6 @@ ms_svsnick(struct Client *source_p, int parc, char *parv[])
   clear_ban_cache_client(target_p);
   watch_check_hash(target_p, RPL_LOGOFF);
 
-  if (HasUMode(target_p, UMODE_REGISTERED))
-  {
-    const unsigned int oldmodes = target_p->umodes;
-    char modebuf[IRCD_BUFSIZE] = "";
-
-    DelUMode(target_p, UMODE_REGISTERED);
-    send_umode(target_p, target_p, oldmodes, modebuf);
-  }
-
   sendto_common_channels_local(target_p, 1, 0, 0, ":%s!%s@%s NICK :%s",
                                target_p->name, target_p->username,
                                target_p->host, parv[2]);

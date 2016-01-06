@@ -133,9 +133,6 @@ whois_person(struct Client *source_p, struct Client *target_p)
     sendto_one_numeric(source_p, &me, RPL_WHOISSERVER, target_p->name,
                        target_p->servptr->name, target_p->servptr->info);
 
-  if (HasUMode(target_p, UMODE_REGISTERED))
-    sendto_one_numeric(source_p, &me, RPL_WHOISREGNICK, target_p->name);
-
   if (strcmp(target_p->account, "*"))
     sendto_one_numeric(source_p, &me, RPL_WHOISACCOUNT, target_p->name,
                        target_p->account, "is");

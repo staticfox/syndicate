@@ -234,15 +234,6 @@ change_local_nick(struct Client *source_p, const char *nick)
     source_p->tsinfo = CurrentTime;
     clear_ban_cache_client(source_p);
     watch_check_hash(source_p, RPL_LOGOFF);
-
-    if (HasUMode(source_p, UMODE_REGISTERED))
-    {
-      unsigned int oldmodes = source_p->umodes;
-      char modebuf[IRCD_BUFSIZE] = "";
-
-      DelUMode(source_p, UMODE_REGISTERED);
-      send_umode(source_p, source_p, oldmodes, modebuf);
-    }
   }
 
   sendto_realops_flags(SNO_NCHANGE, L_ALL, SEND_NOTICE,
@@ -292,7 +283,6 @@ change_remote_nick(struct Client *source_p, char *parv[])
   /* Client changing their nick */
   if (!samenick)
   {
-    DelUMode(source_p, UMODE_REGISTERED);
     watch_check_hash(source_p, RPL_LOGOFF);
     source_p->tsinfo = strtoimax(parv[2], NULL, 10);
     assert(source_p->tsinfo > 0);

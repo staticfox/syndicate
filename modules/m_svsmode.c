@@ -96,8 +96,12 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
           sendto_common_channels_local(target_p, 1, CAP_ACCOUNT_NOTIFY, 0, ":%s!%s@%s ACCOUNT %s",
                                        target_p->name, target_p->username,
                                        target_p->host, target_p->account);
+          AddUMode(target_p, UMODE_REGISTERED);
         }
 
+        break;
+
+      case 'r':  /* This gets propigated when we set an account */
         break;
 
       case 'x':
