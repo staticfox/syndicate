@@ -138,7 +138,7 @@ do_split_del(struct Client *source_p, int parc, char *parv[])
     return;
   }
 
-  sendto_one_notice(source_p, &me, ":Extended commands not implemented yet.");
+  sendto_one_notice(source_p, &me, ":Need either /SPLIT DEL [*|split.host.name] or no extra parameters");
   return;
 }
 
