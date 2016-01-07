@@ -526,6 +526,12 @@ static const struct InfoStruct info_table[] =
     &ConfigGeneral.throttle_time,
     "Minimum time between client reconnects"
   },
+  {
+    "max_split_history",
+    OUTPUT_DECIMAL,
+    &ConfigGeneral.max_split_history,
+    "Number of split servers to remember"
+  },
 
   /* --[  END OF TABLE  ]---------------------------------------------- */
   {
