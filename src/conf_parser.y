@@ -236,6 +236,7 @@ reset_block_state(void)
 %token  KNOCK_DELAY_CHANNEL
 %token  LEAF_MASK
 %token  LISTEN
+%token  MAP_SPLIT_TIMEOUT
 %token  MASK
 %token  MAX_ACCEPT
 %token  MAX_BANS
@@ -2637,6 +2638,7 @@ general_item:       general_away_count |
                     general_cloak_mask |
                     general_kline_reason |
                     general_max_split_history |
+                    general_map_split_timeout |
                     error;
 
 
@@ -2891,6 +2893,11 @@ general_throttle_count: THROTTLE_COUNT '=' NUMBER ';'
 general_throttle_time: THROTTLE_TIME '=' timespec ';'
 {
   ConfigGeneral.throttle_time = $3;
+};
+
+general_map_split_timeout: MAP_SPLIT_TIMEOUT '=' timespec ';'
+{
+  ConfigGeneral.map_split_timeout = $3;
 };
 
 general_oper_umodes: OPER_UMODES

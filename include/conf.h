@@ -263,6 +263,7 @@ struct config_general_entry
   unsigned int enable_cloak_system;
   unsigned int snomodes;
   unsigned int max_split_history;
+  unsigned int map_split_timeout;
 };
 
 struct config_channel_entry

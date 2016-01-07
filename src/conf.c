@@ -879,6 +879,7 @@ set_default_conf(void)
   ConfigGeneral.kline_reason = NULL;
   ConfigGeneral.snomodes = 0;
   ConfigGeneral.max_split_history = 0;
+  ConfigGeneral.map_split_timeout = 0;
 }
 
 static void

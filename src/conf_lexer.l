@@ -226,6 +226,7 @@ leaf_mask                   { return LEAF_MASK; }
 listen                      { return LISTEN; }
 locops                      { return T_LOCOPS; }
 log                         { return T_LOG; }
+map_split_timeout           { return MAP_SPLIT_TIMEOUT; }
 mask                        { return MASK; }
 masked                      { return TMASKED; }
 max_accept                  { return MAX_ACCEPT; }

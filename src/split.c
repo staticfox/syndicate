@@ -35,9 +35,6 @@
 dlink_list split_list;
 static struct Split *split_find_ptr(const char *);
 
-/* Move to config? */
-#define SEND_BEFORE 259200
-
 void
 check_split_history(void)
 {
@@ -163,9 +160,13 @@ split_delete(const char *name)
 void
 split_send_map(struct Client *client_p)
 {
+  unsigned int expire = ConfigGeneral.map_split_timeout;
   dlink_node *node = NULL;
 
   if (!ConfigGeneral.max_split_history)
+    return;
+
+  if (expire == 1)
     return;
 
   DLINK_FOREACH(node, split_list.head)
@@ -174,8 +175,7 @@ split_send_map(struct Client *client_p)
     char buf[IRCD_BUFSIZE] = "";
     char *ptr = buf;
 
-    /* It's been 3 days, don't show it */
-    if ((split->split_time + SEND_BEFORE) < CurrentTime)
+    if (expire && ((split->split_time + expire) < CurrentTime))
       continue;
 
     ptr += sprintf(ptr, " %s (recently split)", split->name);
