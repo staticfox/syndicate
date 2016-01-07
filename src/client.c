@@ -50,6 +50,7 @@
 #include "rng_mt.h"
 #include "parse.h"
 #include "ipcache.h"
+#include "split.h"
 
 
 dlink_list listing_client_list;
@@ -799,6 +800,8 @@ exit_client(struct Client *source_p, const char *comment)
 
     assert(source_p->serv);
     assert(source_p->servptr);
+
+    split_add(source_p);
 
     if (ConfigServerHide.hide_servers)
       /*

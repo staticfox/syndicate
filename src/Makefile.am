@@ -48,6 +48,7 @@ ircd_SOURCES = auth.c            \
                s_bsd_poll.c      \
                s_bsd_devpoll.c   \
                s_bsd_kqueue.c    \
+               split.c           \
                res.c             \
                reslib.c          \
                restart.c         \

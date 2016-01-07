@@ -36,6 +36,7 @@
 #include "parse.h"
 #include "hash.h"
 #include "modules.h"
+#include "split.h"
 
 
 /*! \brief CONNECT command handler
@@ -136,6 +137,7 @@ mo_connect(struct Client *source_p, int parc, char *parv[])
        source_p->name, parv[1], parv[2] ? parv[2] : "");
 
   conf->port = port;
+  split_bump(conf->name);
 
   /*
    * At this point we should be calling connect_server with a valid
@@ -256,6 +258,7 @@ ms_connect(struct Client *source_p, int parc, char *parv[])
        source_p->name, conf->name, port);
 
   conf->port = port;
+  split_bump(conf->name);
 
   /*
    * At this point we should be calling connect_server with a valid

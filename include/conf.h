@@ -262,6 +262,7 @@ struct config_general_entry
   unsigned int cycle_on_host_change;
   unsigned int enable_cloak_system;
   unsigned int snomodes;
+  unsigned int max_split_history;
 };
 
 struct config_channel_entry

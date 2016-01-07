@@ -248,6 +248,7 @@ reset_block_state(void)
 %token  MAX_NICK_LENGTH
 %token  MAX_NICK_TIME
 %token  MAX_NUMBER
+%token  MAX_SPLIT_HISTORY
 %token  MAX_TARGETS
 %token  MAX_TOPIC_LENGTH
 %token  MAX_WATCH
@@ -2635,6 +2636,7 @@ general_item:       general_away_count |
                     general_cloak_key3 |
                     general_cloak_mask |
                     general_kline_reason |
+                    general_max_split_history |
                     error;
 
 
@@ -2895,6 +2897,11 @@ general_oper_umodes: OPER_UMODES
 {
   ConfigGeneral.oper_umodes = 0;
 } '='  umode_oitems ';' ;
+
+general_max_split_history: MAX_SPLIT_HISTORY '=' NUMBER ';'
+{
+  ConfigGeneral.max_split_history = $3;
+};
 
 umode_oitems:    umode_oitems ',' umode_oitem | umode_oitem;
 umode_oitem:     T_DEAF

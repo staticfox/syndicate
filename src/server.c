@@ -47,6 +47,7 @@
 #include "memory.h"
 #include "channel.h"
 #include "parse.h"
+#include "split.h"
 
 
 dlink_list flatten_links;
@@ -320,6 +321,7 @@ try_connections(void *unused)
                              "Connection to %s[%s] activated.",
                              conf->name, conf->host);
 
+      split_bump(conf->name);
       serv_connect(conf, NULL);
       /* We connect only one at time... */
       return;

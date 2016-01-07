@@ -395,6 +395,12 @@ m_sno_la_OBJECTS = m_sno.lo
 m_sno_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(m_sno_la_LDFLAGS) $(LDFLAGS) -o $@
+m_split_la_LIBADD =
+am_m_split_la_OBJECTS = m_split.lo
+m_split_la_OBJECTS = $(am_m_split_la_OBJECTS)
+m_split_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(m_split_la_LDFLAGS) $(LDFLAGS) -o $@
 m_stats_la_LIBADD =
 am_m_stats_la_OBJECTS = m_stats.lo
 m_stats_la_OBJECTS = $(am_m_stats_la_OBJECTS)
@@ -604,19 +610,20 @@ SOURCES = $(m_accept_la_SOURCES) $(m_admin_la_SOURCES) \
 	$(m_post_la_SOURCES) $(m_rehash_la_SOURCES) \
 	$(m_restart_la_SOURCES) $(m_resv_la_SOURCES) \
 	$(m_set_la_SOURCES) $(m_shedding_la_SOURCES) m_sno.c \
-	$(m_stats_la_SOURCES) $(m_svinfo_la_SOURCES) \
-	$(m_svsjoin_la_SOURCES) $(m_svskill_la_SOURCES) \
-	$(m_svsmode_la_SOURCES) $(m_svsnick_la_SOURCES) \
-	$(m_svspart_la_SOURCES) $(m_svstag_la_SOURCES) \
-	$(m_tburst_la_SOURCES) $(m_time_la_SOURCES) \
-	$(m_topic_la_SOURCES) $(m_trace_la_SOURCES) \
-	$(m_undline_la_SOURCES) $(m_unkline_la_SOURCES) \
-	$(m_unresv_la_SOURCES) $(m_unxline_la_SOURCES) \
-	$(m_user_la_SOURCES) $(m_userhost_la_SOURCES) \
-	$(m_version_la_SOURCES) $(m_wallops_la_SOURCES) \
-	$(m_watch_la_SOURCES) $(m_webirc_la_SOURCES) \
-	$(m_who_la_SOURCES) $(m_whois_la_SOURCES) \
-	$(m_whowas_la_SOURCES) $(m_xline_la_SOURCES)
+	$(m_split_la_SOURCES) $(m_stats_la_SOURCES) \
+	$(m_svinfo_la_SOURCES) $(m_svsjoin_la_SOURCES) \
+	$(m_svskill_la_SOURCES) $(m_svsmode_la_SOURCES) \
+	$(m_svsnick_la_SOURCES) $(m_svspart_la_SOURCES) \
+	$(m_svstag_la_SOURCES) $(m_tburst_la_SOURCES) \
+	$(m_time_la_SOURCES) $(m_topic_la_SOURCES) \
+	$(m_trace_la_SOURCES) $(m_undline_la_SOURCES) \
+	$(m_unkline_la_SOURCES) $(m_unresv_la_SOURCES) \
+	$(m_unxline_la_SOURCES) $(m_user_la_SOURCES) \
+	$(m_userhost_la_SOURCES) $(m_version_la_SOURCES) \
+	$(m_wallops_la_SOURCES) $(m_watch_la_SOURCES) \
+	$(m_webirc_la_SOURCES) $(m_who_la_SOURCES) \
+	$(m_whois_la_SOURCES) $(m_whowas_la_SOURCES) \
+	$(m_xline_la_SOURCES)
 DIST_SOURCES = $(m_accept_la_SOURCES) $(m_admin_la_SOURCES) \
 	$(m_away_la_SOURCES) $(m_cap_la_SOURCES) $(m_capab_la_SOURCES) \
 	$(m_capture_la_SOURCES) $(m_certfp_la_SOURCES) \
@@ -636,19 +643,20 @@ DIST_SOURCES = $(m_accept_la_SOURCES) $(m_admin_la_SOURCES) \
 	$(m_post_la_SOURCES) $(m_rehash_la_SOURCES) \
 	$(m_restart_la_SOURCES) $(m_resv_la_SOURCES) \
 	$(m_set_la_SOURCES) $(m_shedding_la_SOURCES) m_sno.c \
-	$(m_stats_la_SOURCES) $(m_svinfo_la_SOURCES) \
-	$(m_svsjoin_la_SOURCES) $(m_svskill_la_SOURCES) \
-	$(m_svsmode_la_SOURCES) $(m_svsnick_la_SOURCES) \
-	$(m_svspart_la_SOURCES) $(m_svstag_la_SOURCES) \
-	$(m_tburst_la_SOURCES) $(m_time_la_SOURCES) \
-	$(m_topic_la_SOURCES) $(m_trace_la_SOURCES) \
-	$(m_undline_la_SOURCES) $(m_unkline_la_SOURCES) \
-	$(m_unresv_la_SOURCES) $(m_unxline_la_SOURCES) \
-	$(m_user_la_SOURCES) $(m_userhost_la_SOURCES) \
-	$(m_version_la_SOURCES) $(m_wallops_la_SOURCES) \
-	$(m_watch_la_SOURCES) $(m_webirc_la_SOURCES) \
-	$(m_who_la_SOURCES) $(m_whois_la_SOURCES) \
-	$(m_whowas_la_SOURCES) $(m_xline_la_SOURCES)
+	$(m_split_la_SOURCES) $(m_stats_la_SOURCES) \
+	$(m_svinfo_la_SOURCES) $(m_svsjoin_la_SOURCES) \
+	$(m_svskill_la_SOURCES) $(m_svsmode_la_SOURCES) \
+	$(m_svsnick_la_SOURCES) $(m_svspart_la_SOURCES) \
+	$(m_svstag_la_SOURCES) $(m_tburst_la_SOURCES) \
+	$(m_time_la_SOURCES) $(m_topic_la_SOURCES) \
+	$(m_trace_la_SOURCES) $(m_undline_la_SOURCES) \
+	$(m_unkline_la_SOURCES) $(m_unresv_la_SOURCES) \
+	$(m_unxline_la_SOURCES) $(m_user_la_SOURCES) \
+	$(m_userhost_la_SOURCES) $(m_version_la_SOURCES) \
+	$(m_wallops_la_SOURCES) $(m_watch_la_SOURCES) \
+	$(m_webirc_la_SOURCES) $(m_who_la_SOURCES) \
+	$(m_whois_la_SOURCES) $(m_whowas_la_SOURCES) \
+	$(m_xline_la_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -905,6 +913,7 @@ modules_LTLIBRARIES = m_accept.la    \
                       m_set.la       \
                       m_shedding.la  \
                       m_sno.la       \
+                      m_split.la     \
                       m_stats.la     \
                       m_svinfo.la    \
                       m_svsjoin.la   \
@@ -973,6 +982,7 @@ m_resv_la_LDFLAGS = $(MODULE_FLAGS)
 m_set_la_LDFLAGS = $(MODULE_FLAGS)
 m_shedding_la_LDFLAGS = $(MODULE_FLAGS)
 m_sno_la_LDFLAGS = $(MODULE_FLAGS)
+m_split_la_LDFLAGS = $(MODULE_FLAGS)
 m_stats_la_LDFLAGS = $(MODULE_FLAGS)
 m_svinfo_la_LDFLAGS = $(MODULE_FLAGS)
 m_svsjoin_la_LDFLAGS = $(MODULE_FLAGS)
@@ -1040,6 +1050,7 @@ m_resv_la_SOURCES = m_resv.c
 m_set_la_SOURCES = m_set.c
 m_shedding_la_SOURCES = m_shedding.c
 m_sno_la_SOURCE = m_sno.c
+m_split_la_SOURCES = m_split.c
 m_stats_la_SOURCES = m_stats.c
 m_svinfo_la_SOURCES = m_svinfo.c
 m_svsjoin_la_SOURCES = m_svsjoin.c
@@ -1258,6 +1269,9 @@ m_shedding.la: $(m_shedding_la_OBJECTS) $(m_shedding_la_DEPENDENCIES) $(EXTRA_m_
 m_sno.la: $(m_sno_la_OBJECTS) $(m_sno_la_DEPENDENCIES) $(EXTRA_m_sno_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(m_sno_la_LINK) -rpath $(modulesdir) $(m_sno_la_OBJECTS) $(m_sno_la_LIBADD) $(LIBS)
 
+m_split.la: $(m_split_la_OBJECTS) $(m_split_la_DEPENDENCIES) $(EXTRA_m_split_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(m_split_la_LINK) -rpath $(modulesdir) $(m_split_la_OBJECTS) $(m_split_la_LIBADD) $(LIBS)
+
 m_stats.la: $(m_stats_la_OBJECTS) $(m_stats_la_DEPENDENCIES) $(EXTRA_m_stats_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(m_stats_la_LINK) -rpath $(modulesdir) $(m_stats_la_OBJECTS) $(m_stats_la_LIBADD) $(LIBS)
 
@@ -1383,6 +1397,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_set.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_shedding.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_sno.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_split.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_stats.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_svinfo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/m_svsjoin.Plo@am__quote@

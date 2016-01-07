@@ -42,6 +42,7 @@
 #include "parse.h"
 #include "memory.h"
 #include "modules.h"
+#include "split.h"
 
 
 /*! Parses server flags to be potentially set
@@ -326,6 +327,7 @@ server_estab(struct Client *client_p)
     return;
 
   SetServer(client_p);
+  split_delete(client_p->name);
 
   /* Some day, all these lists will be consolidated *sigh* */
   dlinkAdd(client_p, &client_p->lnode, &me.serv->server_list);
@@ -839,6 +841,7 @@ ms_sid(struct Client *source_p, int parc, char *parv[])
     server_set_gecos(target_p, parv[parc - 1]);
 
   SetServer(target_p);
+  split_delete(target_p->name);
 
   if (find_matching_name_conf(CONF_SERVICE, target_p->name, NULL, NULL, 0))
     AddFlag(target_p, FLAGS_SERVICE);

@@ -239,6 +239,7 @@ max_nick_changes            { return MAX_NICK_CHANGES; }
 max_nick_length             { return MAX_NICK_LENGTH; }
 max_nick_time               { return MAX_NICK_TIME; }
 max_number                  { return MAX_NUMBER; }
+max_split_history           { return MAX_SPLIT_HISTORY; }
 max_targets                 { return MAX_TARGETS; }
 max_topic_length            { return MAX_TOPIC_LENGTH; }
 max_watch                   { return MAX_WATCH; }

@@ -57,6 +57,7 @@
 #include "ipcache.h"
 #include "isupport.h"
 #include "cloak.h"
+#include "split.h"
 
 
 struct config_channel_entry ConfigChannel;
@@ -877,6 +878,7 @@ set_default_conf(void)
   ConfigGeneral.cloak_mask = NULL;
   ConfigGeneral.kline_reason = NULL;
   ConfigGeneral.snomodes = 0;
+  ConfigGeneral.max_split_history = 0;
 }
 
 static void
@@ -945,6 +947,7 @@ conf_rehash(int sig)
 
   load_conf_modules();
   check_conf_klines();
+  check_split_history();
 }
 
 /* lookup_confhost()

@@ -32,6 +32,7 @@
 #include "conf.h"
 #include "ircd.h"
 #include "parse.h"
+#include "split.h"
 
 
 static void dump_map(struct Client *client,
@@ -132,6 +133,7 @@ do_map(struct Client *source_p)
                        source_p->name, source_p->username,
                        source_p->host, source_p->servptr->name);
   dump_map(source_p, &me, 0);
+  split_send_map(source_p);
 }
 
 /*! \brief MAP command handler
