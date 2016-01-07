@@ -5877,7 +5877,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigGeneral.cloak_key1);
+    xfree(ConfigGeneral.cloak_key1);
     ConfigGeneral.cloak_key1 = xstrdup(yylval.string);
   }
 }
@@ -5889,7 +5889,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigGeneral.cloak_key2);
+    xfree(ConfigGeneral.cloak_key2);
     ConfigGeneral.cloak_key2 = xstrdup(yylval.string);
   }
 }
@@ -5901,7 +5901,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigGeneral.cloak_key3);
+    xfree(ConfigGeneral.cloak_key3);
     ConfigGeneral.cloak_key3 = xstrdup(yylval.string);
   }
 }
@@ -5913,7 +5913,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigGeneral.cloak_mask);
+    xfree(ConfigGeneral.cloak_mask);
     ConfigGeneral.cloak_mask = xstrdup(yylval.string);
   }
 }
@@ -5966,7 +5966,7 @@ yyreduce:
     {
   if (conf_parser_ctx.pass == 2)
   {
-    MyFree(ConfigGeneral.kline_reason);
+    xfree(ConfigGeneral.kline_reason);
     ConfigGeneral.kline_reason = xstrdup(yylval.string);
   }
 }

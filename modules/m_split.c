@@ -97,10 +97,10 @@ do_split_del(struct Client *source_p, int parc, char *parv[])
 
         dlinkDelete(node, &split_list);
         free_dlink_node(node);
-        MyFree(split->name);
-        MyFree(split->uplink);
-        MyFree(split->info);
-        MyFree(split);
+        xfree(split->name);
+        xfree(split->uplink);
+        xfree(split->info);
+        xfree(split);
       }
       sendto_one_notice(source_p, &me, ":SPLIT: Cleared all split servers.");
     }
@@ -129,10 +129,10 @@ do_split_del(struct Client *source_p, int parc, char *parv[])
         sendto_one_notice(source_p, &me, ":SPLIT: Deleted %s's split entry", split_p->name);
         dlinkDelete(node, &split_list);
         free_dlink_node(node);
-        MyFree(split_p->name);
-        MyFree(split_p->uplink);
-        MyFree(split_p->info);
-        MyFree(split_p);
+        xfree(split_p->name);
+        xfree(split_p->uplink);
+        xfree(split_p->info);
+        xfree(split_p);
       }
     }
     return;

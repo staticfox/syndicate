@@ -52,10 +52,10 @@ check_split_history(void)
 
       dlinkDelete(node, &split_list);
       free_dlink_node(node);
-      MyFree(split_p->name);
-      MyFree(split_p->uplink);
-      MyFree(split_p->info);
-      MyFree(split_p);
+      xfree(split_p->name);
+      xfree(split_p->uplink);
+      xfree(split_p->info);
+      xfree(split_p);
     }
   }
   /* We have more servers than the new max allows,
@@ -72,10 +72,10 @@ check_split_history(void)
 
       dlinkDelete(local_node, &split_list);
       free_dlink_node(local_node);
-      MyFree(split_p->name);
-      MyFree(split_p->uplink);
-      MyFree(split_p->info);
-      MyFree(split_p);
+      xfree(split_p->name);
+      xfree(split_p->uplink);
+      xfree(split_p->info);
+      xfree(split_p);
     }
   }
 }
@@ -99,13 +99,13 @@ split_add(const struct Client *client_p)
 
     dlinkDelete(node, &split_list);
     free_dlink_node(node);
-    MyFree(split_p->name);
-    MyFree(split_p->uplink);
-    MyFree(split_p->info);
-    MyFree(split_p);
+    xfree(split_p->name);
+    xfree(split_p->uplink);
+    xfree(split_p->info);
+    xfree(split_p);
   }
 
-  split = MyCalloc(sizeof(*split));
+  split = xcalloc(sizeof(*split));
   split->name = xstrdup(client_p->name);
   split->uplink = xstrdup(client_p->servptr->name);
   split->info = xstrdup(client_p->info);
@@ -154,10 +154,10 @@ split_delete(const char *name)
 
   dlinkDelete(node, &split_list);
   free_dlink_node(node);
-  MyFree(split->name);
-  MyFree(split->uplink);
-  MyFree(split->info);
-  MyFree(split);
+  xfree(split->name);
+  xfree(split->uplink);
+  xfree(split->info);
+  xfree(split);
 }
 
 void

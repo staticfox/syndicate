@@ -1251,11 +1251,11 @@ clear_out_old_conf(void)
   listener_close_marked();
 
   /* Clean out general */
-  MyFree(ConfigGeneral.cloak_key1);
-  MyFree(ConfigGeneral.cloak_key2);
-  MyFree(ConfigGeneral.cloak_key3);
-  MyFree(ConfigGeneral.cloak_mask);
-  MyFree(ConfigGeneral.kline_reason);
+  xfree(ConfigGeneral.cloak_key1);
+  xfree(ConfigGeneral.cloak_key2);
+  xfree(ConfigGeneral.cloak_key3);
+  xfree(ConfigGeneral.cloak_mask);
+  xfree(ConfigGeneral.kline_reason);
   ConfigGeneral.cloak_key1 = NULL;
   ConfigGeneral.cloak_key2 = NULL;
   ConfigGeneral.cloak_key3 = NULL;
