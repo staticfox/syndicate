@@ -5,6 +5,7 @@ User modes: (* designates that the umode is oper only)
      USER MODE    DESCRIPTION
 -----------------------------------------------------------------
        * a     - Is marked as a server admin in stats o/p.
+         C     - Blocks CTCP requests (not including ACTION)
          D     - "Deaf": don't receive channel messages.
        * F     - Can see remote client connection/quit notices.
          g     - "Caller ID" mode: only allow accepted clients to message you.

@@ -57,6 +57,7 @@ static char snomask_buffer[IRCD_BUFSIZE];
 const struct user_modes *umode_map[256];
 const struct user_modes  umode_tab[] =
 {
+  { 'C', UMODE_NOCTCP       },
   { 'D', UMODE_DEAF         },
   { 'F', UMODE_FARCONNECT   },
   { 'G', UMODE_SOFTCALLERID },

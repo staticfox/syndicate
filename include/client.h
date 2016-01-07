@@ -174,7 +174,8 @@ enum
   UMODE_OPERWALL     = 0x080000U,  /**< Send operwall messages to them */
   UMODE_WHOIS        = 0x100000U,  /**< Notify user on WHOIS */
   UMODE_NETADMIN     = 0x200000U,  /**< Network Admin */
-  UMODE_BLOCKINVITES = 0x400000U   /**< Disable receiving /INVITEs */
+  UMODE_BLOCKINVITES = 0x400000U,  /**< Disable receiving /INVITEs */
+  UMODE_NOCTCP       = 0x800000U   /**< Block CTCP requests */
 };
 
 /* nomasks, settable flags */

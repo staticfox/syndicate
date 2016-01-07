@@ -219,6 +219,7 @@ reset_block_state(void)
 %token  INVITE_CLIENT_TIME
 %token  INVITE_DELAY_CHANNEL
 %token  BLOCKINVITES
+%token  BLOCKCTCPS
 %token  IP
 %token  IRCD_AUTH
 %token  IRCD_FLAGS
@@ -1304,6 +1305,10 @@ oper_umodes_item:  T_DEAF
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_BLOCKINVITES;
+} | BLOCKCTCPS
+{
+  if (conf_parser_ctx.pass == 2)
+    block_state.modes.value |= UMODE_NOCTCP;
 };
 
 oper_snomodes: T_SNOMODES
@@ -2959,6 +2964,9 @@ umode_oitem:     T_DEAF
 } | BLOCKINVITES
 {
   ConfigGeneral.oper_umodes |= UMODE_BLOCKINVITES;
+} | BLOCKCTCPS
+{
+  ConfigGeneral.oper_umodes |= UMODE_NOCTCP;
 };
 
 general_oper_only_umodes: OPER_ONLY_UMODES

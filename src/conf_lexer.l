@@ -206,6 +206,7 @@ hub                         { return HUB; }
 hub_mask                    { return HUB_MASK; }
 ignore_bogus_ts             { return IGNORE_BOGUS_TS; }
 blockinvites                { return BLOCKINVITES; }
+blockctcps                  { return BLOCKCTCPS; }
 invisible                   { return T_INVISIBLE; }
 invisible_on_connect        { return INVISIBLE_ON_CONNECT; }
 invite_client_count         { return INVITE_CLIENT_COUNT; }

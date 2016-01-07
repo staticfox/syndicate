@@ -310,6 +310,18 @@ msg_client(int p_or_n, struct Client *source_p, struct Client *target_p,
         return;
       }
     }
+
+    if (HasUMode(target_p, UMODE_NOCTCP) && target_p != source_p)
+    {
+      if (!HasUMode(source_p, UMODE_OPER) || HasFlag(source_p, FLAGS_SERVICE))
+      {
+        if (*text == '\001' && strncmp(text + 1, "ACTION ", 7))
+        {
+          sendto_one_numeric(source_p, &me, ERR_NOCTCP, target_p->name);
+          return;
+        }
+      }
+    }
   }
 
   if (MyClient(target_p) && IsClient(source_p))
