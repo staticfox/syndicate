@@ -29,7 +29,6 @@
 #include "conf.h"
 #include "ircd.h"
 #include "parse.h"
-#include "server.h"
 #include "misc.h"
 #include "split.h"
 
