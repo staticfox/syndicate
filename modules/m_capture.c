@@ -85,7 +85,7 @@ mo_capture(struct Client *source_p, int parc, char *parv[])
           SetCaptured(target_p);
         }
 
-        sendto_one_numeric(source_p, &me, RPL_ISCAPTURED, target_p->name);
+        sendto_one_notice(source_p, &me, ":%s has been captured", target_p->name);
       }
       else if (IsCapable(target_p->from, CAPAB_ENCAP))
         sendto_one(target_p, ":%s ENCAP %s CAPTURE %s",
@@ -182,7 +182,7 @@ mo_uncapture(struct Client *source_p, int parc, char *parv[])
                                target_p->realhost);
         }
 
-        sendto_one_numeric(source_p, &me, RPL_ISUNCAPTURED, target_p->name);
+        sendto_one_notice(source_p, &me, ":%s has been uncaptured", target_p->name);
       }
       else if (IsCapable(target_p->from, CAPAB_ENCAP))
         sendto_one(target_p, ":%s ENCAP %s UNCAPTURE %s",
