@@ -228,8 +228,10 @@ static const char *const replies[] =
   /* 717 */  [RPL_TARGNOTIFY] = "%s :has been informed that you messaged them.",
   /* 718 */  [RPL_UMODEGMSG] = "%s %s@%s :is messaging you, and you are umode %s.",
   /* 723 */  [ERR_NOPRIVS] = "%s :Insufficient oper privileges.",
-  /* 727 */  [RPL_ISCAPTURED] = "%s :is captured",
-  /* 728 */  [RPL_ISUNCAPTURED] = "%s :is uncaptured",
+  /* 728 */  [RPL_QUIETLIST] = "%s x %s!%s@%s %s %ju",
+  /* 729 */  [RPL_ENDOFQUIETLIST] = "%s x :End of Channel Quiet List",
+  /* 775 */  [RPL_ISCAPTURED] = "%s :is captured",
+  /* 776 */  [RPL_ISUNCAPTURED] = "%s :is uncaptured",
   /* 999 */  [ERR_LAST_ERR_MSG] = ":Last error message"
 };
 

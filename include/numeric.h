@@ -253,8 +253,10 @@ enum irc_numerics
   RPL_TARGNOTIFY           = 717,
   RPL_UMODEGMSG            = 718,
   ERR_NOPRIVS              = 723,
-  RPL_ISCAPTURED           = 727,
-  RPL_ISUNCAPTURED         = 728,
+  RPL_QUIETLIST            = 728,
+  RPL_ENDOFQUIETLIST       = 729,
+  RPL_ISCAPTURED           = 775,
+  RPL_ISUNCAPTURED         = 776,
   ERR_LAST_ERR_MSG         = 999
 };
 

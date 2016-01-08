@@ -773,12 +773,12 @@ chm_quiet(struct Client *source_p, struct Channel *chptr, int parc, int *parn,
     DLINK_FOREACH(node, chptr->quietlist.head)
     {
       const struct Ban *ban = node->data;
-      sendto_one_numeric(source_p, &me, RPL_BANLIST, chptr->name,
+      sendto_one_numeric(source_p, &me, RPL_QUIETLIST, chptr->name,
                          ban->name, ban->user, ban->host,
                          ban->who, ban->when);
     }
 
-    sendto_one_numeric(source_p, &me, RPL_ENDOFBANLIST, chptr->name);
+    sendto_one_numeric(source_p, &me, RPL_ENDOFQUIETLIST, chptr->name);
     return;
   }
 
