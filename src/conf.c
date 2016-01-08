@@ -867,7 +867,7 @@ set_default_conf(void)
   ConfigGeneral.no_oper_flood = 0;
   ConfigGeneral.max_targets = MAX_TARGETS_DEFAULT;
   ConfigGeneral.oper_only_umodes = UMODE_LOCOPS | UMODE_HIDDEN | UMODE_FARCONNECT |
-                                   UMODE_SPY;
+                                   UMODE_SERVNOTICE | UMODE_WALLOP | UMODE_SPY;
   ConfigGeneral.oper_umodes = UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
   ConfigGeneral.throttle_count = 1;
   ConfigGeneral.throttle_time = 1;
