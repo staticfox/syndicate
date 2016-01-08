@@ -243,52 +243,50 @@ extern int yydebug;
     T_LOCOPS = 453,
     T_LOG = 454,
     T_NONONREG = 455,
-    T_OPERWALL = 456,
-    T_OPERWALLS = 457,
-    T_OPME = 458,
-    T_PREPEND = 459,
-    T_PSEUDO = 460,
-    T_RECVQ = 461,
-    T_RESTART = 462,
-    T_SERVER = 463,
-    T_SERVICE = 464,
-    T_SERVNOTICE = 465,
-    T_SET = 466,
-    T_SHARED = 467,
-    T_SIZE = 468,
-    T_SNOMODES = 469,
-    T_SOFTCALLERID = 470,
-    T_SPY = 471,
-    T_SSL = 472,
-    T_SSL_CIPHER_LIST = 473,
-    T_TARGET = 474,
-    T_UMODES = 475,
-    T_UNDLINE = 476,
-    T_UNLIMITED = 477,
-    T_UNRESV = 478,
-    T_UNXLINE = 479,
-    T_WALLOP = 480,
-    T_WALLOPS = 481,
-    T_WEBIRC = 482,
-    TBOOL = 483,
-    THROTTLE_COUNT = 484,
-    THROTTLE_TIME = 485,
-    TKLINE_EXPIRE_NOTICES = 486,
-    TMASKED = 487,
-    TS_MAX_DELTA = 488,
-    TS_WARN_DELTA = 489,
-    TWODOTS = 490,
-    TYPE = 491,
-    UNKLINE = 492,
-    USE_LOGGING = 493,
-    USER = 494,
-    VHOST = 495,
-    VHOST6 = 496,
-    WARN_NO_CONNECT_BLOCK = 497,
-    WHOIS = 498,
-    WHOIS_NOTIFY = 499,
-    XLINE = 500,
-    XLINE_EXEMPT = 501
+    T_OPME = 456,
+    T_PREPEND = 457,
+    T_PSEUDO = 458,
+    T_RECVQ = 459,
+    T_RESTART = 460,
+    T_SERVER = 461,
+    T_SERVICE = 462,
+    T_SERVNOTICE = 463,
+    T_SET = 464,
+    T_SHARED = 465,
+    T_SIZE = 466,
+    T_SNOMODES = 467,
+    T_SOFTCALLERID = 468,
+    T_SPY = 469,
+    T_SSL = 470,
+    T_SSL_CIPHER_LIST = 471,
+    T_TARGET = 472,
+    T_UMODES = 473,
+    T_UNDLINE = 474,
+    T_UNLIMITED = 475,
+    T_UNRESV = 476,
+    T_UNXLINE = 477,
+    T_WALLOP = 478,
+    T_WALLOPS = 479,
+    T_WEBIRC = 480,
+    TBOOL = 481,
+    THROTTLE_COUNT = 482,
+    THROTTLE_TIME = 483,
+    TKLINE_EXPIRE_NOTICES = 484,
+    TMASKED = 485,
+    TS_MAX_DELTA = 486,
+    TS_WARN_DELTA = 487,
+    TWODOTS = 488,
+    TYPE = 489,
+    UNKLINE = 490,
+    USE_LOGGING = 491,
+    USER = 492,
+    VHOST = 493,
+    VHOST6 = 494,
+    WARN_NO_CONNECT_BLOCK = 495,
+    WHOIS = 496,
+    WHOIS_NOTIFY = 497,
+    XLINE = 498,
+    XLINE_EXEMPT = 499
   };
 #endif
 /* Tokens.  */
@@ -490,52 +488,50 @@ extern int yydebug;
 #define T_LOCOPS 453
 #define T_LOG 454
 #define T_NONONREG 455
-#define T_OPERWALL 456
-#define T_OPERWALLS 457
-#define T_OPME 458
-#define T_PREPEND 459
-#define T_PSEUDO 460
-#define T_RECVQ 461
-#define T_RESTART 462
-#define T_SERVER 463
-#define T_SERVICE 464
-#define T_SERVNOTICE 465
-#define T_SET 466
-#define T_SHARED 467
-#define T_SIZE 468
-#define T_SNOMODES 469
-#define T_SOFTCALLERID 470
-#define T_SPY 471
-#define T_SSL 472
-#define T_SSL_CIPHER_LIST 473
-#define T_TARGET 474
-#define T_UMODES 475
-#define T_UNDLINE 476
-#define T_UNLIMITED 477
-#define T_UNRESV 478
-#define T_UNXLINE 479
-#define T_WALLOP 480
-#define T_WALLOPS 481
-#define T_WEBIRC 482
-#define TBOOL 483
-#define THROTTLE_COUNT 484
-#define THROTTLE_TIME 485
-#define TKLINE_EXPIRE_NOTICES 486
-#define TMASKED 487
-#define TS_MAX_DELTA 488
-#define TS_WARN_DELTA 489
-#define TWODOTS 490
-#define TYPE 491
-#define UNKLINE 492
-#define USE_LOGGING 493
-#define USER 494
-#define VHOST 495
-#define VHOST6 496
-#define WARN_NO_CONNECT_BLOCK 497
-#define WHOIS 498
-#define WHOIS_NOTIFY 499
-#define XLINE 500
-#define XLINE_EXEMPT 501
+#define T_OPME 456
+#define T_PREPEND 457
+#define T_PSEUDO 458
+#define T_RECVQ 459
+#define T_RESTART 460
+#define T_SERVER 461
+#define T_SERVICE 462
+#define T_SERVNOTICE 463
+#define T_SET 464
+#define T_SHARED 465
+#define T_SIZE 466
+#define T_SNOMODES 467
+#define T_SOFTCALLERID 468
+#define T_SPY 469
+#define T_SSL 470
+#define T_SSL_CIPHER_LIST 471
+#define T_TARGET 472
+#define T_UMODES 473
+#define T_UNDLINE 474
+#define T_UNLIMITED 475
+#define T_UNRESV 476
+#define T_UNXLINE 477
+#define T_WALLOP 478
+#define T_WALLOPS 479
+#define T_WEBIRC 480
+#define TBOOL 481
+#define THROTTLE_COUNT 482
+#define THROTTLE_TIME 483
+#define TKLINE_EXPIRE_NOTICES 484
+#define TMASKED 485
+#define TS_MAX_DELTA 486
+#define TS_WARN_DELTA 487
+#define TWODOTS 488
+#define TYPE 489
+#define UNKLINE 490
+#define USE_LOGGING 491
+#define USER 492
+#define VHOST 493
+#define VHOST6 494
+#define WARN_NO_CONNECT_BLOCK 495
+#define WHOIS 496
+#define WHOIS_NOTIFY 497
+#define XLINE 498
+#define XLINE_EXEMPT 499
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -547,7 +543,7 @@ union YYSTYPE
   int number;
   char *string;
 
-#line 551 "conf_parser.h" /* yacc.c:1909  */
+#line 547 "conf_parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

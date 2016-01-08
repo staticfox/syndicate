@@ -867,7 +867,7 @@ set_default_conf(void)
   ConfigGeneral.no_oper_flood = 0;
   ConfigGeneral.max_targets = MAX_TARGETS_DEFAULT;
   ConfigGeneral.oper_only_umodes = UMODE_LOCOPS | UMODE_HIDDEN | UMODE_FARCONNECT |
-                                   UMODE_SPY | UMODE_OPERWALL;
+                                   UMODE_SPY;
   ConfigGeneral.oper_umodes = UMODE_LOCOPS | UMODE_SERVNOTICE | UMODE_WALLOP;
   ConfigGeneral.throttle_count = 1;
   ConfigGeneral.throttle_time = 1;
@@ -1099,7 +1099,6 @@ static const struct oper_privs
   { OPER_FLAG_UNXLINE,        'Z' },
   { OPER_FLAG_WALLOPS,        'a' },
   { OPER_FLAG_XLINE,          'b' },
-  { OPER_FLAG_OPERWALLS,      'c' },
   { OPER_FLAG_NICK_RESV,      'n' },
   { 0, '\0' }
 };

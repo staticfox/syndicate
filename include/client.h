@@ -171,11 +171,10 @@ enum
   UMODE_WEBIRC       = 0x010000U,  /**< User connected via a webirc gateway */
   UMODE_HIDEIDLE     = 0x020000U,  /**< Hides idle and signon time in WHOIS */
   UMODE_HIDECHANS    = 0x040000U,  /**< Hides channel list in WHOIS */
-  UMODE_OPERWALL     = 0x080000U,  /**< Send operwall messages to them */
-  UMODE_WHOIS        = 0x100000U,  /**< Notify user on WHOIS */
-  UMODE_NETADMIN     = 0x200000U,  /**< Network Admin */
-  UMODE_BLOCKINVITES = 0x400000U,  /**< Disable receiving /INVITEs */
-  UMODE_NOCTCP       = 0x800000U   /**< Block CTCP requests */
+  UMODE_WHOIS        = 0x080000U,  /**< Notify user on WHOIS */
+  UMODE_NETADMIN     = 0x100000U,  /**< Network Admin */
+  UMODE_BLOCKINVITES = 0x200000U,  /**< Disable receiving /INVITEs */
+  UMODE_NOCTCP       = 0x400000U   /**< Block CTCP requests */
 };
 
 /* nomasks, settable flags */
@@ -236,8 +235,7 @@ enum
   OPER_FLAG_UNXLINE        = 0x02000000U,  /**< Oper can use UNXLINE command */
   OPER_FLAG_WALLOPS        = 0x04000000U,  /**< Oper can use WALLOPS command */
   OPER_FLAG_XLINE          = 0x08000000U,  /**< Oper can use XLINE command */
-  OPER_FLAG_OPERWALLS      = 0x10000000U,  /**< Oper can use OPERWALL command */
-  OPER_FLAG_NETADMIN       = 0x20000000U   /**< Oper can set user mode +N */
+  OPER_FLAG_NETADMIN       = 0x10000000U   /**< Oper can set user mode +N */
 };
 
 #define HasOFlag(x, y) ((x)->connection->operflags &   (y))

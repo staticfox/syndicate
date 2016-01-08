@@ -346,8 +346,6 @@ reset_block_state(void)
 %token  T_LOCOPS
 %token  T_LOG
 %token  T_NONONREG
-%token  T_OPERWALL
-%token  T_OPERWALLS
 %token  T_OPME
 %token  T_PREPEND
 %token  T_PSEUDO
@@ -1293,10 +1291,6 @@ oper_umodes_item:  T_DEAF
 {
   if (conf_parser_ctx.pass == 2)
     block_state.modes.value |= UMODE_FARCONNECT;
-} | T_OPERWALL
-{
- if (conf_parser_ctx.pass == 2)
-    block_state.modes.value |= UMODE_OPERWALL;
 } | WHOIS_NOTIFY
 {
   if (conf_parser_ctx.pass == 2)
@@ -1495,10 +1489,6 @@ oper_flags_item: KILL ':' REMOTE
 {
   if (conf_parser_ctx.pass == 2)
     block_state.port.value |= OPER_FLAG_CLOSE;
-} | T_OPERWALLS
-{
-  if (conf_parser_ctx.pass == 2)
-    block_state.port.value |= OPER_FLAG_OPERWALLS;
 } | NETADMIN
 {
   if (conf_parser_ctx.pass == 2)
@@ -2955,9 +2945,6 @@ umode_oitem:     T_DEAF
 } | T_FARCONNECT
 {
   ConfigGeneral.oper_umodes |= UMODE_FARCONNECT;
-} | T_OPERWALL
-{
-  ConfigGeneral.oper_umodes |= UMODE_OPERWALL;
 } | WHOIS_NOTIFY
 {
   ConfigGeneral.oper_umodes |= UMODE_WHOIS;
@@ -3008,9 +2995,6 @@ umode_item:   T_DEAF
 } | T_FARCONNECT
 {
   ConfigGeneral.oper_only_umodes |= UMODE_FARCONNECT;
-} | T_OPERWALL
-{
-  ConfigGeneral.oper_only_umodes |= UMODE_OPERWALL;
 } | WHOIS_NOTIFY
 {
   ConfigGeneral.oper_only_umodes |= UMODE_WHOIS;

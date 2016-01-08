@@ -269,8 +269,6 @@ oper_only_umodes            { return OPER_ONLY_UMODES; }
 oper_umodes                 { return OPER_UMODES; }
 operator                    { return OPERATOR; }
 opers_bypass_callerid       { return OPERS_BYPASS_CALLERID; }
-operwall                    { return T_OPERWALL; }
-operwalls                   { return T_OPERWALLS; }
 opme                        { return T_OPME; }
 pace_wait                   { return PACE_WAIT; }
 pace_wait_simple            { return PACE_WAIT_SIMPLE; }

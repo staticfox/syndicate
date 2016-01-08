@@ -31,4 +31,3 @@ User modes: (* designates that the umode is oper only)
          x     - User's host has been spoofed by services.
                  This mode can only be set by servers and services.
        * y     - Can see stats/links/admin requests, etc.
-       * z     - Can receive operwalls.
