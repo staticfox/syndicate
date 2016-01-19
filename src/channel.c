@@ -101,7 +101,7 @@ add_user_to_channel(struct Channel *chptr, struct Client *client_p,
         SetJoinFloodNoticed(chptr);
         sendto_snomask_flags(SNO_BOTS, L_ALL, SEND_NOTICE,
                              "Possible Join Flooder %s on %s target: %s",
-                             get_client_name(client_p, HIDE_IP),
+                             get_client_name(client_p, SHOW_IP),
                              client_p->servptr->name, chptr->name);
       }
     }

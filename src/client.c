@@ -398,7 +398,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
       {
         sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "KLINE over-ruled for %s, client is kline_exempt",
-                             get_client_name(client_p, HIDE_IP));
+                             get_client_name(client_p, SHOW_IP));
         return;
       }
 
@@ -415,7 +415,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
       {
         sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                              "XLINE over-ruled for %s, client is xline_exempt",
-                             get_client_name(client_p, HIDE_IP));
+                             get_client_name(client_p, SHOW_IP));
         return;
       }
 
@@ -428,7 +428,7 @@ conf_try_ban(struct Client *client_p, struct MaskItem *conf)
   }
 
   sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE, "%c-line active for %s",
-                       ban_type, get_client_name(client_p, HIDE_IP));
+                       ban_type, get_client_name(client_p, SHOW_IP));
 
   if (IsClient(client_p))
     sendto_one_numeric(client_p, &me, ERR_YOUREBANNEDCREEP, conf->reason);
