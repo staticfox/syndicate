@@ -58,7 +58,7 @@ set_sno_mask(struct Client *source_p, int what, const char *modes)
     return;
   }
 
-  // Unset all snomasks
+  /* Unset all snomasks */
   if (what == MODE_DEL && HasUMode(source_p, UMODE_SERVNOTICE))
   {
     source_p->snomodes = 0;
@@ -67,14 +67,14 @@ set_sno_mask(struct Client *source_p, int what, const char *modes)
     return;
   }
 
-  // Only reply with what we have
+  /* Only reply with what we have */
   if (what == MODE_ADD && modes == NULL)
   {
     send_snomask_rpl(source_p);
     return;
   }
 
-  // Figure out what we're adding or removing
+  /* Figure out what we're adding or removing */
   for (const char *m = modes; *m; ++m)
   {
     switch (*m)
