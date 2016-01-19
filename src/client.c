@@ -935,10 +935,10 @@ exit_aborted_clients(void)
 {
   dlink_node *ptr;
   struct Client *target_p;
-  const char *notice;
 
   DLINK_FOREACH_SAFE(ptr, eac_next, abort_list.head)
   {
+    char notice[IRCD_BUFSIZE];
     target_p = ptr->data;
     eac_next = ptr->next;
 
@@ -954,9 +954,10 @@ exit_aborted_clients(void)
     dlinkDelete(ptr, &abort_list);
 
     if (HasFlag(target_p, FLAGS_SENDQEX))
-      notice = "Max SendQ exceeded";
+      strlcpy(notice, "Max SendQ exceeded", sizeof(notice));
     else
-      notice = "Write error: connection closed";
+      snprintf(notice, sizeof(notice), "Write error: %s",
+        strerror(errno));
 
     exit_client(target_p, notice);
     free_dlink_node(ptr);
