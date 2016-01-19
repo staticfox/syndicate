@@ -71,6 +71,7 @@ const struct user_modes  umode_tab[] =
   { 'g', UMODE_CALLERID     },
   { 'h', UMODE_WHOIS        },
   { 'i', UMODE_INVISIBLE    },
+  { 'k', UMODE_SERVICE      },
   { 'l', UMODE_LOCOPS       },
   { 'o', UMODE_OPER         },
   { 'p', UMODE_HIDECHANS    },

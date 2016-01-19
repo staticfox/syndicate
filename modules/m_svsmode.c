@@ -101,6 +101,7 @@ ms_svsmode(struct Client *source_p, int parc, char *parv[])
 
         break;
 
+      case 'k':  /* Can only be set by services. No abuse please. Use +N for that. */
       case 'r':  /* This gets propigated when we set an account */
         break;
 

@@ -234,6 +234,7 @@ set_user_mode(struct Client *source_p, const int parc, char *parv[])
 
       case 'S':  /* Only servers may set +S in a burst */
       case 'W':  /* Only servers may set +W in a burst */
+      case 'k':  /* Only services may set +k */
       case 'r':  /* Only services may set +r */
       case 'x':  /* Only services may set +x */
         break;

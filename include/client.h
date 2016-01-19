@@ -174,7 +174,8 @@ enum
   UMODE_WHOIS        = 0x080000U,  /**< Notify user on WHOIS */
   UMODE_NETADMIN     = 0x100000U,  /**< Network Admin */
   UMODE_BLOCKINVITES = 0x200000U,  /**< Disable receiving /INVITEs */
-  UMODE_NOCTCP       = 0x400000U   /**< Block CTCP requests */
+  UMODE_NOCTCP       = 0x400000U,  /**< Block CTCP requests */
+  UMODE_SERVICE      = 0x800000U   /**< Is a network service */
 };
 
 /* nomasks, settable flags */
@@ -267,6 +268,9 @@ enum
 #define SetCaptured(x)          ((x)->handler =  DUMMY_HANDLER)
 #define ClearCaptured(x)        ((x)->handler = CLIENT_HANDLER)
 
+/* immunity stuff */
+#define IsImmune(x)             ((x)->umodes & (UMODE_SERVICE|UMODE_NETADMIN))
+#define IsKillImmune(x)         (((x)->umodes & UMODE_NETADMIN) || (x)->flags & FLAGS_SERVICE)
 
 /*! \brief addr_mask_type enumeration */
 enum addr_mask_type

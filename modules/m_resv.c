@@ -56,7 +56,7 @@ parse_resv(struct Client *source_p, const char *name, time_t duration, const cha
   if (!IsChanPrefix(*name))
     type = "nick";
 
-  if (!HasFlag(source_p, FLAGS_SERVICE) && !HasUMode(source_p, UMODE_ADMIN) && has_wildcards(name))
+  if (!IsKillImmune(source_p) && has_wildcards(name))
   {
     if (IsClient(source_p))
       sendto_one_notice(source_p, &me, ":You must be an admin to perform a wildcard RESV");

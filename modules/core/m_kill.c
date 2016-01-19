@@ -192,8 +192,7 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
   else
     reason = def_reason;
 
-  if (IsServer(target_p) || IsMe(target_p) ||
-    HasFlag(target_p, FLAGS_SERVICE) || HasUMode(target_p, UMODE_NETADMIN))
+  if (IsServer(target_p) || IsMe(target_p) || IsKillImmune(target_p))
   {
     sendto_one_numeric(source_p, &me, ERR_CANTKILLSERVER);
     return 0;

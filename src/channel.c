@@ -78,7 +78,8 @@ add_user_to_channel(struct Channel *chptr, struct Client *client_p,
 
   assert(IsClient(client_p));
 
-  if (GlobalSetOptions.joinfloodtime > 0)
+  if (GlobalSetOptions.joinfloodtime > 0 &&
+    (!HasFlag(client_p, FLAGS_SERVICE) || !HasUMode(client_p, UMODE_OPER)))
   {
     if (flood_ctrl)
       ++chptr->number_joined;
@@ -841,7 +842,7 @@ can_send(struct Channel *chptr, struct Client *client_p,
 {
   const struct MaskItem *conf = NULL;
 
-  if (IsServer(client_p) || HasFlag(client_p, FLAGS_SERVICE))
+  if (IsServer(client_p) || IsImmune(client_p))
     return CAN_SEND_OPV;
 
   if (MyClient(client_p) && !HasFlag(client_p, FLAGS_EXEMPTRESV))

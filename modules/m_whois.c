@@ -89,7 +89,7 @@ whois_person(struct Client *source_p, struct Client *target_p)
    * If they're a service then their channels are most likely private.
    * Don't send them to users
    */
-  if (!HasFlag(target_p, FLAGS_SERVICE))
+  if (!HasUMode(target_p, UMODE_SERVICE))
   {
     DLINK_FOREACH(node, target_p->channel.head)
     {
