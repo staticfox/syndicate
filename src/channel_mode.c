@@ -965,7 +965,7 @@ static int
 is_service_modify(struct Client *source_p, struct Client *target_p,
                   struct Channel *chptr, int *errors)
 {
-  if (HasUMode(target_p, UMODE_SERVICE) && !IsServer(source_p))
+  if (HasUMode(target_p, UMODE_SERVICE) && !HasUMode(source_p, UMODE_SERVICE) && !IsServer(source_p))
   {
     if (!(*errors & ERR_ISCHANSERVICE))
       sendto_one_numeric(source_p, &me, ERR_ISCHANSERVICE, chptr->name);
