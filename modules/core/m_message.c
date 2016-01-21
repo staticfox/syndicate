@@ -279,7 +279,13 @@ msg_channel(int p_or_n, struct Client *source_p, struct Channel *chptr,
     }
   }
   else if (p_or_n != NOTICE)
-    sendto_one_numeric(source_p, &me, result, chptr->name, text);
+  {
+    if (chptr->mode.mode & MODE_OPMODERATE)
+      sendto_channel_ops_butone(source_p, source_p, chptr, type, "%s %s%s :%s",
+                                command[p_or_n], prefix, chptr->name, text);
+    else
+      sendto_one_numeric(source_p, &me, result, chptr->name, text);
+  }
 }
 
 /* msg_client()
@@ -313,7 +319,7 @@ msg_client(int p_or_n, struct Client *source_p, struct Client *target_p,
 
     if (HasUMode(target_p, UMODE_NOCTCP) && target_p != source_p)
     {
-      if (!HasUMode(source_p, UMODE_OPER) || HasFlag(source_p, FLAGS_SERVICE))
+      if (!HasUMode(source_p, UMODE_OPER) || !HasFlag(source_p, FLAGS_SERVICE))
       {
         if (*text == '\001' && strncmp(text + 1, "ACTION ", 7))
         {

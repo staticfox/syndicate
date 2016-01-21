@@ -101,7 +101,8 @@ enum
   MODE_NOCTCP     = 0x00001000U,  /**< Clients cannot send CTCP messages to the channel */
   MODE_NONOTICE   = 0x00002000U,  /**< Clients cannot send NOTICE to the channel */
   MODE_DELJOINS   = 0x00004000U,  /**< New join messages are delayed */
-  MODE_WASDELJOINS= 0x00008000U   /**< Not DELJOINS, but some joins pending */
+  MODE_WASDELJOINS= 0x00008000U,  /**< Not DELJOINS, but some joins pending */
+  MODE_OPMODERATE = 0x00010000U   /**< Send blocked messages to halfops+ */
 };
 
 /* name invisible */

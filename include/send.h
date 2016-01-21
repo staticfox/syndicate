@@ -67,6 +67,9 @@ extern void sendto_one_notice(struct Client *, struct Client *, const char *, ..
 extern void sendto_channel_butone(struct Client *, struct Client *,
                                   struct Channel *, unsigned int,
                                   const char *, ...) AFP(5,6);
+extern void sendto_channel_ops_butone(struct Client *, struct Client *,
+                                      struct Channel *, unsigned int,
+                                      const char *, ...) AFP(5,6);
 extern void sendto_common_channels_local(struct Client *, int, unsigned int, unsigned int,
                                          const char *, ...) AFP(5,6);
 extern void sendto_channel_local(const struct Client *, struct Channel *, unsigned int,

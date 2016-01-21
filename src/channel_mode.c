@@ -1522,7 +1522,7 @@ const struct ChannelMode ModeTable[256] =
   { chm_nosuch,     0               },  /* w */
   { chm_quiet,      0               },  /* x */
   { chm_nosuch,     0               },  /* y */
-  { chm_nosuch,     0               },  /* z */
+  { chm_simple,     MODE_OPMODERATE },  /* z */
   { chm_nosuch,  0 },			/* 0x7b */
   { chm_nosuch,  0 },			/* 0x7c */
   { chm_nosuch,  0 },			/* 0x7d */
