@@ -227,7 +227,7 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
   if (IsClient(source_p))  /* Send it normally */
     sendto_snomask_flags(SNO_GENERAL, L_ALL, SEND_NOTICE,
                          "Received KILL message for %s!%s@%s[%s/%s]. From %s Path: %s!%s!%s!%s %s",
-                         target_p->name, target_p->username, target_p->host,
+                         target_p->name, target_p->username, target_p->realhost,
                          target_p->servptr->name,
                          target_p->servptr->id, source_p->name,
                          source_p->servptr->name, source_p->host, source_p->username,
@@ -235,7 +235,7 @@ ms_kill(struct Client *source_p, int parc, char *parv[])
   else
     sendto_snomask_flags(SNO_SKILL, L_ALL, SEND_NOTICE,
                          "Received KILL message for %s!%s@%s[%s/%s]. From %s %s",
-                         target_p->name, target_p->username, target_p->host,
+                         target_p->name, target_p->username, target_p->realhost,
                          target_p->servptr->name,
                          target_p->servptr->id,
                          source_p->name, reason);
