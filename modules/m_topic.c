@@ -166,6 +166,13 @@ ms_topic(struct Client *source_p, int parc, char *parv[])
   else
     snprintf(topic_info, sizeof(topic_info), "%s!%s@%s", source_p->name,
              source_p->username, source_p->host);
+
+  if (EmptyString(parv[2]))
+  {
+    sendto_one_numeric(source_p, &me, ERR_NEEDMOREPARAMS, "TOPIC");
+    return 0;
+  }
+
   channel_set_topic(chptr, parv[2], topic_info, CurrentTime, 0);
 
   sendto_server(source_p, 0, 0, ":%s TOPIC %s :%s",
