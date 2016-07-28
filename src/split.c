@@ -33,7 +33,22 @@
 #include "split.h"
 
 dlink_list split_list;
-static struct Split *split_find_ptr(const char *);
+
+static struct Split *
+split_find_ptr(const char *name)
+{
+  dlink_node *node = NULL, *node_next = NULL;
+
+  DLINK_FOREACH_SAFE(node, node_next, split_list.head)
+  {
+    struct Split *split = node->data;
+
+    if (!irccmp(split->name, name))
+      return split;
+  }
+
+  return NULL;
+}
 
 void
 check_split_history(void)
@@ -184,20 +199,4 @@ split_send_map(struct Client *client_p)
 
     sendto_one_numeric(client_p, &me, RPL_MAP, "**", buf);
   }
-}
-
-static struct Split *
-split_find_ptr(const char *name)
-{
-  dlink_node *node = NULL, *node_next = NULL;
-
-  DLINK_FOREACH_SAFE(node, node_next, split_list.head)
-  {
-    struct Split *split = node->data;
-
-    if (!irccmp(split->name, name))
-      return split;
-  }
-
-  return NULL;
 }
